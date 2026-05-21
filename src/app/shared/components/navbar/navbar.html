@@ -1,0 +1,36 @@
+<nav class="navbar">
+  <div class="container navbar__inner">
+    <div class="navbar__logo">
+      <img src="images/logoTelesecundaria.svg" alt="Logo Telesecundaria" />
+      <span class="navbar__nombre">Silvestre Aguilar Vargas</span>
+    </div>
+
+    <ul class="navbar__links">
+      <li><a href="#">Inicio</a></li>
+      <li><a href="#">Cursos</a></li>
+      <li><a href="#">Recursos</a></li>
+      <li><a href="#">Calendario</a></li>
+      <li><a href="#">Contacto</a></li>
+    </ul>
+
+    <button class="navbar__btn">Ingresar al portal</button>
+
+    <button class="navbar__hamburger" (click)="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <!-- MENÚ MÓVIL -->
+  <div class="navbar__mobile" [class.navbar__mobile--abierto]="menuAbierto">
+    <ul>
+      <li><a href="#" (click)="toggleMenu()">Inicio</a></li>
+      <li><a href="#" (click)="toggleMenu()">Cursos</a></li>
+      <li><a href="#" (click)="toggleMenu()">Recursos</a></li>
+      <li><a href="#" (click)="toggleMenu()">Calendario</a></li>
+      <li><a href="#" (click)="toggleMenu()">Contacto</a></li>
+    </ul>
+    <button class="navbar__btn" (click)="toggleMenu()">Ingresar al portal</button>
+  </div>
+</nav>
