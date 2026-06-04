@@ -1,0 +1,36 @@
+[
+  {
+    "clavePublicacion": "PUB-001",
+    "titulo": "¡Inscripciones Abiertas Ciclo 2026-2027!",
+    "subtitulo": "Asegura el lugar de tu hijo en nuestra Telesecundaria.",
+    "cuerpoContenido": "El proceso de preinscripción digital ya comenzó.",
+    "categoria": "Convocatoria",
+    "fechaAparicion": "2026-06-01T00:00:00",
+    "fechaRetiro": null,
+    "claveUsuario": "USR-DIR01",
+    "claveConvocatoria": "PDF-CONV-REQ.pdf",
+    "claveImagenPrincipal": "images/collageBanner.png",
+    "claveImagenSecundaria": null,
+    "claveImagenTercera": null,
+    "fechaRegistro": "2026-05-30T10:00:00",
+    "destacado": true,
+    "estatusVisible": true
+  },
+  {
+    "clavePublicacion": "PUB-002",
+    "titulo": "Educación a tu alcance",
+    "subtitulo": "Bienvenido a la plataforma educativa para la telesecundaria.",
+    "cuerpoContenido": "Felicitamos al equipo varonil por su destacado esfuerzo.",
+    "categoria": "Noticia",
+    "fechaAparicion": "2026-05-28T00:00:00",
+    "fechaRetiro": null,
+    "claveUsuario": "USR-PROF02",
+    "claveConvocatoria": "",
+    "claveImagenPrincipal": "images/collageBanner.png",
+    "claveImagenSecundaria": null,
+    "claveImagenTercera": null,
+    "fechaRegistro": "2026-05-28T08:00:00",
+    "destacado": true,
+    "estatusVisible": true
+  }
+]

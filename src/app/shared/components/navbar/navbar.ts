@@ -13,4 +13,14 @@ export class Navbar {
   toggleMenu() {
     this.menuAbierto = !this.menuAbierto;
   }
+
+  navegarA(id: string) {
+    this.menuAbierto = false;
+    setTimeout(() => {
+      const elemento = document.getElementById(id);
+      if (elemento) {
+        elemento.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 300);
+  }
 }
