@@ -11,12 +11,14 @@
   display: block;
   border-radius: 1.5rem;
 }
+
 .hero__banner {
   width: 100%;
   overflow: hidden;
   line-height: 0;
   padding: 0 1rem;
 }
+
 .hero__content {
   padding: 2.5rem 1rem;
 }
@@ -56,6 +58,36 @@
   color: var(--color-primario);
 }
 
+.hero__btn--download {
+  background: transparent;
+  border: 1.5px solid var(--color-blanco);
+  color: var(--color-blanco);
+  padding: 0.6rem 1.5rem;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: var(--font-base);
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero__btn--download:hover {
+  background: var(--color-blanco);
+  color: var(--color-primario);
+}
+
+/* AGREGADO: Regla base global para controlar el comportamiento y la animación de las flechas */
+div[style*='position: relative'] > div > button {
+  transform: translateY(-50%) !important;
+  transition: all 0.2s ease;
+}
+
 /* ===== MEDIA QUERIES ===== */
 
 @media (max-width: 479px) {
@@ -67,6 +99,21 @@
   }
   .hero__content {
     padding: 1.5rem 1rem;
+  }
+  /* AGREGADO: Flechas configuradas con sus lados específicos en celular chico */
+  div[style*='position: relative'] > div > button:first-child {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 14px !important;
+    top: 80px !important;
+    left: 24px !important;
+  }
+  div[style*='position: relative'] > div > button:last-child {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 14px !important;
+    top: 80px !important;
+    right: 24px !important;
   }
 }
 
@@ -82,12 +129,45 @@
   }
 }
 
+/* AGREGADO: Control específico para el rango de tablets medianas */
+@media (min-width: 480px) and (max-width: 767px) {
+  div[style*='position: relative'] > div > button:first-child {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 16px !important;
+    top: 100px !important;
+    left: 24px !important;
+  }
+  div[style*='position: relative'] > div > button:last-child {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 16px !important;
+    top: 100px !important;
+    right: 24px !important;
+  }
+}
+
 @media (min-width: 768px) {
   .hero__banner img {
     max-height: 240px;
   }
   .hero__title {
     font-size: 2.5rem;
+  }
+  /* AGREGADO: Separación estricta de izquierda y derecha en tablets grandes */
+  div[style*='position: relative'] > div > button:first-child {
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 18px !important;
+    top: 120px !important;
+    left: 26px !important;
+  }
+  div[style*='position: relative'] > div > button:last-child {
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 18px !important;
+    top: 120px !important;
+    right: 26px !important;
   }
 }
 
@@ -101,6 +181,24 @@
   .hero__content {
     padding: 3rem 1rem;
   }
+  .hero__text-container {
+    min-height: 180px;
+  }
+  /* AGREGADO: Separación de flechas en diseño PC estándar */
+  div[style*='position: relative'] > div > button:first-child {
+    width: 45px !important;
+    height: 45px !important;
+    font-size: 20px !important;
+    top: 140px !important;
+    left: 30px !important;
+  }
+  div[style*='position: relative'] > div > button:last-child {
+    width: 45px !important;
+    height: 45px !important;
+    font-size: 20px !important;
+    top: 140px !important;
+    right: 30px !important;
+  }
 }
 
 @media (min-width: 1200px) {
@@ -109,5 +207,17 @@
   }
   .hero__title {
     font-size: 4rem;
+  }
+  .hero__text-container {
+    min-height: 240px;
+  }
+  /* AGREGADO: Altura final calculada para monitores grandes con posiciones independientes */
+  div[style*='position: relative'] > div > button:first-child {
+    top: 160px !important;
+    left: 35px !important;
+  }
+  div[style*='position: relative'] > div > button:last-child {
+    top: 160px !important;
+    right: 35px !important;
   }
 }

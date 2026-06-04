@@ -5,7 +5,7 @@ import { Conocenos } from '../../components/conocenos/conocenos';
 import { Convocatorias } from '../../components/convocatorias/convocatorias';
 import { Cursos } from '../../components/cursos/cursos';
 import { Estadisticas } from '../../components/estadisticas/estadisticas';
-import { Galeria } from '../../components/galeria/galeria';
+import { GaleriaComponent } from '../../components/galeria/galeria';
 import { Hero } from '../../components/hero/hero';
 import { Materiales } from '../../components/materiales/materiales';
 
@@ -18,7 +18,7 @@ import { Materiales } from '../../components/materiales/materiales';
     Convocatorias,
     Cursos,
     Estadisticas,
-    Galeria,
+    GaleriaComponent,
     Hero,
     Materiales,
   ],

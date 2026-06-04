@@ -6,11 +6,11 @@
     </div>
 
     <ul class="navbar__links">
-      <li><a href="#">Inicio</a></li>
-      <li><a href="#">Cursos</a></li>
-      <li><a href="#">Recursos</a></li>
-      <li><a href="#">Calendario</a></li>
-      <li><a href="#">Contacto</a></li>
+      <li><a href="#inicio">Inicio</a></li>
+      <li><a href="#conocenos">Conócenos</a></li>
+      <li><a href="#materiales">Recursos</a></li>
+      <li><a href="#cursos">Cursos</a></li>
+      <li><a href="#galeria">Galería</a></li>
     </ul>
 
     <button class="navbar__btn">Ingresar al portal</button>
@@ -25,11 +25,11 @@
   <!-- MENÚ MÓVIL -->
   <div class="navbar__mobile" [class.navbar__mobile--abierto]="menuAbierto">
     <ul>
-      <li><a href="#" (click)="toggleMenu()">Inicio</a></li>
-      <li><a href="#" (click)="toggleMenu()">Cursos</a></li>
-      <li><a href="#" (click)="toggleMenu()">Recursos</a></li>
-      <li><a href="#" (click)="toggleMenu()">Calendario</a></li>
-      <li><a href="#" (click)="toggleMenu()">Contacto</a></li>
+      <li><a (click)="navegarA('inicio')">Inicio</a></li>
+      <li><a (click)="navegarA('conocenos')">Conocenos</a></li>
+      <li><a (click)="navegarA('materiales')">Recursos</a></li>
+      <li><a (click)="navegarA('cursos')">Cursos</a></li>
+      <li><a (click)="navegarA('galeria')">Galería</a></li>
     </ul>
     <button class="navbar__btn" (click)="toggleMenu()">Ingresar al portal</button>
   </div>

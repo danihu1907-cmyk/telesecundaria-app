@@ -2,8 +2,24 @@
 @import url('https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400&display=swap');
 
 /* ===== VARIABLES GLOBALES ===== */
+html {
+  scroll-behavior: smooth;
+}
+
+#inicio,
+#conocenos,
+#estadisticas,
+#materiales,
+#cursos,
+#galeria,
+#convocatorias {
+  scroll-margin-top: 70px;
+}
 :root {
-  --color-primario: #611232;
+  --color-primario: #7d932e;
+  /* --color-primario: #e79538;*/
+  /*   --color-primario: #611232;
+ */
   --color-blanco: #ffffff;
   --color-texto: #333333;
   --color-fondo: #f5f5f5;
@@ -31,3 +47,27 @@ body {
   margin: 0 auto;
   padding: 0 1rem;
 }
+
+/*Tabla completa de botones 🎯
+BotónWHFillTextoBordeEstadoVolver12044FFFFFF1A1A1AD1D5DB✅+ Agregar hijo160447D932EFFFFFF—✅Registra tu hijo163487D932EFFFFFF—✅Completar →130367D932EFFFFFF—✅Ver detalles13036FFFFFF1A1A1AD1D5DB✅Corregir →130367D932EFFFFFF—✅Guardar y terminar18134FFFFFF7D932E7D932E⚠️ Sube H a 36Siguiente →181347D932EFFFFFF—⚠️ Sube H a 36Crear cuenta nueva380527D932EFFFFFF—✅Ya tengo cuenta38052FFFFFF7D932E7D932E✅Iniciar sesión380527D932EFFFFFF—✅Enviar enlace380527D932EFFFFFF—✅← Regresar al login38052FFFFFF7D932E7D932E✅Eliminar 🗑️3636FFFFFF991B1B991B1B✅
+
+Corner radius para todos: 8px ✅
+Botón Primario
+Es el botón de acción principal de cada pantalla. Se reconoce porque:
+
+Fondo relleno verde 7D932E
+Texto blanco FFFFFF
+Sin borde
+Corner radius 8px
+Siempre va a la derecha
+
+
+Botón Secundario
+Es el botón de acción de menor peso. Se reconoce porque:
+
+Fondo blanco FFFFFF
+Texto verde 7D932E
+Borde verde 7D932E de 1px
+Corner radius 8px
+Siempre va a la izquierda
+*/

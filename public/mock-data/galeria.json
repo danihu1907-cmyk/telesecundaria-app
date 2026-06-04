@@ -1,0 +1,17 @@
+[
+  {
+    "claveGaleria": 1,
+    "rutaImagenUrl": "images/img1.jpg",
+    "tituloEvento": "Clase de cómputo y exposición tecnológica"
+  },
+  {
+    "claveGaleria": 2,
+    "rutaImagenUrl": "images/img2.jpg",
+    "tituloEvento": "Alumnos trabajando en equipo en el aula"
+  },
+  {
+    "claveGaleria": 3,
+    "rutaImagenUrl": "images/img3.jpg",
+    "tituloEvento": "Fachada principal de la Telesecundaria"
+  }
+]
