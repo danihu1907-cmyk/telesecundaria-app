@@ -1,0 +1,20 @@
+/* Contenedor completo con tu verde oficial */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--color-primario);
+  padding: 1.5rem; /* Espaciado interno para que en celular no pegue a los bordes */
+}
+
+/* La tarjeta blanca fluida */
+.auth-card {
+  background-color: var(--color-blanco);
+  width: 100%;
+  max-width: 480px; /* Ancho máximo elegante para un formulario */
+  border-radius: 12px; /* Esquinas redondeadas estándar y limpias */
+  padding: 2.5rem 2rem; /* Espaciado premium usando rems */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}

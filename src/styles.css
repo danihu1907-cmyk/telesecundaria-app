@@ -1,5 +1,6 @@
 /* ===== FUENTE SATOSHI ===== */
 @import url('https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 /* ===== VARIABLES GLOBALES ===== */
 html {
@@ -15,16 +16,36 @@ html {
 #convocatorias {
   scroll-margin-top: 70px;
 }
+
 :root {
+  /* COLORES DE IDENTIDAD PRINCIPAL */
   --color-primario: #7d932e;
-  /* --color-primario: #e79538;*/
-  /*   --color-primario: #611232;
- */
   --color-blanco: #ffffff;
   --color-texto: #333333;
   --color-fondo: #f5f5f5;
 
+  /* NUEVOS COLORES REQUERIDOS PARA BOTONES Y ALERTAS */
+  --color-texto-oscuro: #1a1a1a;
+  --color-borde: #d1d5db;
+  --color-gris-placeholder: #c0c4cc;
+  --color-gris-hover: #f3f4f6;
+  --color-deshabilitado: #d1d5db;
+  --color-texto-deshabilitado: #888888;
+
+  /* ALERTAS Y ESTADOS DEL SISTEMA */
+  --color-error: #991b1b;
+  --color-error-fondo: #fee2e2;
+  --color-error-borde: #f8d7da;
+  --color-exito: #065f46;
+  --color-exito-fondo: #d1fae5;
+  --color-exito-borde: #c3e6cb;
+
+  /* COMPORTAMIENTO TIPOGRAFICO */
   --font-base: 'Satoshi', sans-serif;
+  --font-sistema: 'Inter', sans-serif; /* SE USA EXCLUSIVAMENTE PARA EL REGISTRO Y LOGIN */
+
+  /* MEDIDAS CORPORATIVAS DE TUS BOTONES */
+  --radius-general: 8px;
 }
 
 /* ===== RESET ===== */
