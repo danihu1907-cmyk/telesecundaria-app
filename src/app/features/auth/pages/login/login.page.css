@@ -1,0 +1,308 @@
+/* ===== CONTENEDOR ENVOLVENTE COMPLETO SPLIT LAYOUT ===== */
+.pantalla-split-auth {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  box-sizing: border-box;
+  overflow: hidden;
+  background-color: var(--color-blanco);
+}
+
+/* FORZAMOS INTER EN NUESTRO COMPONENTE */
+.pantalla-split-auth,
+.pantalla-split-auth * {
+  font-family: var(--font-sistema) !important;
+}
+
+/* LOGO MÓVIL: OCULTO POR DEFECTO EN COMPUTADORA */
+.logo-movil {
+  display: none;
+  height: 50px;
+  margin: 0 auto 20px auto;
+  object-fit: contain;
+}
+
+/* ==========================================================================
+   COLUMNA IZQUIERDA: PANEL DE MARCA (VERDE INSTITUCIONAL)
+   ========================================================================== */
+.panel-marca-izquierdo {
+  flex: 1;
+  background-color: var(--color-primario);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  text-align: center;
+  box-sizing: border-box;
+  color: var(--color-blanco);
+}
+
+/* CONTENEDOR BLANCO DEL LOGO */
+.contenedor-logo-blanco {
+  background-color: var(--color-blanco);
+  padding: 15px 25px;
+  border-radius: 16px;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.logo-institucional {
+  height: 55px;
+  object-fit: contain;
+}
+
+.titulo-marca {
+  font-size: 2rem;
+  font-weight: 900;
+  margin: 0 0 15px 0;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.descripcion-marca {
+  font-size: 1rem;
+  font-weight: 400;
+  max-width: 400px;
+  margin: 0 0 30px 0;
+  opacity: 0.9;
+  line-height: 1.5;
+}
+
+/* CHIP ESTILO PILL */
+.chip-informativo {
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   COLUMNA DERECHA: PANEL DE FORMULARIO
+   ========================================================================== */
+.panel-formulario-derecho {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fcfcfc;
+  padding: 30px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+/* TARJETA BLANCA DE FORMULARIO COHERENTE INTEGRADA */
+.contenedor-login {
+  width: 480px;
+  max-width: 100%;
+  background-color: var(--color-blanco);
+  border-radius: 16px;
+  padding: 10px 10px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+/* TITULOS VISUALES SUPERIORES */
+.titulo-pantalla {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--color-texto-oscuro);
+  margin: 0 0 4px 0;
+  letter-spacing: -0.5px;
+}
+
+.subtitulo-pasos {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666666;
+  margin: 0 0 24px 0;
+}
+
+/* DISEÑO MINIMALISTA DE LOS CAMPOS */
+.campo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 14px;
+  text-align: left;
+}
+
+.campo label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-texto-oscuro);
+  margin-bottom: 5px;
+}
+
+.campo input {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radius-general);
+  font-size: 0.9rem;
+  color: var(--color-texto-oscuro);
+  background-color: var(--color-blanco);
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.campo input::placeholder {
+  color: var(--color-gris-placeholder);
+}
+
+.campo input:focus {
+  outline: none;
+  border-color: var(--color-primario);
+}
+
+/* ENLACE RECUPERAR */
+.enlace-recuperar {
+  text-align: right;
+  margin-top: -6px;
+  margin-bottom: 15px;
+}
+
+.enlace-recuperar span {
+  font-size: 0.8rem;
+  color: var(--color-primario);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.enlace-recuperar span:hover {
+  text-decoration: underline;
+}
+
+/* CLASE INPUT ERROR */
+.campo input.input-error {
+  border: 1px solid #dc3545 !important;
+  background-color: #fff8f8 !important;
+}
+
+.texto-error-campo {
+  color: #dc3545;
+  font-size: 11px;
+  font-weight: 500;
+  margin-top: 5px;
+  display: block;
+}
+
+/* SISTEMA DE BOTONES VERTICALES */
+.bloque-botones-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 22px;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.btn-primario-grande {
+  width: 100%;
+  height: 44px;
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+  border: none;
+  border-radius: var(--radius-general);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  box-sizing: border-box;
+}
+
+.btn-primario-grande:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+button:disabled {
+  background-color: var(--color-deshabilitado) !important;
+  color: var(--color-texto-deshabilitado) !important;
+  border: none !important;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* ENLACES INFERIORES */
+.enlace-login-inferior {
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: var(--color-texto-oscuro);
+}
+
+.enlace-login-inferior strong {
+  color: var(--color-texto-oscuro);
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   ===== TODAS TUS MEDIA QUERIES REAJUSTADAS PARA RESPONSIVO IMPECABLE =====
+   ========================================================================== */
+@media (max-width: 767px) {
+  .pantalla-split-auth {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  /* OCULTAMOS EL PANEL VERDE IZQUIERDO EN DISPOSITIVOS MOVILES */
+  .panel-marca-izquierdo {
+    display: none !important;
+  }
+
+  /* MOSTRAR EL LOGO AQUÍ YA QUE LA COLUMNA VERDE SE DETECTÓ COMO OCULTA */
+  .logo-movil {
+    display: block !important;
+  }
+
+  /* EL PANEL DERECHO ABARCA EL 100% DEL ANCHO PARA EL FORMULARIO */
+  .panel-formulario-derecho {
+    flex: 1;
+    width: 100%;
+    padding: 20px;
+    background-color: var(--color-blanco);
+  }
+
+  .contenedor-login {
+    max-width: 100%;
+    padding: 10px 5px;
+    box-shadow: none;
+  }
+}
+
+@media (max-width: 479px) {
+  .contenedor-login {
+    padding: 20px 10px;
+  }
+
+  .titulo-pantalla {
+    font-size: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .contenedor-login {
+    max-width: 480px;
+  }
+}
+
+@media (min-width: 992px) {
+  .titulo-pantalla {
+    font-size: 1.9rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .titulo-pantalla {
+    font-size: 2rem;
+  }
+}

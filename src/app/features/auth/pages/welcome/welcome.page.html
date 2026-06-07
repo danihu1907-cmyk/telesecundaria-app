@@ -1,0 +1,43 @@
+<div class="pantalla-split-auth">
+  <div class="panel-marca-izquierdo">
+    <div class="contenedor-logo-blanco">
+      <img
+        src="images/logo-telesecundaria.png"
+        alt="Logo Telesecundaria"
+        class="logo-institucional"
+      />
+    </div>
+    <h1 class="titulo-marca">INSCRIPCIÓN CICLO 2025–2026</h1>
+    <p class="descripcion-marca">Para inscribir a tu hijo necesitas una cuenta de tutor.</p>
+    <div class="chip-informativo">Ciclo escolar 2025–2026</div>
+  </div>
+
+  <div class="panel-formulario-derecho">
+    <div class="contenedor-registro">
+      <h2 class="titulo-pantalla">Inscripción</h2>
+      <p class="subtitulo-pasos">Selecciona una opción para continuar</p>
+
+      <div class="bloque-paso">
+        <div class="bloque-botones-vertical">
+          <button type="button" class="btn-primario-grande con-icono" (click)="irARegistro()">
+            <span class="icono">👤</span> Crear cuenta nueva
+          </button>
+
+          <div class="separador-o">
+            <span class="linea-divisor"></span>
+            <span class="letra-o">o</span>
+            <span class="linea-divisor"></span>
+          </div>
+
+          <button type="button" class="btn-secundario-grande con-icono" (click)="irALogin()">
+            <span class="icono">🚪</span> Ya tengo una cuenta
+          </button>
+        </div>
+      </div>
+
+      <p class="texto-privacidad-inferior">
+        Tu información está protegida y solo será usada para el proceso de inscripción.
+      </p>
+    </div>
+  </div>
+</div>

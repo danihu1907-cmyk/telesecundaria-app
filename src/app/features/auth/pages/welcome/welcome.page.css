@@ -1,0 +1,400 @@
+/* ===== CONTENEDOR ENVOLVENTE COMPLETO SPLIT LAYOUT ===== */
+.pantalla-split-auth {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  box-sizing: border-box;
+  overflow: hidden;
+  background-color: var(--color-blanco);
+}
+
+/* FORZAMOS INTER EN NUESTRO COMPONENTE */
+.pantalla-split-auth,
+.pantalla-split-auth * {
+  font-family: var(--font-sistema) !important;
+}
+
+/* ==========================================================================
+   COLUMNA IZQUIERDA: PANEL DE MARCA (VERDE INSTITUCIONAL)
+   ========================================================================== */
+.panel-marca-izquierdo {
+  flex: 1;
+  background-color: var(--color-primario);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  text-align: center;
+  box-sizing: border-box;
+  color: var(--color-blanco);
+}
+
+/* CONTENEDOR BLANCO DEL LOGO */
+.contenedor-logo-blanco {
+  background-color: var(--color-blanco);
+  padding: 15px 25px;
+  border-radius: 16px;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.logo-institucional {
+  height: 55px;
+  object-fit: contain;
+}
+
+.titulo-marca {
+  font-size: 2rem;
+  font-weight: 900;
+  margin: 0 0 15px 0;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.descripcion-marca {
+  font-size: 1rem;
+  font-weight: 400;
+  max-width: 400px;
+  margin: 0 0 30px 0;
+  opacity: 0.9;
+  line-height: 1.5;
+}
+
+/* CHIP ESTILO PILL */
+.chip-informativo {
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   COLUMNA DERECHA: PANEL DE FORMULARIO
+   ========================================================================== */
+.panel-formulario-derecho {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fcfcfc;
+  padding: 30px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+/* TARJETA BLANCA DE FORMULARIO COHERENTE INTEGRADA */
+.contenedor-registro {
+  width: 480px;
+  max-width: 100%;
+  background-color: var(--color-blanco);
+  border-radius: 16px;
+  padding: 10px 10px; /* Reducido para encajar orgánicamente en el Split Panel */
+  box-sizing: border-box;
+  text-align: center;
+}
+
+/* TITULOS VISUALES SUPERIORES */
+.titulo-pantalla {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--color-texto-oscuro);
+  margin: 0 0 4px 0;
+  letter-spacing: -0.5px;
+}
+
+.subtitulo-pasos {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666666;
+  margin: 0 0 24px 0;
+}
+
+/* DISEÑO MINIMALISTA DE LOS CAMPOS */
+.campo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 14px;
+  text-align: left;
+}
+
+.campo label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-texto-oscuro);
+  margin-bottom: 5px;
+}
+
+.campo input {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radius-general);
+  font-size: 0.9rem;
+  color: var(--color-texto-oscuro);
+  background-color: var(--color-blanco);
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.campo input::placeholder {
+  color: var(--color-gris-placeholder);
+}
+
+.campo input:focus {
+  outline: none;
+  border-color: var(--color-primario);
+}
+
+/* ENLACE RECUPERAR */
+.enlace-recuperar {
+  text-align: right;
+  margin-top: -6px;
+  margin-bottom: 15px;
+}
+
+.enlace-recuperar span {
+  font-size: 0.8rem;
+  color: var(--color-primario);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.enlace-recuperar span:hover {
+  text-decoration: underline;
+}
+
+/* CLASE INPUT ERROR */
+.campo input.input-error {
+  border: 1px solid #dc3545 !important;
+  background-color: #fff8f8 !important;
+}
+
+.texto-error-campo {
+  color: #dc3545;
+  font-size: 11px;
+  font-weight: 500;
+  margin-top: 5px;
+  display: block;
+}
+
+/* SISTEMA DE BOTONES VERTICALES */
+.bloque-botones-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 22px;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.con-icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn-primario-grande {
+  width: 100%;
+  height: 44px;
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+  border: none;
+  border-radius: var(--radius-general);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  box-sizing: border-box;
+}
+
+.btn-primario-grande:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.btn-secundario-grande {
+  width: 100%;
+  height: 44px;
+  background-color: var(--color-blanco);
+  color: var(--color-primario);
+  border: 1px solid var(--color-primario);
+  border-radius: var(--radius-general);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-sizing: border-box;
+}
+
+.btn-secundario-grande:hover:not(:disabled) {
+  background-color: var(--color-gris-hover);
+}
+
+button:disabled {
+  background-color: var(--color-deshabilitado) !important;
+  color: var(--color-texto-deshabilitado) !important;
+  border: none !important;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* SEPARADOR DE LA 'O' CENTRAL */
+.separador-o {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 4px 0;
+}
+
+.separador-o .linea-divisor {
+  flex: 1;
+  height: 1px;
+  background-color: var(--color-borde);
+}
+
+.separador-o .letra-o {
+  padding: 0 12px;
+  font-size: 0.85rem;
+  color: #777777;
+  font-weight: 600;
+}
+
+/* TEXTO DE PRIVACIDAD INFERIOR */
+.texto-privacidad-inferior {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #777777;
+  line-height: 1.5;
+  margin-top: 25px;
+  padding: 0 15px;
+}
+
+/* ENLACES INFERIORES */
+.enlace-login-inferior {
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: var(--color-texto-oscuro);
+}
+
+.enlace-login-inferior strong {
+  color: var(--color-texto-oscuro);
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* ALERTAS */
+.alerta {
+  padding: 10px;
+  border-radius: var(--radius-general);
+  margin-bottom: 12px;
+  font-size: 0.8rem;
+  text-align: left;
+}
+.alerta.error {
+  background-color: var(--color-error-fondo);
+  color: var(--color-error);
+  border: 1px solid var(--color-error-borde);
+}
+
+.bloque-paso {
+  animation: fadeIn 0.3s ease-out;
+  width: 100%;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   ===== TODAS TUS MEDIA QUERIES ORIGINALES PRESERVADAS INTEGRALMENTE =====
+   ========================================================================== */
+@media (max-width: 767px) {
+  .pantalla-split-auth {
+    flex-direction: column; /* Colapsa verticalmente en móviles y tabletas */
+    overflow-y: auto;
+  }
+  .panel-marca-izquierdo {
+    padding: 30px 20px;
+    min-height: 280px;
+  }
+  .titulo-marca {
+    font-size: 1.6rem;
+  }
+  .panel-formulario-derecho {
+    padding: 20px;
+    background-color: var(--color-blanco);
+  }
+  .contenedor-registro {
+    max-width: 90%;
+    padding: 10px 5px;
+  }
+}
+
+@media (max-width: 479px) {
+  .panel-marca-izquierdo {
+    min-height: auto;
+    padding: 25px 15px;
+  }
+  .contenedor-logo-blanco {
+    margin-bottom: 15px;
+    padding: 10px 20px;
+  }
+  .logo-institucional {
+    height: 45px;
+  }
+  .titulo-marca {
+    font-size: 1.3rem;
+  }
+  .descripcion-marca {
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+  }
+  .contenedor-registro {
+    padding: 5px 0;
+  }
+  .titulo-pantalla {
+    font-size: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .contenedor-registro {
+    max-width: 480px;
+  }
+}
+
+@media (min-width: 992px) {
+  .titulo-pantalla {
+    font-size: 1.9rem;
+  }
+  .titulo-marca {
+    font-size: 2.3rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .titulo-pantalla {
+    font-size: 2rem;
+  }
+  .titulo-marca {
+    font-size: 2.6rem;
+  }
+}
