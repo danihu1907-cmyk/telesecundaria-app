@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SidebarService } from '../../services/sidebar.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -10,8 +11,15 @@ import { CommonModule } from '@angular/common';
 export class Navbar {
   menuAbierto = false;
 
+  constructor(private sidebarService: SidebarService) {}
+
   toggleMenu() {
     this.menuAbierto = !this.menuAbierto;
+  }
+
+  openSidebar() {
+    this.menuAbierto = false;
+    this.sidebarService.open();
   }
 
   navegarA(id: string) {

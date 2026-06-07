@@ -13,7 +13,7 @@
       <li><a href="#galeria">Galería</a></li>
     </ul>
 
-    <button class="navbar__btn">Ingresar al portal</button>
+    <button class="navbar__btn" (click)="openSidebar()">Ingresar al portal</button>
 
     <button class="navbar__hamburger" (click)="toggleMenu()">
       <span></span>
@@ -31,6 +31,6 @@
       <li><a (click)="navegarA('cursos')">Cursos</a></li>
       <li><a (click)="navegarA('galeria')">Galería</a></li>
     </ul>
-    <button class="navbar__btn" (click)="toggleMenu()">Ingresar al portal</button>
+    <button class="navbar__btn" (click)="openSidebar()">Ingresar al portal</button>
   </div>
 </nav>
