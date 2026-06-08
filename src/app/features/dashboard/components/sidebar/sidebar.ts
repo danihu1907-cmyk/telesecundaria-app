@@ -1,236 +1,195 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
 import { HlmAvatarImports } from '@spartan-ng/helm/avatar';
-import { Router, RouterOutlet } from '@angular/router';
-
+import { Router } from '@angular/router';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { HlmIcon } from '@spartan-ng/helm/icon';
+import { RouterModule } from '@angular/router';
 import {
   lucideHome,
+  lucideChevronDown,
+  lucideLifeBuoy,
+  lucideSend,
   lucideFileText,
   lucideUsers,
   lucideUserCircle,
   lucideBookOpen,
+  lucideBuilding,
   lucideCalendar,
   lucideClipboardList,
   lucideSettings,
   lucideLogOut,
   lucideInbox,
-  lucideSearch
+  lucideSearch,
+  lucideChevronRight,
 } from '@ng-icons/lucide';
-import { NgIcon, provideIcons } from '@ng-icons/core';
-import { HlmIcon } from '@spartan-ng/helm/icon';
-import { RouterModule } from '@angular/router';
+
+import { HlmCollapsible, HlmCollapsibleContent } from '../../../../../../libs/ui/collapsible/src';
+import { MenuGroup } from '../../models/menu-item.models';
 
 @Component({
   selector: 'app-sidebar',
-  standalone: true,
-  imports: [HlmSidebarImports, HlmAvatarImports, NgIcon, HlmIcon, RouterModule],
+  imports: [
+    HlmSidebarImports,
+    HlmAvatarImports,
+    NgIcon,
+    HlmIcon,
+    RouterModule,
+    HlmCollapsible,
+    HlmCollapsibleContent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="w-72 bg-neutral-100 rounded-lg  outline-1 outline-offset-1">
-      <!-- Header con logo y nombre de escuela -->
-      <div class="p-2">
-        <div class="h-14 p-2 flex items-center gap-2">
-          <div class="size-8 bg-lime-600 rounded-lg flex items-center justify-center">
-            <div class="size-4 relative">
-              <div
-                class="w-2.5 h-3.5 absolute left-[2.67px] top-[1.33px] outline-1 outline-offset-[-0.5px] outline-neutral-50"
-              ></div>
-            </div>
-          </div>
-          <div class="flex-1">
-            <div class="text-zinc-700 text-sm font-semibold leading-5">
-              TS Silvestre Aguilar Vargas
-            </div>
-          </div>
-        </div>
-      </div>
+    <div hlmSidebarWrapper>
+      <hlm-sidebar
+        variant="inset"
+        class="bg-neutral-100 rounded-lg outline-1 outline-offset-1 flex flex-col transition-all duration-300 h-full"
+        [class.w-72]="!collapsed"
+        [class.w-20]="collapsed"
+      >
+        <!-- Header con logo y nombre de escuela -->
+        <hlm-sidebar-header>
+          <ul hlmSidebarMenu>
+            <li hlmSidebarMenuItem>
+              <a hlmSidebarMenuButton size="lg" href="#">
+                <div
+                  class="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg"
+                >
+                  <ng-icon name="lucideBuilding" class="text-base" />
+                </div>
+                <div class="grid flex-1 text-left text-sm leading-tight">
+                  <span class="truncate font-medium">Silvestre Aguilar Vargas</span>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </hlm-sidebar-header>
+        <!-- contenido del sidebar -->
+        <div hlmSidebarContent>
+          <div class="px-4 pt-2 pb-6 flex flex-col gap-4 overflow-y-auto flex-1">
+            @for (group of menuGroups; track group.label) {
+              <div class="flex flex-col">
+                <!-- Título del grupo -->
+                @if (!collapsed) {
+                  <div class="h-11 px-2 flex items-center gap-2.5">
+                    <div class="opacity-70 text-neutral-950 text-xs font-normal leading-4">
+                      {{ group.label }}
+                    </div>
+                  </div>
+                }
 
-      <!-- Contenido principal del sidebar -->
-      <div class="px-4 pt-2 pb-6 flex flex-col gap-4">
-        <!-- Sección: Escuela -->
-        <div>
-          <div class="h-11 px-2 flex items-center gap-2.5">
-            <div class="opacity-70 text-neutral-950 text-xs font-normal leading-4">Escuela</div>
-          </div>
-          <div class="flex flex-col gap-2">
-            <button
-              (click)="navegar('/dashboard/inicio')"
-              class="w-full h-11 px-4 py-2 rounded-[200px] flex items-center gap-2 hover:bg-lime-50 transition-colors"
-              [class.bg-lime-600]="activeRoute === '/dashboard/inicio'"
-              [class.text-white]="activeRoute === '/dashboard/inicio'"
-              [class.text-neutral-950]="activeRoute !== '/dashboard/inicio'"
-            >
-              <ng-icon hlm name="lucideHome" size="20px" />
-              <span class="text-sm font-normal leading-5">Inicio</span>
-            </button>
-          </div>
-        </div>
+                <!-- Items del grupo -->
+                <div class="flex flex-col gap-2">
+                  @for (item of group.items; track item.title) {
+                    <button
+                      (click)="navegar(item.route)"
+                      class="group/item flex items-center gap-2 transition-all duration-200"
+                      [class.px-4]="!collapsed"
+                      [class.px-2]="collapsed"
+                      [class.py-2]="!collapsed"
+                      [class.py-3]="collapsed"
+                      [class.justify-center]="collapsed"
+                      [class.w-full]="!collapsed"
+                      [class.rounded-[200px]]="!collapsed"
+                      [class.rounded-lg]="collapsed"
+                      [class.bg-lime-600]="isActive(item.route)"
+                      [class.text-white]="isActive(item.route)"
+                      [class.text-neutral-950]="!isActive(item.route)"
+                      [class.hover:bg-lime-100]="!isActive(item.route)"
+                    >
+                      <!-- Icono -->
+                      <div class="size-5 relative overflow-hidden flex-shrink-0">
+                        @if (isActive(item.route)) {
+                          <!-- Icono activo (blanco) -->
+                          <ng-icon hlm [name]="item.icon" size="20px" class="text-white" />
+                        } @else {
+                          <!-- Icono inactivo (neutral) -->
+                          <ng-icon hlm [name]="item.icon" size="20px" class="text-neutral-950" />
+                        }
+                      </div>
 
-        <!-- Sección: Inscripciones -->
-        <div>
-          <div class="h-11 px-2 flex items-center gap-2.5">
-            <div class="opacity-70 text-neutral-950 text-xs font-normal leading-4">
-              Inscripciones
-            </div>
-          </div>
-          <div class="flex flex-col gap-2">
-            <!-- Convocatorias (Activo) -->
-            <button
-              (click)="navegar('/dashboard/convocatorias')"
-              class="w-full h-12 px-4 py-2 rounded-[200px] flex items-center gap-2 transition-colors"
-              [class.bg-lime-600]="activeRoute === '/dashboard/convocatorias'"
-              [class.text-white]="activeRoute === '/dashboard/convocatorias'"
-              [class.text-neutral-950]="activeRoute !== '/dashboard/convocatorias'"
-              [class.hover:bg-lime-50]="activeRoute !== '/dashboard/convocatorias'"
-            >
-              <ng-icon hlm name="lucideFileText" size="20px" />
-              <span class="text-sm font-normal leading-5">Convocatorias</span>
-            </button>
-
-            <!-- Aspirantes -->
-            <button
-              (click)="navegar('/dashboard/aspirantes')"
-              class="w-full h-11 px-4 py-2 rounded-[200px] flex items-center gap-2 hover:bg-lime-50 transition-colors"
-              [class.bg-lime-600]="activeRoute === '/dashboard/aspirantes'"
-              [class.text-white]="activeRoute === '/dashboard/aspirantes'"
-              [class.text-neutral-950]="activeRoute !== '/dashboard/aspirantes'"
-            >
-              <ng-icon hlm name="lucideUsers" size="20px" />
-              <span class="text-sm font-normal leading-5">Aspirantes</span>
-            </button>
-
-            <!-- Tutores -->
-            <button
-              (click)="navegar('/dashboard/tutores')"
-              class="w-full h-11 px-4 py-2 rounded-[200px] flex items-center gap-2 hover:bg-lime-50 transition-colors"
-              [class.bg-lime-600]="activeRoute === '/dashboard/tutores'"
-              [class.text-white]="activeRoute === '/dashboard/tutores'"
-              [class.text-neutral-950]="activeRoute !== '/dashboard/tutores'"
-            >
-              <ng-icon hlm name="lucideUserCircle" size="20px" />
-              <span class="text-sm font-normal leading-5">Tutores</span>
-            </button>
-
-            <!-- Adjunciones -->
-            <button
-              (click)="navegar('/dashboard/adjunciones')"
-              class="w-full h-11 px-4 py-2 rounded-[200px] flex items-center gap-2 hover:bg-lime-50 transition-colors"
-              [class.bg-lime-600]="activeRoute === '/dashboard/adjunciones'"
-              [class.text-white]="activeRoute === '/dashboard/adjunciones'"
-              [class.text-neutral-950]="activeRoute !== '/dashboard/adjunciones'"
-            >
-              <ng-icon hlm name="lucideBookOpen" size="20px" />
-              <span class="text-sm font-normal leading-5">Adjunciones</span>
-            </button>
+                      <!-- Texto (visible solo cuando no está colapsado) -->
+                      @if (!collapsed) {
+                        <span class="text-sm font-normal leading-5">
+                          {{ item.title }}
+                        </span>
+                      }
+                    </button>
+                  }
+                </div>
+              </div>
+            }
           </div>
         </div>
-
-        <!-- Sección: Alumnos -->
-        <div>
-          <div class="h-11 px-2 flex items-center gap-2.5">
-            <div class="opacity-70 text-neutral-950 text-xs font-normal leading-4">Alumnos</div>
-          </div>
-          <div class="flex flex-col gap-2">
-            <button
-              (click)="navegar('/dashboard/alumnos')"
-              class="w-full h-11 px-4 py-2 rounded-[200px] flex items-center gap-2 hover:bg-lime-50 transition-colors"
-              [class.bg-lime-600]="activeRoute === '/dashboard/alumnos'"
-              [class.text-white]="activeRoute === '/dashboard/alumnos'"
-              [class.text-neutral-950]="activeRoute !== '/dashboard/alumnos'"
-            >
-              <ng-icon hlm name="lucideUsers" size="20px" />
-              <span class="text-sm font-normal leading-5">Alumnos</span>
-            </button>
-
-            <button
-              (click)="navegar('/dashboard/grupos')"
-              class="w-full h-11 px-4 py-2 rounded-[200px] flex items-center gap-2 hover:bg-lime-50 transition-colors"
-              [class.bg-lime-600]="activeRoute === '/dashboard/grupos'"
-              [class.text-white]="activeRoute === '/dashboard/grupos'"
-              [class.text-neutral-950]="activeRoute !== '/dashboard/grupos'"
-            >
-              <ng-icon hlm name="lucideCalendar" size="20px" />
-              <span class="text-sm font-normal leading-5">Grupos</span>
-            </button>
-
-            <button
-              (click)="navegar('/dashboard/actividades')"
-              class="w-full h-11 px-4 py-2 rounded-[200px] flex items-center gap-2 hover:bg-lime-50 transition-colors"
-              [class.bg-lime-600]="activeRoute === '/dashboard/actividades'"
-              [class.text-white]="activeRoute === '/dashboard/actividades'"
-              [class.text-neutral-950]="activeRoute !== '/dashboard/actividades'"
-            >
-              <ng-icon hlm name="lucideClipboardList" size="20px" />
-              <span class="text-sm font-normal leading-5">Actividades</span>
+        <!-- footer -->
+        <hlm-sidebar-footer>
+          <div hlmSidebarFooter>
+            <button hlmSidebarMenuButton size="lg">
+              <hlm-avatar size="lg">
+                <span hlmAvatarFallback>AQ</span>
+              </hlm-avatar>
+              <div class="grid flex-1 text-left text-sm leading-tight">
+                <span class="truncate font-medium">Aquiles</span>
+                <span class="truncate text-xs">aquiles@example.com</span>
+              </div>
             </button>
           </div>
-        </div>
-      </div>
-
-      <!-- Footer con información del usuario -->
-      <div class="p-2">
-        <div class="h-14 p-2 flex items-center gap-2">
-          <hlm-avatar size="lg" class="size-8 rounded-lg">
-            <!-- <img hlmAvatarImage src="https://placehold.co/32x32" alt="Avatar" /> -->
-            <span hlmAvatarFallback>AQ</span>
-          </hlm-avatar>
-          <div class="flex-1">
-            <div class="text-zinc-700 text-sm font-semibold leading-5">Aquiles</div>
-            <div class="text-zinc-700 text-xs font-normal leading-4">m@example.com</div>
-          </div>
-          <ng-icon
-            hlm
-            name="lucideLogOut"
-            size="16px"
-            class="text-zinc-700 cursor-pointer"
-          ></ng-icon>
-        </div>
-      </div>
+        </hlm-sidebar-footer>
+      </hlm-sidebar>
+      <ng-content />
     </div>
-
     <!-- Router outlet para el contenido dinámico -->
     <router-outlet />
   `,
   providers: [
     provideIcons({
       lucideHome,
+      lucideChevronRight,
       lucideInbox,
       lucideCalendar,
       lucideSearch,
       lucideSettings,
+      lucideBuilding,
+      lucideLifeBuoy,
+      lucideSend,
+      lucideChevronDown,
     }),
   ],
 })
 export class AppSidebar {
-  protected readonly _items = [
+  constructor(private router: Router) {}
+
+  @Input() collapsed = false;
+  @Output() toggleCollapse = new EventEmitter<void>();
+
+  menuGroups: MenuGroup[] = [
     {
-      title: 'Inicio',
-      url: '#',
-      icon: 'lucideHome',
+      label: 'Escuela',
+      items: [{ title: 'Inicio', route: '/dashboard/inicio', icon: 'lucideHome' }],
     },
     {
-      title: 'Inbox',
-      url: '#',
-      icon: 'lucideInbox',
+      label: 'Inscripciones',
+      items: [
+        { title: 'Convocatorias', route: '/dashboard/convocatorias', icon: 'lucideFileText' },
+        { title: 'Aspirantes', route: '/dashboard/aspirantes', icon: 'lucideUsers' },
+        { title: 'Tutores', route: '/dashboard/tutores', icon: 'lucideUserCircle' },
+        { title: 'Adjunciones', route: '/dashboard/adjunciones', icon: 'lucideBookOpen' },
+      ],
     },
     {
-      title: 'Calendar',
-      url: '#',
-      icon: 'lucideCalendar',
-    },
-    {
-      title: 'Search',
-      url: '#',
-      icon: 'lucideSearch',
-    },
-    {
-      title: 'Settings',
-      url: '#',
-      icon: 'lucideSettings',
+      label: 'Alumnos',
+      items: [
+        { title: 'Alumnos', route: '/dashboard/alumnos', icon: 'lucideUsers' },
+        { title: 'Grupos', route: '/dashboard/grupos', icon: 'lucideCalendar' },
+        { title: 'Actividades', route: '/dashboard/actividades', icon: 'lucideClipboardList' },
+      ],
     },
   ];
 
-  constructor(private router: Router) {}
+  isActive(route: string): boolean {
+    return this.router.url === route;
+  }
+
   activeRoute: string = '/dashboard/inicio';
 
   // ✅ Método básico de navegación

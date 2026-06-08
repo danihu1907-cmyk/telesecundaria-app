@@ -46,6 +46,9 @@
       ],
       "@spartan-ng/helm/typography": [
         "./libs/ui/typography/src/index.ts"
+      ],
+      "@spartan-ng/helm/collapsible": [
+        "./libs/ui/collapsible/src/index.ts"
       ]
     }
   },
