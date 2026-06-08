@@ -21,29 +21,64 @@
       <h1 class="titulo-pantalla">INICIAR SESIÓN</h1>
       <p class="subtitulo-pasos">Ingresa tus credenciales de acceso</p>
 
-      <form>
+      <div class="alerta error" *ngIf="mensajeErrorGlobal">{{ mensajeErrorGlobal }}</div>
+
+      <form (ngSubmit)="ejecutarLogin()" #formularioLogin="ngForm">
         <div class="campo">
           <label>Correo electrónico</label>
-          <input type="email" placeholder="correo@gmail.com" />
+          <input
+            type="email"
+            name="correo"
+            [(ngModel)]="datosLogin.correo"
+            (input)="limpiarErrorCampo('correo')"
+            placeholder="correo@gmail.com"
+            required
+            [class.input-error]="erroresCampos['correo']"
+          />
+          <span class="texto-error-campo" *ngIf="erroresCampos['correo']">{{
+            erroresCampos['correo']
+          }}</span>
         </div>
 
         <div class="campo">
           <label>Contraseña</label>
-          <input type="password" placeholder="Ingresa tu contraseña" />
+          <input
+            type="password"
+            name="contrasena"
+            [(ngModel)]="datosLogin.contrasena"
+            (input)="limpiarErrorCampo('contrasena')"
+            placeholder="Ingresa tu contraseña"
+            required
+            [class.input-error]="erroresCampos['contrasena']"
+          />
+          <span class="texto-error-campo" *ngIf="erroresCampos['contrasena']">{{
+            erroresCampos['contrasena']
+          }}</span>
         </div>
 
         <div class="enlace-recuperar">
-          <span (click)="irAForgotPassword()">¿Olvidaste tu contraseña?</span>
+          <a
+            routerLink="/forgot-password"
+            style="cursor: pointer; text-decoration: none; color: inherit"
+          >
+            ¿Olvidaste tu contraseña?
+          </a>
         </div>
 
         <div class="bloque-botones-vertical">
-          <button type="submit" class="btn-primario-grande">Ingresar</button>
+          <button
+            type="submit"
+            class="btn-primario-grande"
+            [disabled]="!datosLogin.correo || !datosLogin.contrasena || cargando()"
+          >
+            {{ cargando() ? 'Ingresando...' : 'Ingresar' }}
+          </button>
         </div>
       </form>
 
       <div class="enlace-login-inferior">
         ¿No tienes cuenta?
-        <strong (click)="irARegistro()" style="cursor: pointer">Regístrate aquí</strong>
+        <strong routerLink="/register" style="cursor: pointer">Regístrate aquí</strong>
       </div>
     </div>
   </div>

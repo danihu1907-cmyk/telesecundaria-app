@@ -1,12 +1,14 @@
 import { Component, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthTutorService } from '../../../../core/services/auth-tutor.service'; // <-- INYECCIÓN AJUSTADA CON EL NOMBRE EXACTO DEL SERVICIO
+import { RecuperarPasswordRequest } from '../../models/auth.models';
 
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './forgot-password.page.html',
   styleUrls: ['./forgot-password.page.css'],
 })
@@ -19,7 +21,10 @@ export class ForgotPasswordPage {
   correoRecuperacion: string = '';
   errorCorreo: string | null = null;
 
-  constructor(private router: Router) {}
+  constructor(
+    private authTutorService: AuthTutorService, // <-- SE INTEGRA EL SERVICIO GLOBAL EN EL CONSTRUCTOR
+    private router: Router,
+  ) {}
 
   limpiarError(): void {
     this.errorCorreo = null;
@@ -39,22 +44,30 @@ export class ForgotPasswordPage {
 
     this.cargando.set(true);
 
-    console.log('Solicitando recuperación para:', this.correoRecuperacion);
+    // CONSTRUCCIÓN DEL OBJETO CON LA ESTRUCTURA ESPERADA POR LA INTERFAZ RECUPERARPASSWORDREQUEST
+    const payload: RecuperarPasswordRequest = {
+      correo: this.correoRecuperacion.toLowerCase().trim(),
+    };
 
-    // Simulación de petición de recuperación (Se puede conectar a tu servicio real después)
-    setTimeout(() => {
-      this.cargando.set(false);
+    console.log(
+      'DISPARANDO SOLICITUD DE RECUPERACIÓN HACIA EL SERVICIO SUTURADO CON EL PAYLOAD:',
+      payload,
+    );
 
-      if (this.correoRecuperacion.toLowerCase().trim() === 'tutor@gmail.com') {
-        this.mensajeExito = `Se ha enviado un enlace de restauración a ${this.correoRecuperacion}. Por favor, revisa tu bandeja de entrada.`;
+    // LLAMADA DIRECTA AL MÉTODO EXISTENTE EN TU SERVICIO (COMPATIBLE CON MOCK Y CON SERVIDOR REAL)
+    this.authTutorService.recuperarContrasena(payload).subscribe({
+      next: (respuesta) => {
+        this.cargando.set(false);
+        this.mensajeExito = respuesta.message;
         this.correoEnviado.set(true);
-      } else {
-        this.mensajeErrorGlobal = 'El correo ingresado no coincide con ninguna cuenta registrada.';
-      }
-    }, 1500);
+      },
+      error: (err) => {
+        this.cargando.set(false);
+        // CAPTURA EL ERROR QUE DISPARA TU CONTROLADOR INTERNO (EXCELENTE PARA MANEJAR "CORREO NO REGISTRADO")
+        this.mensajeErrorGlobal = err.message || 'Ocurrió un error al procesar la solicitud.';
+      },
+    });
   }
 
-  irALogin(): void {
-    this.router.navigate(['/login']);
-  }
+  // SE ELIMINÓ LA FUNCIÓN irALogin() PORQUE YA SE GESTIONA CON ROUTERLINK DIRECTAMENTE EN EL ARCHIVO HTML
 }

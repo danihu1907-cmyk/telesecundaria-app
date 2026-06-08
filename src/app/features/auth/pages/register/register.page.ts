@@ -1,9 +1,11 @@
-import { Component, signal } from '@angular/core'; // IMPORTAMOS SIGNAL DESDE EL NUCLEO DE ANGULAR
+import { Component, signal, OnInit } from '@angular/core'; // IMPORTAMOS SIGNAL DESDE EL NUCLEO DE ANGULAR
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common'; // REQUERIDO OBLIGATORIAMENTE EN COMPONENTES STANDALONE
 import { FormsModule } from '@angular/forms'; // LIBRERIA INTEGRADA PARA DAR SOPORTE A NGMODEL
-import { AuthService } from '../../services/auth.service';
+import { AuthTutorService } from '../../../../core/services/auth-tutor.service'; // <-- SE CORRIGE LA RUTA AL NUEVO SERVICIO GLOBAL EN CORE
+import { BannerHeroService } from '../../../landing/services/banner-hero.service'; // <-- INYECCIÓN DEL SERVICIO DE PUBLICACIONES PARA EL CONTROL DE ACCESO
 import { RegistroTutorRequest } from '../../models/auth.models';
+import { Publicacion } from '../../../landing/models/publicacion.model';
 
 @Component({
   selector: 'app-register',
@@ -12,11 +14,15 @@ import { RegistroTutorRequest } from '../../models/auth.models';
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.css'],
 })
-export class RegisterPage {
+export class RegisterPage implements OnInit {
   // CONVERTIMOS LAS VARIABLES DE FLUJO EN SIGNALS REACTIVOS
   pasoActual = signal<number>(1);
   cargando = signal<boolean>(false);
   mensajeExito: string | null = null;
+
+  // SIGNALS CONTROLADORES PARA PREVENIR ENTRADAS FORZADAS POR URL DIRECTA
+  convocatoriaCerrada = signal<boolean>(false);
+  cargandoValidacion = signal<boolean>(true);
 
   // DICCIONARIO DE ERRORES INDEPENDIENTES CON TEXTO EN MINÚSCULAS TIPO ORACIÓN
   erroresCampos: { [key: string]: string | null } = {
@@ -53,9 +59,30 @@ export class RegisterPage {
   confirmarContrasena: string = '';
 
   constructor(
-    private authService: AuthService,
+    private authService: AuthTutorService,
+    private bannerService: BannerHeroService, // <-- AGREGADO AL CONSTRUCTOR PARA LEER EL JSON DESDE EL SERVICIO EXISTENTE
     private router: Router,
   ) {}
+
+  // AL INICIALIZAR EL COMPONENTE SE EVALÚA EL SEMÁFORO DE LA CONVOCATORIA
+  ngOnInit(): void {
+    this.bannerService.obtenerBanners().subscribe({
+      next: (datos: Publicacion[]) => {
+        const tieneConvocatoria = datos.some(
+          (p: Publicacion) => p.categoria === 'Convocatoria' && p.estatusVisible,
+        );
+
+        // SI NO ENCUENTRA NINGUNA CONVOCATORIA ACTIVA SE LEVANTA EL CANDADO DE BLOQUEO
+        this.convocatoriaCerrada.set(!tieneConvocatoria);
+        this.cargandoValidacion.set(false);
+      },
+      error: (err) => {
+        console.error('ERROR AL VALIDAR ESTADO DE CONVOCATORIAS EN REGISTRO:', err);
+        this.convocatoriaCerrada.set(true);
+        this.cargandoValidacion.set(false);
+      },
+    });
+  }
 
   // FUNCIÓN DE CONTROL INTERNO PARA BLOQUEAR LETRAS EN LA PC EN TIEMPO REAL
   soloNumeros(evento: KeyboardEvent): boolean {
@@ -186,7 +213,7 @@ export class RegisterPage {
         this.mensajeExito = respuesta.message;
 
         if (respuesta.token) {
-          localStorage.setItem('token_convocatoria', respuesta.token);
+          localStorage.setItem('token_control_escolar', respuesta.token); // <-- MANTIENE TU PERSISTENCIA EN EL DISCO CON EL MISMO NOMBRE CLAVE DEL SERVICIO
         }
 
         setTimeout(() => {
@@ -200,9 +227,5 @@ export class RegisterPage {
     });
   }
 
-  // 🚪 REDIRECCIÓN LÓGICA AL INICIO DE SESIÓN EXIGIDA DESDE EL ENLACE INFERIOR DEL HTML
-  irALogin(): void {
-    console.log('REDIRECCIONANDO AL TUTOR COMPLETO HACIA LA PANTALLA DE LOGIN...');
-    this.router.navigate(['/login']);
-  }
+  // SE ELIMINÓ LA FUNCIÓN OBSOLETA irALogin() PORQUE YA SE RESUELVE DE MANERA NATIVA USANDO ROUTERLINK DESDE EL HTML
 }

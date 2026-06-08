@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthTutorService } from '../../../../core/services/auth-tutor.service';
 import { LoginRequest } from '../../models/auth.models';
 
 @Component({
@@ -27,7 +27,7 @@ export class LoginPage {
   };
 
   constructor(
-    private authService: AuthService,
+    private authService: AuthTutorService,
     private router: Router,
   ) {}
 
@@ -79,11 +79,5 @@ export class LoginPage {
     });
   }
 
-  irARegistro(): void {
-    this.router.navigate(['/register']);
-  }
-
-  irAForgotPassword(): void {
-    this.router.navigate(['/forgot-password']);
-  }
+  // SE ELIMINARON LAS FUNCIONES OBSOLETAS DE NAVEGACIÓN MANUAL YA QUE AHORA SE ENCARGA EL ROUTERLINK DIRECTO EN EL HTML
 }

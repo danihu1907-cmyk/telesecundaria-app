@@ -7,30 +7,48 @@
         class="logo-institucional"
       />
     </div>
-    <h1 class="titulo-marca">INSCRIPCIÓN CICLO 2025–2026</h1>
+    <h1 class="titulo-marca">INSCRIPCIÓN CICLO 2026–2027</h1>
     <p class="descripcion-marca">Para inscribir a tu hijo necesitas una cuenta de tutor.</p>
-    <div class="chip-informativo">Ciclo escolar 2025–2026</div>
+    <div class="chip-informativo">Ciclo escolar 2026–2027</div>
   </div>
 
   <div class="panel-formulario-derecho">
     <div class="contenedor-registro">
       <h2 class="titulo-pantalla">Inscripción</h2>
-      <p class="subtitulo-pasos">Selecciona una opción para continuar</p>
 
-      <div class="bloque-paso">
+      <div *ngIf="cargandoValidacion()" class="subtitulo-pasos">
+        Validando estado del período de inscripciones...
+      </div>
+
+      <div *ngIf="!cargandoValidacion()" class="bloque-paso">
+        <div *ngIf="tieneConvocatoriaActiva()">
+          <p class="subtitulo-pasos">Selecciona una opción para continuar</p>
+          <div class="bloque-botones-vertical">
+            <button type="button" class="btn-primario-grande con-icono" routerLink="/register">
+              <span class="icono">👤</span> Crear cuenta nueva
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="!tieneConvocatoriaActiva()" style="margin-bottom: 20px">
+          <div class="alerta error" style="text-align: center; font-weight: 600">
+            ⚠️ El periodo de registro digital no está abierto en este momento.
+          </div>
+          <p class="subtitulo-pasos" style="color: #777">
+            Las opciones de registro se habilitarán automáticamente cuando se publique la
+            convocatoria oficial.
+          </p>
+        </div>
+
         <div class="bloque-botones-vertical">
-          <button type="button" class="btn-primario-grande con-icono" (click)="irARegistro()">
-            <span class="icono">👤</span> Crear cuenta nueva
-          </button>
-
-          <div class="separador-o">
+          <div class="separador-o" *ngIf="tieneConvocatoriaActiva()">
             <span class="linea-divisor"></span>
             <span class="letra-o">o</span>
             <span class="linea-divisor"></span>
           </div>
 
-          <button type="button" class="btn-secundario-grande con-icono" (click)="irALogin()">
-            <span class="icono">🚪</span> Ya tengo una cuenta
+          <button type="button" class="btn-secundario-grande con-icono" routerLink="/login">
+            <span class="icono">🚪</span> Ya tengo una cuenta (Iniciar Sesión)
           </button>
         </div>
       </div>
