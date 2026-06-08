@@ -1,5 +1,14 @@
 import { Routes } from '@angular/router';
 import { LandingPage } from './features/landing/pages/landing-page/landing-page';
+import { Inicio } from './features/dashboard/pages/inicio/inicio';
+import { Convocatorias } from './features/dashboard/pages/convocatorias/convocatorias';
+import { Aspirantes } from './features/dashboard/pages/aspirantes/aspirantes';
+import { Tutores } from './features/dashboard/pages/tutores/tutores';
+import { Adjunciones } from './features/dashboard/pages/adjunciones/adjunciones';
+import { Alumnos } from './features/dashboard/pages/alumnos/alumnos';
+import { Grupos } from './features/dashboard/pages/grupos/grupos';
+import { Actividades } from './features/dashboard/pages/actividades/actividades';
+import { AdminDashboard } from './features/dashboard/pages/admin-dashboard/admin-dashboard';
 
 export const routes: Routes = [
   //  Página principal o Landing Page pública
@@ -36,6 +45,23 @@ export const routes: Routes = [
       import('./features/auth/pages/forgot-password/forgot-password.page').then(
         (m) => m.ForgotPasswordPage,
       ),
+  },
+
+  // Panel de administración (layout con rutas hijas)
+  {
+    path: 'dashboard',
+    component: AdminDashboard,
+    children: [
+      { path: '', redirectTo: 'inicio', pathMatch: 'full' },
+      { path: 'inicio', component: Inicio },
+      { path: 'convocatorias', component: Convocatorias },
+      { path: 'aspirantes', component: Aspirantes },
+      { path: 'tutores', component: Tutores },
+      { path: 'adjunciones', component: Adjunciones },
+      { path: 'alumnos', component: Alumnos },
+      { path: 'grupos', component: Grupos },
+      { path: 'actividades', component: Actividades },
+    ],
   },
 
   // Comodín por si escriben cualquier otra ruta (Redirige a la Landing)

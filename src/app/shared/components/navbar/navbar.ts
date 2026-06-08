@@ -1,25 +1,22 @@
 import { Component } from '@angular/core';
-import { SidebarService } from '../../services/sidebar.service';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
 export class Navbar {
   menuAbierto = false;
 
-  constructor(private sidebarService: SidebarService) {}
-
   toggleMenu() {
     this.menuAbierto = !this.menuAbierto;
   }
 
-  openSidebar() {
+  cerrarMenu() {
     this.menuAbierto = false;
-    this.sidebarService.open();
   }
 
   navegarA(id: string) {
