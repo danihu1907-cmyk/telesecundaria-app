@@ -1,13 +1,15 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http'; // 1. IMPORTA ESTA LÍNEA
+import { provideHttpClient, withInterceptors } from '@angular/common/http'; // MODIFICADO: SE IMPORTA withInterceptors
 
 import { routes } from './app.routes';
+import { authTutorInterceptor } from './core/interceptors/auth-tutor.interceptor'; // MODIFICADO: SE IMPORTA TU INTERCEPTOR REAL
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideHttpClient(), // 2. AGREGA ESTA FUNCIÓN AL FINAL DEL ARREGLO
+    // MODIFICADO: SE INYECTA EL INTERCEPTOR DENTRO DE LA CONFIGURACIÓN DEL CLIENTE HTTP
+    provideHttpClient(withInterceptors([authTutorInterceptor])),
   ],
 };
