@@ -7,5 +7,6 @@ export interface MenuItem {
 
 export interface MenuGroup {
   label: string;
+  expanded: boolean;
   items: MenuItem[];
 }

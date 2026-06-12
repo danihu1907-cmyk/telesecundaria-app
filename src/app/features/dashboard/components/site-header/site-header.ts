@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { HlmSeparatorImports } from '@spartan-ng/helm/separator';
 import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
 import { hlmH4 } from '../../../../../../libs/ui/typography/src/lib/hlm-h4';
@@ -13,10 +13,12 @@ import { hlmH4 } from '../../../../../../libs/ui/typography/src/lib/hlm-h4';
         <button hlmSidebarTrigger></button>
         <hlm-separator orientation="vertical" class="mr-2 data-[orientation=vertical]:h-4" />
         <nav>
-          <h4 class="${hlmH4}">Convocatorias</h4>
+          <h4 class="${hlmH4}">{{ title }}</h4>
         </nav>
       </div>
     </header>
   `,
 })
-export class SiteHeader {}
+export class SiteHeader {
+  @Input() title: string = 'Dashboard';
+}
