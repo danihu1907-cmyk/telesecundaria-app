@@ -49,6 +49,12 @@
       ],
       "@spartan-ng/helm/collapsible": [
         "./libs/ui/collapsible/src/index.ts"
+      ],
+      "@spartan-ng/helm/field": [
+        "./libs/ui/field/src/index.ts"
+      ],
+      "@spartan-ng/helm/label": [
+        "./libs/ui/label/src/index.ts"
       ]
     }
   },

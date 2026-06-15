@@ -10,6 +10,7 @@ import { Grupos } from './features/dashboard/pages/grupos/grupos';
 import { Actividades } from './features/dashboard/pages/actividades/actividades';
 import { AdminDashboard } from './features/dashboard/pages/admin-dashboard/admin-dashboard';
 import { Revisiones } from './features/dashboard/pages/revisiones/revisiones';
+import { LoginDashboard } from './features/login/login';
 
 export const routes: Routes = [
   //  Página principal o Landing Page pública
@@ -64,6 +65,11 @@ export const routes: Routes = [
       { path: 'actividades', component: Actividades },
       { path: 'revisiones', component: Revisiones },
     ],
+  },
+
+  {
+    path: 'LoginDashboard',
+    component: LoginDashboard,
   },
 
   // Comodín por si escriben cualquier otra ruta (Redirige a la Landing)
