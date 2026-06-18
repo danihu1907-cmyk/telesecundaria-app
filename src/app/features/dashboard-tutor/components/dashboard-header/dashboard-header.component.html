@@ -1,0 +1,63 @@
+<header class="header">
+  <div class="header-izquierda">
+    <div class="logo-chip">
+      <span class="logo-siglas">TS</span>
+    </div>
+    <span class="nombre-tutor">{{ nombreTutor() }}</span>
+  </div>
+
+  <div class="header-derecha">
+    <div class="usuario-wrapper" [class.abierto]="dropdownAbierto()">
+      <div class="usuario-chip" (click)="toggleDropdown()">
+        <div class="usuario-iniciales">{{ inicialesUsuario() }}</div>
+        <div class="usuario-info">
+          <span class="bienvenido">¡Bienvenido de nuevo!</span>
+          <span class="usuario-nombre">
+            <span class="nombre-completo">{{ nombreUsuario() }}</span>
+            <span class="nombre-corto">{{ nombreUsuario().split(' ')[0] }}</span>
+          </span>
+        </div>
+        <svg
+          class="chevron"
+          [class.abierto]="dropdownAbierto()"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+        >
+          <path
+            d="M4 6L8 10L12 6"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+
+      @if (dropdownAbierto()) {
+        <div class="dropdown">
+          <div class="dropdown-separador"></div>
+          <button class="dropdown-item" (click)="onCerrarSesion()">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              style="transform: scaleX(-1)"
+            >
+              <path
+                d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            Cerrar sesión
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+</header>

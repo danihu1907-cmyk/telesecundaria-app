@@ -1,0 +1,109 @@
+<div class="pantalla-register">
+  <app-dashboard-header
+    [nombreTutor]="nombreTutorActivo()"
+    [nombreUsuario]="nombreTutorActivo()"
+    [inicialesUsuario]="'DN'"
+    (cerrarSesion)="onLogout()"
+  />
+
+  <main class="contenido">
+    <div class="seccion-header">
+      <h2 class="titulo-pagina">Registrar aspirante</h2>
+    </div>
+
+    <div class="contenedor-wrap">
+      <div class="contenedor-tarjeta">
+        <app-progress-stepper [pasoActual]="pasoActual()" [finalizado]="enviado()" />
+
+        @if (pasoActual() === 1) {
+          <div class="seccion-documentos">
+            <app-info-form
+              #infoForm
+              [datosIniciales]="datosAspiranteExistente()"
+              (siguiente)="onSiguiente($event)"
+            />
+
+            <div class="bloque-botones">
+              <button class="btn-secundario" routerLink="/dashboard">Cancelar</button>
+              <!-- BOTON BLOQUEADO MIENTRAS SE PROCESA PARA EVITAR CLICS MULTIPLES -->
+              <button class="btn-primario" [disabled]="procesando()" (click)="infoForm.onSubmit()">
+                {{ procesando() ? 'Procesando...' : 'Seguir' }}
+              </button>
+            </div>
+          </div>
+        }
+
+        @if (pasoActual() === 2) {
+          <div class="seccion-documentos">
+            <h3 class="subtitulo-seccion">Documentos requeridos</h3>
+
+            <div class="grid-documentos">
+              @for (doc of docs(); track doc.id) {
+                <div class="fila-documento">
+                  <div class="doc-info">
+                    <span class="doc-nombre">{{ doc.label }}</span>
+                    <span class="doc-desc">Formato PDF • Máximo 5MB</span>
+                  </div>
+
+                  <!-- CONTENEDOR QUE AGRUPA EL BOTON DE SUBIR O LISTA Y EL ICONO DE QUITAR -->
+                  <div class="doc-acciones">
+                    <label class="btn-upload" [class.listo]="doc.file !== null">
+                      @if (doc.file === null) {
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                          <path
+                            d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      }
+                      {{ doc.file !== null ? 'Listo ✓' : 'Subir' }}
+                      <input
+                        type="file"
+                        accept="application/pdf"
+                        style="display: none"
+                        (change)="onFileSelected(doc.id, $event)"
+                      />
+                    </label>
+
+                    <!-- BOTON DE QUITAR VISIBLE SOLO CUANDO YA HAY UN ARCHIVO SELECCIONADO -->
+                    @if (doc.file !== null) {
+                      <button class="btn-quitar-archivo" (click)="onQuitarArchivo(doc.id)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                          <path
+                            d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0M15 9l-6 6M9 9l6 6"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                          />
+                        </svg>
+                      </button>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+
+            <div class="bloque-botones">
+              @if (enviado()) {
+                <button class="btn-primario" routerLink="/dashboard">Volver al inicio</button>
+              } @else {
+                <button class="btn-secundario" (click)="pasoActual.set(1)">Atrás</button>
+                <!-- BOTON BLOQUEADO MIENTRAS SE SUBEN LOS ARCHIVOS PARA EVITAR CLICS MULTIPLES -->
+                <button
+                  class="btn-primario"
+                  [disabled]="!formularioDocumentosValido() || enviando()"
+                  (click)="onEnviar()"
+                >
+                  {{ enviando() ? 'Enviando...' : 'Enviar' }}
+                </button>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </main>
+</div>

@@ -94,9 +94,8 @@
 .contenedor-registro {
   width: 480px;
   max-width: 100%;
-  background-color: var(--color-blanco);
   border-radius: 16px;
-  padding: 10px 10px; /* Reducido para encajar orgánicamente en el Split Panel */
+  padding: 10px 40px; /* Reducido para encajar orgánicamente en el Split Panel */
   box-sizing: border-box;
   text-align: center;
 }
@@ -104,7 +103,7 @@
 /* TITULOS VISUALES SUPERIORES */
 .titulo-pantalla {
   font-size: 1.8rem;
-  font-weight: 800;
+  font-weight: 600;
   color: var(--color-texto-oscuro);
   margin: 0 0 4px 0;
   letter-spacing: -0.5px;

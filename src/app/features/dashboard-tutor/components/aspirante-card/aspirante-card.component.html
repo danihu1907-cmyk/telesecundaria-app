@@ -1,0 +1,25 @@
+<div class="card">
+  <div class="card-header">
+    <span class="nombre">{{ aspirante().nombre_completo }} - {{ aspirante().claveAspirante }}</span>
+    <div class="card-acciones">
+      <app-status-badge [estatus]="aspirante().estatus_tramite" />
+      @if (aspirante().porcentaje_progreso < 100) {
+        <button
+          class="btn-completar"
+          (click)="completarDocumentos.emit(aspirante().claveAspirante)"
+        >
+          Completar documentos →
+        </button>
+      }
+    </div>
+  </div>
+  <div class="progreso-wrap">
+    <div class="barra-fondo">
+      <div class="barra-relleno" [style.width.%]="aspirante().porcentaje_progreso"></div>
+    </div>
+    <div class="progreso-info">
+      <span class="doc-texto">Progreso del trámite escolar</span>
+      <span class="porcentaje-texto">{{ aspirante().porcentaje_progreso }}%</span>
+    </div>
+  </div>
+</div>

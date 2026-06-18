@@ -1,31 +1,15 @@
 <div class="pantalla-split-auth">
-  <div class="panel-marca-izquierdo">
-    <div class="contenedor-logo-blanco">
-      <img
-        src="images/logo-telesecundaria.png"
-        alt="Logo Telesecundaria"
-        class="logo-institucional"
-      />
-    </div>
-    <h1 class="titulo-marca">BIENVENIDO</h1>
-    <p class="descripcion-marca">
-      Inicia sesión para gestionar las inscripciones y consultar el estado del alumno.
-    </p>
-    <div class="chip-informativo">Control Escolar</div>
-  </div>
-
   <div class="panel-formulario-derecho">
     <div class="contenedor-login">
       <img src="images/logo-telesecundaria.png" alt="Logo Telesecundaria" class="logo-movil" />
 
-      <h1 class="titulo-pantalla">INICIAR SESIÓN</h1>
-      <p class="subtitulo-pasos">Ingresa tus credenciales de acceso</p>
+      <h1 class="titulo-pantalla">Inicia sesion con tu cuenta</h1>
 
       <div class="alerta error" *ngIf="mensajeErrorGlobal">{{ mensajeErrorGlobal }}</div>
 
       <form (ngSubmit)="ejecutarLogin()" #formularioLogin="ngForm">
         <div class="campo">
-          <label>Correo electrónico</label>
+          <label>Correo electrónico <span class="requerido">*</span></label>
           <input
             type="email"
             name="correo"
@@ -41,7 +25,7 @@
         </div>
 
         <div class="campo">
-          <label>Contraseña</label>
+          <label>Contraseña <span class="requerido">*</span></label>
           <input
             type="password"
             name="contrasena"
@@ -56,11 +40,9 @@
           }}</span>
         </div>
 
+        <!-- ENLACE DE RECUPERAR CONTRASEÑA — USA CLASE CSS PARA EL COLOR VERDE -->
         <div class="enlace-recuperar">
-          <a
-            routerLink="/forgot-password"
-            style="cursor: pointer; text-decoration: none; color: inherit"
-          >
+          <a routerLink="/forgot-password" class="enlace-recuperar-link">
             ¿Olvidaste tu contraseña?
           </a>
         </div>
@@ -81,5 +63,19 @@
         <strong routerLink="/register" style="cursor: pointer">Regístrate aquí</strong>
       </div>
     </div>
+  </div>
+  <div class="panel-marca-izquierdo">
+    <div class="contenedor-logo-blanco">
+      <img
+        src="images/logo-telesecundaria.png"
+        alt="Logo Telesecundaria"
+        class="logo-institucional"
+      />
+    </div>
+    <h1 class="titulo-marca">BIENVENIDO</h1>
+    <p class="descripcion-marca">
+      Inicia sesión para gestionar las inscripciones y consultar el estado del alumno.
+    </p>
+    <div class="chip-informativo">Control Escolar</div>
   </div>
 </div>

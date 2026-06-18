@@ -1,0 +1,141 @@
+.card {
+  background-color: var(--color-blanco);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radius-general);
+  padding: 16px 20px;
+  font-family: var(--font-sistema);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.card-acciones {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.nombre {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-texto-oscuro);
+}
+
+.btn-completar {
+  height: 36px;
+  padding: 0 16px;
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+  border: none;
+  border-radius: var(--radius-general);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: var(--font-sistema);
+  transition: opacity 0.2s;
+}
+
+.btn-completar:hover {
+  opacity: 0.9;
+}
+
+.progreso-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.barra-fondo {
+  width: 100%;
+  height: 6px;
+  background-color: var(--color-borde);
+  border-radius: 50px;
+  overflow: hidden;
+}
+
+.barra-relleno {
+  height: 100%;
+  background-color: var(--color-primario);
+  border-radius: 50px;
+  transition: width 0.3s ease;
+}
+
+.progreso-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.doc-texto {
+  font-size: 0.75rem;
+  color: var(--color-gris-placeholder);
+}
+
+.porcentaje-texto {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-texto-oscuro);
+}
+
+@media (max-width: 1200px) {
+  .nombre {
+    font-size: 0.88rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .card {
+    padding: 14px 18px;
+  }
+}
+
+@media (max-width: 767px) {
+  .card {
+    padding: 14px 16px;
+  }
+}
+
+@media (max-width: 479px) {
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .card-acciones {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .btn-completar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 360px) {
+  .card {
+    padding: 12px;
+  }
+  .nombre {
+    font-size: 0.82rem;
+  }
+  .btn-completar {
+    font-size: 0.75rem;
+    height: 32px;
+  }
+  .doc-texto {
+    font-size: 0.7rem;
+  }
+  .porcentaje-texto {
+    font-size: 0.7rem;
+  }
+}

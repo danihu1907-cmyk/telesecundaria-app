@@ -1,0 +1,35 @@
+<div class="pantalla-overview">
+  <app-dashboard-header
+    [nombreTutor]="datos()?.nombre_tutor || 'David Nieves'"
+    [nombreUsuario]="datos()?.nombre_tutor || 'David Nieves'"
+    [inicialesUsuario]="'DN'"
+    (cerrarSesion)="onLogout()"
+  />
+
+  <main class="contenido">
+    <div class="seccion-header">
+      <h2 class="titulo-seccion">Mis aspirantes</h2>
+      <button class="btn-agregar" routerLink="/dashboard/register-flow">+ Agregar aspirante</button>
+    </div>
+
+    @if (cargando()) {
+      <div class="spinner-carga"><p>Consultando registros en el servidor escolar...</p></div>
+    } @else {
+      <div class="lista-aspirantes">
+        @for (asp of datos()?.aspirantes; track asp.id_aspirante) {
+          <app-aspirante-card
+            [aspirante]="asp"
+            (completarDocumentos)="completarDocumentosAspirante($event)"
+          />
+        } @empty {
+          <div class="estado-vacio">
+            <p>Aún no has registrado aspirantes en la convocatoria actual.</p>
+            <button class="btn-agregar" routerLink="/dashboard/register-flow">
+              + Registrar primer aspirante
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </main>
+</div>

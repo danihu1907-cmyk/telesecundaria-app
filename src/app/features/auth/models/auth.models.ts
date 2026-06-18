@@ -44,6 +44,12 @@ export interface LoginRequest {
 export interface RecuperarPasswordRequest {
   correo: string;
 }
+export interface AuthResponse {
+  success: boolean;
+  message: string;
+  token?: string;
+  claveTutorAspirante?: string; // <--- ¡ AGREGA ESTA LÍNEA AQUÍ !
+}
 
 export interface AuthResponse {
   success: boolean;
