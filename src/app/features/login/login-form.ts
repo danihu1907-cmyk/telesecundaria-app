@@ -23,7 +23,7 @@ import {
     HlmField,
     HlmFieldError,
   ],
-  // providers: [provideIcons({ remixGithubFill })],
+
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <form [formGroup]="form" (ngSubmit)="login()">

@@ -11,6 +11,12 @@ import { Actividades } from './features/dashboard/pages/actividades/actividades'
 import { AdminDashboard } from './features/dashboard/pages/admin-dashboard/admin-dashboard';
 import { Revisiones } from './features/dashboard/pages/revisiones/revisiones';
 import { LoginDashboard } from './features/login/login';
+import { Citas } from './features/dashboard/pages/citas/citas';
+import { Entregas } from './features/dashboard/pages/entregas/entregas';
+import { Cotejos } from './features/dashboard/pages/cotejos/cotejos';
+import { Inscripciones } from './features/dashboard/pages/inscripciones/inscripciones';
+import { Usuarios } from './features/dashboard/pages/usuarios/usuarios';
+import { Expedientes } from './features/dashboard/pages/expedientes/expedientes';
 
 export const routes: Routes = [
   //  Página principal o Landing Page pública
@@ -55,15 +61,21 @@ export const routes: Routes = [
     component: AdminDashboard,
     children: [
       { path: '', redirectTo: 'inicio', pathMatch: 'full' },
-      { path: 'inicio', component: Inicio },
-      { path: 'convocatorias', component: Convocatorias },
-      { path: 'aspirantes', component: Aspirantes },
-      { path: 'tutores', component: Tutores },
-      { path: 'adjunciones', component: Adjunciones },
-      { path: 'alumnos', component: Alumnos },
-      { path: 'grupos', component: Grupos },
-      { path: 'actividades', component: Actividades },
-      { path: 'revisiones', component: Revisiones },
+      { path: 'inicio', component: Inicio, data: { title: 'Inicio' } },
+      { path: 'inscripciones', component: Inscripciones, data: { title: 'Inscripciones' } },
+      { path: 'convocatorias', component: Convocatorias, data: { title: 'Convocatorias' } },
+      { path: 'aspirantes', component: Aspirantes, data: { title: 'Aspirantes' } },
+      { path: 'tutores', component: Tutores, data: { title: 'Tutores' } },
+      { path: 'adjunciones', component: Adjunciones, data: { title: 'Adjunciones' } },
+      { path: 'alumnos', component: Alumnos, data: { title: 'Alumnos' } },
+      { path: 'grupos', component: Grupos, data: { title: 'Grupos' } },
+      { path: 'actividades', component: Actividades, data: { title: 'Actividades' } },
+      { path: 'revisiones', component: Revisiones, data: { title: 'Revisiones' } },
+      { path: 'citas', component: Citas, data: { title: 'Citas' } },
+      { path: 'entregas', component: Entregas, data: { title: 'Entregas' } },
+      { path: 'cotejos', component: Cotejos, data: { title: 'Cotejos' } },
+      { path: 'expedientes', component: Expedientes, data: { title: 'Expedientes' } },
+      { path: 'usuarios', component: Usuarios, data: { title: 'Usuarios' } },
     ],
   },
 

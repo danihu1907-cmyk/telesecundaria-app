@@ -26,14 +26,22 @@ import {
   lucideFileCheck,
   lucideCalendarClock,
   lucideFile,
+  lucideFileText,
 } from '@ng-icons/lucide';
 
-import { HlmCollapsible, HlmCollapsibleContent } from '../../../../../../libs/ui/collapsible/src';
-import { MenuGroup } from '../../models/menu-item.models';
+import { INDEPENDENT_ITEMS, MENU_GROUPS, MenuGroup } from '../../models/menu-item.models';
+import { SidebarItemComponent } from './sidebar-item';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [HlmSidebarImports, HlmAvatarImports, NgIcon, HlmIcon, RouterModule],
+  imports: [
+    HlmSidebarImports,
+    HlmAvatarImports,
+    NgIcon,
+    HlmIcon,
+    RouterModule,
+    SidebarItemComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div hlmSidebarWrapper>
@@ -58,6 +66,33 @@ import { MenuGroup } from '../../models/menu-item.models';
         <!-- contenido del sidebar -->
         <div hlmSidebarContent>
           <div class="px-4 pt-2 pb-6 flex flex-col gap-4 overflow-y-auto flex-1">
+            <!-- BOTONES INDEPENDIENTES  -->
+
+            <!-- Inicio -->
+            <app-sidebar-item
+              label="Inicio"
+              icon="lucideHome"
+              [active]="isActive('/dashboard/inicio')"
+              [collapsed]="collapsed"
+              (navigate)="navegar('/dashboard/inicio')"
+            />
+            <!-- Expedientes -->
+            <app-sidebar-item
+              label="Expedientes"
+              icon="lucideFileText"
+              [active]="isActive('/dashboard/expedientes')"
+              [collapsed]="collapsed"
+              (navigate)="navegar('/dashboard/expedientes')"
+            />
+            <!-- Usuarios -->
+            <app-sidebar-item
+              label="Usuarios"
+              icon="lucideUsers"
+              [active]="isActive('/dashboard/usuarios')"
+              [collapsed]="collapsed"
+              (navigate)="navegar('/dashboard/usuarios')"
+            />
+
             @for (group of menuGroups; track group.label) {
               <div class="flex flex-col">
                 <!-- Group Header -->
@@ -88,38 +123,13 @@ import { MenuGroup } from '../../models/menu-item.models';
                 >
                   <div class="flex flex-col gap-2">
                     @for (item of group.items; track item.title) {
-                      <button
-                        (click)="navegar(item.route)"
-                        class="group/item flex items-center gap-2 transition-all duration-200"
-                        [class.px-4]="!collapsed"
-                        [class.px-2]="collapsed"
-                        [class.py-2]="!collapsed"
-                        [class.py-3]="collapsed"
-                        [class.justify-center]="collapsed"
-                        [class.w-full]="!collapsed"
-                        [class.rounded-[200px]]="!collapsed"
-                        [class.rounded-lg]="collapsed"
-                        [class.bg-lime-600]="isActive(item.route)"
-                        [class.text-white]="isActive(item.route)"
-                        [class.text-neutral-950]="!isActive(item.route)"
-                        [class.hover:bg-lime-100]="!isActive(item.route)"
-                      >
-                        <!-- Icon -->
-                        <div class="size-5 relative overflow-hidden shrink-0">
-                          @if (isActive(item.route)) {
-                            <ng-icon hlm [name]="item.icon" size="20px" class="text-white" />
-                          } @else {
-                            <ng-icon hlm [name]="item.icon" size="20px" class="text-neutral-950" />
-                          }
-                        </div>
-
-                        <!-- Label -->
-                        @if (!collapsed) {
-                          <span class="text-sm font-normal leading-5">
-                            {{ item.title }}
-                          </span>
-                        }
-                      </button>
+                      <app-sidebar-item
+                        [label]="item.title"
+                        [icon]="item.icon"
+                        [active]="isActive(item.route)"
+                        [collapsed]="collapsed"
+                        (navigate)="navegar(item.route)"
+                      />
                     }
                   </div>
                 </div>
@@ -145,7 +155,7 @@ import { MenuGroup } from '../../models/menu-item.models';
       <ng-content />
     </div>
     <!-- Router outlet para el contenido dinámico -->
-    <router-outlet />
+    <!-- <router-outlet /> -->
   `,
   providers: [
     provideIcons({
@@ -169,6 +179,7 @@ import { MenuGroup } from '../../models/menu-item.models';
       lucideFileCheck,
       lucideCalendarClock,
       lucideFile,
+      lucideFileText,
     }),
   ],
 })
@@ -178,46 +189,16 @@ export class AppSidebar {
   @Input() collapsed = false;
   @Output() toggleCollapse = new EventEmitter<void>();
 
-  menuGroups: MenuGroup[] = [
-    {
-      label: 'Escuela',
-      expanded: true,
-      items: [{ title: 'Inicio', route: '/dashboard/inicio', icon: 'lucideHome' }],
-    },
-    {
-      label: 'Convocatorias',
-      expanded: true,
-      items: [
-        { title: 'Convocatorias', route: '/dashboard/convocatorias', icon: 'lucideBookOpen' },
-        { title: 'Aspirantes', route: '/dashboard/aspirantes', icon: 'lucideClipboardList' },
-        { title: 'Revisiones', route: '/dashboard/revisiones', icon: 'lucideFileCheck' },
-        { title: 'Adjunciones', route: '/dashboard/adjunciones', icon: 'lucideFolderPlus' },
-      ],
-    },
-    {
-      label: 'Inscripciones',
-      expanded: true,
-      items: [
-        { title: 'Inscripciones', route: '/dashboard/inscripciones', icon: 'lucideGraduationCap' },
-        { title: 'Citas', route: '/dashboard/grupos', icon: 'lucideCalendarClock' },
-        { title: 'Entregas', route: '/dashboard/actividades', icon: 'lucideFile' },
-        { title: 'Cotejos', route: '/dashboard/tutores', icon: 'lucideUsers' },
-      ],
-    },
-
-    {
-      label: 'Alumnos',
-      expanded: false,
-      items: [
-        { title: 'Alumnos', route: '/dashboard/alumnos', icon: 'lucideGraduationCap' },
-        { title: 'Grupos', route: '/dashboard/grupos', icon: 'lucideBoxes' },
-        { title: 'Actividades', route: '/dashboard/actividades', icon: 'lucideBook' },
-      ],
-    },
-  ];
+  independentItems = INDEPENDENT_ITEMS;
+  menuGroups: MenuGroup[] = MENU_GROUPS;
 
   isActive(route: string): boolean {
-    return this.router.url === route;
+    return this.router.isActive(route, {
+      paths: 'exact',
+      queryParams: 'ignored',
+      matrixParams: 'ignored',
+      fragment: 'ignored',
+    });
   }
 
   activeRoute: string = '/dashboard/inicio';
