@@ -116,6 +116,12 @@
   padding: 1.5rem 1rem;
   gap: 1rem;
   animation: slideDown 0.3s ease;
+  /* POSICION FIJA PARA QUE FLOTE SOBRE EL CONTENIDO SIN EMPUJARLO */
+  position: fixed;
+  top: 52px;
+  left: 0;
+  width: 100%;
+  z-index: 99;
 }
 
 .navbar__mobile--abierto {
