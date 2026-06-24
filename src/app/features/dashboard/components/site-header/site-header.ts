@@ -11,7 +11,7 @@ import { CrearConvocatorias } from '../modal-crear-convocatorias/modal-crear-con
 
 @Component({
   selector: 'site-header',
-  imports: [HlmSidebarImports, HlmSeparatorImports, NgIcon, HlmButtonImports, CrearConvocatorias],
+  imports: [HlmSidebarImports, HlmSeparatorImports, HlmButtonImports, CrearConvocatorias],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <header class="flex h-16 items-center px-2">

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmFieldImports } from '@spartan-ng/helm/field';
 import { HlmInputImports } from '@spartan-ng/helm/input';
+import { HlmDrawerImports } from '../../../../../../libs/ui/drawer/src';
 import {
   HlmDrawerFooter,
   HlmDrawerHeader,
@@ -9,6 +10,7 @@ import {
   HlmDrawerContent,
   HlmDrawerPortal,
   HlmDrawerTrigger,
+  HlmDrawerTitle,
 } from '../../../../../../libs/ui/drawer/src';
 import { HlmIcon } from '@spartan-ng/helm/icon';
 import { lucidePlus } from '@ng-icons/lucide';
@@ -17,18 +19,7 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 @Component({
   selector: 'crear-convocatorias',
   standalone: true,
-  imports: [
-    HlmButtonImports,
-    HlmFieldImports,
-    HlmInputImports,
-    HlmDrawerFooter,
-    HlmDrawerHeader,
-    HlmDrawer,
-    HlmDrawerContent,
-    HlmDrawerPortal,
-    NgIcon,
-    HlmDrawerTrigger,
-  ],
+  imports: [HlmButtonImports, HlmDrawerImports, HlmFieldImports, HlmInputImports, NgIcon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <hlm-drawer>
@@ -46,24 +37,24 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
       <!-- Modal -->
       <hlm-drawer-content *hlmDrawerPortal="let ctx">
         <hlm-drawer-header>
-          <h3 hlmDrawerTitle>Crear Convocatoria</h3>
+          <h1 hlmDrawerTitle>Crear Convocatoria</h1>
           <p hlmDrawerDescription>
             Cree una nueva convocatoria aquí. Haga clic en guardar cuando haya terminado.
           </p>
         </hlm-drawer-header>
         <hlm-field-group class="px-4">
           <hlm-field>
-            <label hlmFieldLabel for="name">Name</label>
-            <input hlmInput id="name" value="Pedro Duarte" />
+            <label hlmFieldLabel for="title">Titulo de la convocatoria</label>
+            <input hlmInput id="title" />
           </hlm-field>
           <hlm-field>
-            <label hlmFieldLabel for="username">Username</label>
-            <input hlmInput id="username" value="peduarte" />
+            <label hlmFieldLabel for="description">Descripción de la convocatoria</label>
+            <input hlmInput id="description" />
           </hlm-field>
         </hlm-field-group>
         <hlm-drawer-footer>
-          <button hlmBtn type="submit">Save Changes</button>
-          <button hlmDrawerClose hlmBtn variant="outline">Cancel</button>
+          <button hlmBtn type="submit">Crear convocatoria</button>
+          <button hlmDrawerClose hlmBtn variant="outline">Cancelar</button>
         </hlm-drawer-footer>
       </hlm-drawer-content>
     </hlm-drawer>
