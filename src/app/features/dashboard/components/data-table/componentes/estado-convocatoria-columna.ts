@@ -1,38 +1,24 @@
 import { Component } from '@angular/core';
-import { NgIcon, provideIcons } from '@ng-icons/core';
-import {
-  lucideChevronDown,
-  lucideChevronLeft,
-  lucideChevronsUp,
-  lucideChevronUp,
-  lucideCircleHelp,
-} from '@ng-icons/lucide';
-
-import { HlmIcon } from '@spartan-ng/helm/icon';
 import { type CellContext, injectFlexRenderContext } from '@tanstack/angular-table';
-import { Convocatoria } from '../../../models/convocatorias.models';
+import { Convocatoria, ESTADO_COLORS } from '../../../models/convocatorias.models';
+import { HlmBadge } from '@spartan-ng/helm/badge';
 
 @Component({
   selector: 'estado-convocatoria-columna',
-
-  providers: [
-    provideIcons({
-      lucideChevronDown,
-      lucideChevronLeft,
-      lucideChevronUp,
-      lucideChevronsUp,
-      lucideCircleHelp, // Default icon if not recognized
-    }),
-  ],
+  imports: [HlmBadge],
   template: `
     <div class="flex items-center">
-      <span hlmBadge class="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">{{
-        _element.estado
-      }}</span>
+      <span hlmBadge [class]="getBadgeClasses(_element.estado)">{{ _element.estado }}</span>
     </div>
   `,
 })
 export class EstadoConvocatoria {
   private readonly _context = injectFlexRenderContext<CellContext<Convocatoria, unknown>>();
   protected readonly _element = this._context.row.original;
+
+  protected getBadgeClasses(estado: string): string {
+    const colors = ESTADO_COLORS[estado as keyof typeof ESTADO_COLORS];
+    if (!colors) return 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300';
+    return `${colors.bg} ${colors.text}`;
+  }
 }

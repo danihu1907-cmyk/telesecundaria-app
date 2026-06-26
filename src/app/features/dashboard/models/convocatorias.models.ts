@@ -11,8 +11,24 @@ export type Convocatoria = {
 
 export type EstadoConvocatoria = 'Activa' | 'Cerrada' | 'En Pausa';
 
+export const ESTADO_COLORS: Record<EstadoConvocatoria, { bg: string; text: string }> = {
+  Activa: {
+    bg: 'bg-green-100 dark:bg-green-950',
+    text: 'text-green-700 dark:text-green-300',
+  },
+  Cerrada: {
+    bg: 'bg-red-100 dark:bg-red-950',
+    text: 'text-red-700 dark:text-red-300',
+  },
+  'En Pausa': {
+    bg: 'bg-yellow-100 dark:bg-yellow-950',
+    text: 'text-yellow-700 dark:text-yellow-300',
+  },
+};
+
 export type OrdenarTablas =
   | 'titulo'
+  | 'descripcion'
   | 'Fecha de Inicio'
   | 'Fecha de Fin'
   | 'Ciclo Escolar'

@@ -5,12 +5,12 @@ import { type CellContext, injectFlexRenderContext } from '@tanstack/angular-tab
 import { Convocatoria } from '../../../models/convocatorias.models';
 
 @Component({
-  selector: 'titulo-columna',
+  selector: 'fecha-fin-columna',
   imports: [],
   providers: [provideIcons({ lucideEllipsis })],
-  template: ` {{ _element.titulo }} `,
+  template: ` {{ _element.fechaFin }} `,
 })
-export class TituloColumna {
+export class FechaFinColumna {
   private readonly _context = injectFlexRenderContext<CellContext<Convocatoria, unknown>>();
   protected readonly _element = this._context.row.original;
 }
