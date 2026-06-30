@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { type CellContext, injectFlexRenderContext } from '@tanstack/angular-table';
-import { Convocatoria, ESTADO_COLORS } from '../../../models/convocatorias.models';
+import { Convocatoria, ESTADO_COLORS } from '../../../../models/convocatorias.models';
 import { HlmBadge } from '@spartan-ng/helm/badge';
 
 @Component({

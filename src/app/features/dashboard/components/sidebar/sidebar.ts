@@ -44,7 +44,7 @@ import { SidebarItemComponent } from './sidebar-item';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div hlmSidebarWrapper>
+    <div hlmSidebarWrapper class="h-svh overflow-hidden">
       <hlm-sidebar variant="inset">
         <!-- Header con logo y nombre de escuela -->
         <hlm-sidebar-header>
@@ -154,8 +154,6 @@ import { SidebarItemComponent } from './sidebar-item';
       </hlm-sidebar>
       <ng-content />
     </div>
-    <!-- Router outlet para el contenido dinámico -->
-    <!-- <router-outlet /> -->
   `,
   providers: [
     provideIcons({

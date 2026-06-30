@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { provideIcons } from '@ng-icons/core';
 import { lucideEllipsis } from '@ng-icons/lucide';
 import { type CellContext, injectFlexRenderContext } from '@tanstack/angular-table';
-import { Convocatoria } from '../../../models/convocatorias.models';
+import { Convocatoria } from '../../../../models/convocatorias.models';
 
 @Component({
   selector: 'titulo-columna',

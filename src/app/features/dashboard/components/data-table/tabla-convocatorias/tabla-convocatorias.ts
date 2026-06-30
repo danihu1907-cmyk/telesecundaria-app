@@ -1,8 +1,14 @@
-import { Component, signal, TrackByFunction } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, TrackByFunction } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { type Convocatoria, DATA_CONVOCATORIAS } from '../../../models/convocatorias.models';
 import { BarraAccionesConvocatorias } from './barra-acciones-convocatorias';
-import { lucideLoader } from '@ng-icons/lucide';
+import {
+  lucideChevronLeft,
+  lucideChevronRight,
+  lucideChevronsLeft,
+  lucideChevronsRight,
+  lucideLoader,
+} from '@ng-icons/lucide';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
 import { HlmTableImports } from '@spartan-ng/helm/table';
 import {
@@ -27,19 +33,23 @@ import {
   HlmSelectGroup,
   HlmSelectItem,
 } from '../../../../../../../libs/ui/select/src';
-import { OrdenarColumnas } from '../componentes/boton-ordenar-columna';
-import { BotonAccionesColumna } from '../componentes/boton-acciones-columna';
-import { SeleccionFilaTabla, SeleccionTituloTabla } from '../componentes/columna-seleccion';
-import { TituloColumna } from '../componentes/titulo-columna';
-import { EstadoConvocatoria } from '../componentes/estado-convocatoria-columna';
-import { DescripcionColumna } from '../componentes/descripcion-columna';
-import { FechaFinColumna } from '../componentes/fecha-fin-columna';
-import { FechaInicioColumna } from '../componentes/fecha-inicio-columna';
+import { OrdenarColumnas } from './componentes/boton-ordenar-columna';
+import { BotonAccionesColumna } from './componentes/boton-acciones-columna';
+import { SeleccionFilaTabla, SeleccionTituloTabla } from './componentes/columna-seleccion';
+import { TituloColumna } from './componentes/titulo-columna';
+import { EstadoConvocatoria } from './componentes/estado-convocatoria-columna';
+import { DescripcionColumna } from './componentes/descripcion-columna';
+import { FechaFinColumna } from './componentes/fecha-fin-columna';
+import { FechaInicioColumna } from './componentes/fecha-inicio-columna';
+import { CicloEscolar } from './componentes/ciclo-escolar';
+import { CupoMaximo } from './componentes/cupo-maximo';
+import { HlmButton } from '@spartan-ng/helm/button';
 
 @Component({
   selector: 'tabla-convocatorias',
   imports: [
     BarraAccionesConvocatorias,
+    HlmButton,
     FlexRender,
     HlmIcon,
     FormsModule,
@@ -53,30 +63,50 @@ import { FechaInicioColumna } from '../componentes/fecha-inicio-columna';
     HlmSelectGroup,
     HlmSelectItem,
   ],
-  providers: [provideIcons({ lucideLoader })],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    provideIcons({
+      lucideLoader,
+      lucideChevronLeft,
+      lucideChevronRight,
+      lucideChevronsLeft,
+      lucideChevronsRight,
+    }),
+  ],
   host: {
-    class: 'w-full',
+    class: 'flex min-h-0 min-w-0 h-full w-full flex-1 overflow-hidden',
   },
   template: `
-    <div class="hidden h-full flex-1 flex-col space-y-4 rounded-lg  p-6 py-6 md:flex">
-      <div class="flex items-center justify-between space-y-2">
+    <div
+      class="flex h-full min-h-0 min-w-0 max-w-full flex-1 flex-col gap-4 overflow-hidden p-3 sm:p-4 md:p-6"
+    >
+      <div class="flex w-full min-w-0 flex-col lg:flex-row lg:items-center lg:justify-between">
         <!-- titulo de la tabla -->
-        <div class="flex w-full items-center justify-between">
-          <p class="font-bold text-muted-foreground">Lista de convocatorias</p>
+        <div class="flex w-full min-w-0 flex-wrap items-center justify-between">
+          <p class="truncate font-bold text-muted-foreground">Lista de convocatorias</p>
           <barra-acciones-convocatorias table="table" />
         </div>
         <!-- titulo de la tabla -->
       </div>
 
-      <div class="max-h-175 w-full overflow-auto rounded-md border border-border">
+      <!-- contenedor de la tabla -->
+      <div class="min-h-0 min-w-0 flex-1 overflow-hidden rounded-lg border border-border">
         @defer {
-          <div hlmTableContainer class="spartan-table-container container">
-            <table hlmTable class="spartan-table  ">
+          <div
+            hlmTableContainer
+            class="h-full w-full min-h-0 min-w-0 overflow-y-auto overflow-x-auto overscroll-contain"
+          >
+            <table hlmTable class="w-full min-w-4xl table-auto  ">
               <thead hlmTHead class="spartan-table-header bg-background sticky top-0 z-10">
                 @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
-                  <tr hlmTr class="border-b border-border">
+                  <tr hlmTr class="border-b border-border transition-colors">
                     @for (header of headerGroup.headers; track header.id) {
-                      <th hlmTh [attr.colSpan]="header.colSpan" class="">
+                      <th
+                        hlmTh
+                        [attr.colSpan]="header.colSpan"
+                        [class.px-0]="header.column.id !== 'select'"
+                        [class.px-4]="header.column.id === 'select'"
+                      >
                         @if (!header.isPlaceholder) {
                           <ng-container
                             *flexRender="
@@ -102,7 +132,7 @@ import { FechaInicioColumna } from '../componentes/fecha-inicio-columna';
                     class="border-b border-border"
                   >
                     @for (cell of row.getVisibleCells(); track $index) {
-                      <td hlmTd>
+                      <td hlmTd class="px-4">
                         <ng-container
                           *flexRender="
                             cell.column.columnDef.cell;
@@ -131,13 +161,18 @@ import { FechaInicioColumna } from '../componentes/fecha-inicio-columna';
           </div>
         }
       </div>
-      <div class="mt-4 flex flex-col justify-between sm:flex-row sm:items-center">
-        <span class="text-muted-foreground text-sm">
+
+      <!-- footer con paginacion -->
+      <div
+        class="mt-2 flex w-full min-w-0 flex-col gap-3 lg:mt-4 lg:flex-row lg:items-center lg:justify-between"
+      >
+        <span class="text-muted-foreground text-sm wrap-break-word">
           {{ table.getSelectedRowModel().rows.length }} of {{ table.getRowCount() }} Filas
           seleccionadas
         </span>
-        <div class="mt-2 flex gap-8 sm:mt-0">
-          <div class="flex gap-2">
+
+        <div class="mt-1 flex min-w-0 flex-wrap items-center gap-3 sm:mt-0 sm:gap-6">
+          <div class="flex min-w-0 items-center gap-2">
             <span hlmLabel>Filas por página:</span>
             <hlm-select
               [ngModel]="table.getState().pagination.pageSize"
@@ -146,6 +181,7 @@ import { FechaInicioColumna } from '../componentes/fecha-inicio-columna';
               <hlm-select-trigger size="sm" class="mr-1 inline-flex h-8 w-fit">
                 <hlm-select-value placeholder="{{ _tamanoPaginasDisponibles[0] }}" />
               </hlm-select-trigger>
+
               <hlm-select-content *hlmSelectPortal>
                 <hlm-select-group>
                   @for (size of _tamanoPaginasDisponibles; track size) {
@@ -158,12 +194,12 @@ import { FechaInicioColumna } from '../componentes/fecha-inicio-columna';
             </hlm-select>
           </div>
 
-          <span hlmLabel
+          <span hlmLabel class="whitespace-nowrap"
             >Pagina {{ table.getState().pagination.pageIndex + 1 }} de
             {{ table.getPageCount() }}</span
           >
 
-          <div class="flex space-x-1">
+          <div class="ml-auto flex flex-wrap justify-end gap-1 sm:ml-0">
             <button
               size="icon-sm"
               variant="outline"
@@ -173,6 +209,7 @@ import { FechaInicioColumna } from '../componentes/fecha-inicio-columna';
             >
               <ng-icon hlm name="lucideChevronsLeft" size="sm" />
             </button>
+
             <button
               size="icon-sm"
               variant="outline"
@@ -182,6 +219,7 @@ import { FechaInicioColumna } from '../componentes/fecha-inicio-columna';
             >
               <ng-icon hlm name="lucideChevronLeft" size="sm" />
             </button>
+
             <button
               size="icon-sm"
               variant="outline"
@@ -191,6 +229,7 @@ import { FechaInicioColumna } from '../componentes/fecha-inicio-columna';
             >
               <ng-icon hlm name="lucideChevronRight" size="sm" />
             </button>
+
             <button
               size="icon-sm"
               variant="outline"
@@ -255,6 +294,20 @@ export class TablaConvocatorias {
       id: 'fechaFin',
       header: () => flexRenderComponent(OrdenarColumnas, { inputs: { header: '' } }),
       cell: () => flexRenderComponent(FechaFinColumna),
+    },
+
+    {
+      accessorKey: 'cicloEscolar',
+      id: 'cicloEscolar',
+      header: () => flexRenderComponent(OrdenarColumnas, { inputs: { header: '' } }),
+      cell: () => flexRenderComponent(CicloEscolar),
+    },
+
+    {
+      accessorKey: 'cupoMaximo',
+      id: 'cupoMaximo',
+      header: () => flexRenderComponent(OrdenarColumnas, { inputs: { header: '' } }),
+      cell: () => flexRenderComponent(CupoMaximo),
     },
 
     {

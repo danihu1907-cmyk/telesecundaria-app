@@ -5,7 +5,7 @@ import {
   type HeaderContext,
   injectFlexRenderContext,
 } from '@tanstack/angular-table';
-import { HlmCheckbox } from '../../../../../../../libs/ui/checkbox/src';
+import { HlmCheckbox } from '../../../../../../../../libs/ui/checkbox/src';
 
 @Component({
   imports: [HlmCheckbox],

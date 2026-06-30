@@ -42,7 +42,7 @@ import { HlmInput } from '@spartan-ng/helm/input';
   providers: [provideIcons({ lucideCirclePlus, lucideX })],
   host: { class: 'block' },
   template: `
-    <div class="wip-table-search flex flex-col justify-between gap-4 pb-4 sm:flex-row">
+    <div class="wip-table-search flex flex-col justify-between gap-4 sm:flex-row">
       <div class="flex flex-col justify-between gap-2 sm:flex-row">
         <!-- Barra de busqueda -->
         <input

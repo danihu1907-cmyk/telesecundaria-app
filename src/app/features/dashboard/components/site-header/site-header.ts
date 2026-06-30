@@ -7,15 +7,15 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucidePlus } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { hlmH3 } from '../../../../../../libs/ui/typography/src/lib/hlm-h3';
-import { CrearConvocatorias } from '../modal-crear-convocatorias/modal-crear-convocatorias';
+import { CrearConvocatorias } from '../modales/modal-crear-convocatorias';
 
 @Component({
   selector: 'site-header',
   imports: [HlmSidebarImports, HlmSeparatorImports, HlmButtonImports, CrearConvocatorias],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <header class="flex h-16 items-center px-2">
-      <div class="flex w-full items-center gap-2 px-2">
+    <header class="flex h-16 shrink-0 items-center px-2">
+      <div class="flex w-full min-w-0 items-center gap-2 px-2">
         <button hlmSidebarTrigger></button>
         <hlm-separator orientation="vertical" class="mr-2 data-[orientation=vertical]:h-6" />
 

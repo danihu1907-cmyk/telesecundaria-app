@@ -5,6 +5,9 @@ import { TablaConvocatorias } from '../../components/data-table/tabla-convocator
 @Component({
   selector: 'app-convocatorias',
   imports: [TablaConvocatorias],
+  host: {
+    class: 'flex min-h-0 min-w-0 h-full w-full flex-1 overflow-hidden',
+  },
   templateUrl: './convocatorias.html',
   styleUrl: './convocatorias.css',
 })

@@ -27,7 +27,9 @@ export class OrdenarColumnas<T> {
     this._context.column.toggleSorting(this._context.column.getIsSorted() === 'asc');
   }
   public readonly header = input('');
+
   protected readonly _header = computed(() => {
-    return this.header() === '' ? this._context.column.id : this.header();
+    const text = this.header() === '' ? this._context.column.id : this.header();
+    return text.replace(/([a-z])([A-Z])/g, '$1 $2');
   });
 }

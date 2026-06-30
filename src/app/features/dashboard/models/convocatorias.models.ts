@@ -26,14 +26,6 @@ export const ESTADO_COLORS: Record<EstadoConvocatoria, { bg: string; text: strin
   },
 };
 
-export type OrdenarTablas =
-  | 'titulo'
-  | 'descripcion'
-  | 'Fecha de Inicio'
-  | 'Fecha de Fin'
-  | 'Ciclo Escolar'
-  | 'Cupo Máximo';
-
 // Creacion de datos de prueba para las convocatorias
 function randomDate(start: Date, end: Date): Date {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));

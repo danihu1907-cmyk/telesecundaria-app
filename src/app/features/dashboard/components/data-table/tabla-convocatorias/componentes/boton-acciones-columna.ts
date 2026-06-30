@@ -4,14 +4,14 @@ import { lucideEllipsis, lucidePencil, lucideTrash2 } from '@ng-icons/lucide';
 import { HlmButton } from '@spartan-ng/helm/button';
 import { HlmIcon } from '@spartan-ng/helm/icon';
 import { type CellContext, injectFlexRenderContext } from '@tanstack/angular-table';
-import type { Convocatoria } from '../../../models/convocatorias.models';
+import type { Convocatoria } from '../../../../models/convocatorias.models';
 import {
   HlmDropdownMenuTrigger,
   HlmDropdownMenu,
   HlmDropdownMenuLabel,
   HlmDropdownMenuSeparator,
   HlmDropdownMenuGroup,
-} from '../../../../../../../libs/ui/dropdown-menu/src';
+} from '../../../../../../../../libs/ui/dropdown-menu/src';
 
 @Component({
   selector: 'boton-acciones-columna',
