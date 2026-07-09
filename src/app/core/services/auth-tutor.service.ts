@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+/*import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, throwError, delay, tap } from 'rxjs';
 import {
@@ -82,7 +82,6 @@ export class AuthTutorService {
 
     return of({
       success: true,
-      message: `REGISTRO COMPLETADO EXITOSAMENTE. SE CREO EL ACCESO PARA EL CORREO ${payload.correo}`,
       token: 'TOKEN_SIMULADO_DE_CONVOCATORIA_XYZ123',
     }).pipe(delay(1500));
   }
@@ -93,7 +92,7 @@ export class AuthTutorService {
 
     if (
       payload.correo.toLowerCase().trim() === 'tutor@gmail.com' &&
-      payload.contrasena === 'Temporal123'
+      payload.contrasenia === 'Temporal123'
     ) {
       const tokenSimulado = 'TOKEN_SIMULADO_PADRE_VALIDEZ_2026';
       this.establecerSesion(tokenSimulado);
@@ -125,32 +124,35 @@ export class AuthTutorService {
     }).pipe(delay(1000));
   }
 }
-
-/* =========================================================================
-VERSION 2: ESCENARIO REAL CON SERVIDOR (COMENTADO POR BLOQUE)
-=========================================================================
+*/
 
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { environment } from '../../../environments/environment'; 
-import { RegistroTutorRequest, AuthResponse, LoginRequest, RecuperarPasswordRequest } from '../../features/auth/models/auth.models';
+import { environment } from '../../../environments/environment';
+import {
+  RegistroTutorRequest,
+  AuthResponse,
+  LoginRequest,
+  RecuperarPasswordRequest,
+} from '../../features/auth/models/auth.models';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class AuthTutorService { 
+export class AuthTutorService {
+  // VARIABLES DE SESIÓN REACTIVAS EN MEMORIA RAM (SIGNALS)
   private sesionActivaSignal = signal<boolean>(false);
   private tokenSignal = signal<string | null>(null);
-  
-  // MODIFICADO EN MAYÚSCULAS: INTEGRACIÓN DE VARIABLE DE CONVOCATORIA PARA PETICIÓN REAL
   private convocatoriaActivaSignal = signal<boolean>(true);
 
+  // EXPUESTAS A LECTURA EXCLUSIVA PARA EL RESTO DE LA APP (GUARDS Y COMPONENTES)
   public sesionActiva = this.sesionActivaSignal.asReadonly();
   public tokenActual = this.tokenSignal.asReadonly();
   public convocatoriaActiva = this.convocatoriaActivaSignal.asReadonly();
 
   constructor(private http: HttpClient) {
+    // AL ARRANCAR EL SERVICIO, LEEMOS EL DISCO UNA SOLA VEZ PARA REANUDAR SESIÓN SI EXISTE
     const tokenGuardado = localStorage.getItem('token_control_escolar');
     if (tokenGuardado) {
       this.tokenSignal.set(tokenGuardado);
@@ -158,66 +160,77 @@ export class AuthTutorService {
     }
   }
 
-  private establecerSesion(token: string): void {
+  // MÉTODOS DE GESTIÓN COMBINADA (RAM + DISCO) PARA INTERCEPTORES Y GUARDS
+  private establecerSesion(token: string, claveTutorAspirante: string): void {
     localStorage.setItem('token_control_escolar', token);
+    localStorage.setItem('claveTutorAspirante', claveTutorAspirante);
     this.tokenSignal.set(token);
     this.sesionActivaSignal.set(true);
   }
 
   public cerrarSesion(): void {
     localStorage.removeItem('token_control_escolar');
+    localStorage.removeItem('claveTutorAspirante');
     this.tokenSignal.set(null);
     this.sesionActivaSignal.set(false);
   }
 
-  // MODIFICADO EN MAYÚSCULAS: MÉTODO REAL DE CONTROL DE APERTURA DESDE EL BACKEND
-  verificarConvocatoriaServidor(): Observable<boolean> {
-    const url = environment.production
-      ? `${environment.apiUrl}/api/convocatoria/estado-actual`
-      : `http://localhost:3000/api/convocatoria/estado-actual`;
+  // MÉTODO PARA ACTUALIZAR EL ESTADO DE LA CONVOCATORIA DINÁMICAMENTE
+  public establecerEstadoConvocatoria(estado: boolean): void {
+    this.convocatoriaActivaSignal.set(estado);
+  }
 
-    return this.http.get<boolean>(url).pipe(
-      tap(activa => this.convocatoriaActivaSignal.set(activa))
+  // VERIFICAR SI HAY UNA CONVOCATORIA ACTIVA EN EL SERVIDOR
+  verificarConvocatoriaServidor(): Observable<any> {
+    const url = `${environment.apiUrl}/Convocatorias`;
+    return this.http.get<any>(url).pipe(
+      tap((convocatorias) => {
+        // SI EXISTE AL MENOS UNA CONVOCATORIA ACTIVA LA CONVOCATORIA ESTA ABIERTA
+        const hayActiva = convocatorias.some(
+          (c: any) => c.activacion === true && c.estado === 'Publicada',
+        );
+        this.convocatoriaActivaSignal.set(hayActiva);
+      }),
     );
   }
 
-  verificarCurpUnica(curp: string): Observable<boolean> {
-    const url = environment.production
-      ? `${environment.apiUrl}/api/auth/validar-curp/${curp}`
-      : `http://localhost:3000/api/auth/validar-curp/${curp}`; 
-
-    return this.http.get<boolean>(url);
+  // VERIFICAR SI UNA CURP YA ESTA REGISTRADA EN EL SISTEMA
+  verificarCurpUnica(curp: string): Observable<any> {
+    const url = `${environment.apiUrl}/TutorAspirante/curp/${curp}`;
+    return this.http.get<any>(url);
   }
 
+  // REGISTRAR UN NUEVO TUTOR CON DIRECCION
   registrarTutorCompleto(payload: RegistroTutorRequest): Observable<AuthResponse> {
-    const url = environment.production
-      ? `${environment.apiUrl}/api/auth/registro-tutor`
-      : `http://localhost:3000/api/auth/registro-tutor`; 
-
+    const url = `${environment.apiUrl}/TutorAspirante`;
     return this.http.post<AuthResponse>(url, payload);
   }
 
+  // INICIO DE SESION DEL TUTOR ASPIRANTE
   login(payload: LoginRequest): Observable<AuthResponse> {
-    const url = environment.production
-      ? `${environment.apiUrl}/api/auth/login`
-      : `http://localhost:3000/api/auth/login`; 
-
+    const url = `${environment.apiUrl}/v1/Auth/Tutor/login`;
     return this.http.post<AuthResponse>(url, payload).pipe(
-      tap(res => {
+      tap((res) => {
         if (res && res.token) {
-          this.establecerSesion(res.token);
+          this.establecerSesion(res.token, res.claveTutorAspirante);
         }
-      })
+      }),
     );
   }
 
-  recuperarContrasena(payload: RecuperarPasswordRequest): Observable<AuthResponse> {
-    const url = environment.production
-      ? `${environment.apiUrl}/api/auth/recuperar-contrasena`
-      : `http://localhost:3000/api/auth/recuperar-contrasena`; 
+  // CIERRE DE SESION DEL TUTOR ASPIRANTE
+  logout(claveToken: string): Observable<any> {
+    const url = `${environment.apiUrl}/v1/Auth/Tutor/logout`;
+    return this.http.post<any>(url, { claveToken }).pipe(
+      tap(() => {
+        this.cerrarSesion();
+      }),
+    );
+  }
 
+  // RECUPERACION DE CONTRASENA
+  recuperarContrasena(payload: RecuperarPasswordRequest): Observable<AuthResponse> {
+    const url = `${environment.apiUrl}/v1/Auth/recuperar-contrasena`;
     return this.http.post<AuthResponse>(url, payload);
   }
 }
-=========================================================================
-*/

@@ -3,9 +3,11 @@
     <div class="contenedor-login">
       <img src="images/logo-telesecundaria.png" alt="Logo Telesecundaria" class="logo-movil" />
 
-      <h1 class="titulo-pantalla">Inicia sesion con tu cuenta</h1>
+      <h1 class="titulo-pantalla">Inicia sesión con tu cuenta</h1>
 
-      <div class="alerta error" *ngIf="mensajeErrorGlobal">{{ mensajeErrorGlobal }}</div>
+      @if (mensajeErrorGlobal) {
+        <div class="alerta error">{{ mensajeErrorGlobal }}</div>
+      }
 
       <form (ngSubmit)="ejecutarLogin()" #formularioLogin="ngForm">
         <div class="campo">
@@ -19,28 +21,27 @@
             required
             [class.input-error]="erroresCampos['correo']"
           />
-          <span class="texto-error-campo" *ngIf="erroresCampos['correo']">{{
-            erroresCampos['correo']
-          }}</span>
+          @if (erroresCampos['correo']) {
+            <span class="texto-error-campo">{{ erroresCampos['correo'] }}</span>
+          }
         </div>
 
         <div class="campo">
           <label>Contraseña <span class="requerido">*</span></label>
           <input
             type="password"
-            name="contrasena"
-            [(ngModel)]="datosLogin.contrasena"
-            (input)="limpiarErrorCampo('contrasena')"
+            name="contrasenia"
+            [(ngModel)]="datosLogin.contrasenia"
+            (input)="limpiarErrorCampo('contrasenia')"
             placeholder="Ingresa tu contraseña"
             required
-            [class.input-error]="erroresCampos['contrasena']"
+            [class.input-error]="erroresCampos['contrasenia']"
           />
-          <span class="texto-error-campo" *ngIf="erroresCampos['contrasena']">{{
-            erroresCampos['contrasena']
-          }}</span>
+          @if (erroresCampos['contrasenia']) {
+            <span class="texto-error-campo">{{ erroresCampos['contrasenia'] }}</span>
+          }
         </div>
 
-        <!-- ENLACE DE RECUPERAR CONTRASEÑA — USA CLASE CSS PARA EL COLOR VERDE -->
         <div class="enlace-recuperar">
           <a routerLink="/forgot-password" class="enlace-recuperar-link">
             ¿Olvidaste tu contraseña?
@@ -51,7 +52,7 @@
           <button
             type="submit"
             class="btn-primario-grande"
-            [disabled]="!datosLogin.correo || !datosLogin.contrasena || cargando()"
+            [disabled]="!datosLogin.correo || !datosLogin.contrasenia || cargando()"
           >
             {{ cargando() ? 'Ingresando...' : 'Ingresar' }}
           </button>
@@ -64,6 +65,7 @@
       </div>
     </div>
   </div>
+
   <div class="panel-marca-izquierdo">
     <div class="contenedor-logo-blanco">
       <img

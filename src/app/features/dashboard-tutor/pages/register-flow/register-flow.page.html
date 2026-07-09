@@ -17,9 +17,15 @@
 
         @if (pasoActual() === 1) {
           <div class="seccion-documentos">
+            <!-- MENSAJE DE ERROR GLOBAL DEL SERVIDOR -->
+            @if (mensajeErrorGlobal()) {
+              <div class="alerta error">{{ mensajeErrorGlobal() }}</div>
+            }
+
             <app-info-form
               #infoForm
               [datosIniciales]="datosAspiranteExistente()"
+              [errorCurpServidor]="errorCurpServidor()"
               (siguiente)="onSiguiente($event)"
             />
 
@@ -36,6 +42,11 @@
         @if (pasoActual() === 2) {
           <div class="seccion-documentos">
             <h3 class="subtitulo-seccion">Documentos requeridos</h3>
+
+            <!-- MENSAJE DE ERROR GLOBAL EN PASO 2 -->
+            @if (mensajeErrorGlobal()) {
+              <div class="alerta error">{{ mensajeErrorGlobal() }}</div>
+            }
 
             <div class="grid-documentos">
               @for (doc of docs(); track doc.id) {

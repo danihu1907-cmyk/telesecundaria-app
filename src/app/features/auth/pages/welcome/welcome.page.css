@@ -30,6 +30,16 @@
   color: var(--color-blanco);
 }
 
+/*.panel-marca-izquierdo {
+  flex: 1;
+  box-sizing: border-box;
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    url('../../../../../../public/images/collageBanner.png');
+  background-size: cover;
+  background-position: center;
+}*/
+
 /* CONTENEDOR BLANCO DEL LOGO */
 .contenedor-logo-blanco {
   background-color: var(--color-blanco);
@@ -331,8 +341,7 @@ button:disabled {
     overflow-y: auto;
   }
   .panel-marca-izquierdo {
-    padding: 30px 20px;
-    min-height: 280px;
+    display: none !important;
   }
   .titulo-marca {
     font-size: 1.6rem;

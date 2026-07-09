@@ -2,13 +2,27 @@
   <div class="container">
     <h2 class="galeria__titulo">Galería</h2>
 
-    <div class="galeria__grid">
-      @for (imagen of imagenesGaleria(); track imagen.claveGaleria) {
-        <div class="galeria__item">
-          <img [src]="imagen.rutaImagenUrl" [alt]="imagen.tituloEvento" />
-        </div>
-      }
-    </div>
+    @if (cargando()) {
+      <div class="galeria__loading">
+        <div class="galeria__spinner"></div>
+      </div>
+    } @else if (hayError()) {
+      <div class="galeria__error">
+        <p>No se pudo cargar la galería en este momento. Intenta más tarde.</p>
+      </div>
+    } @else if (imagenesGaleria().length === 0) {
+      <div class="galeria__vacio">
+        <p>No hay imágenes disponibles por el momento.</p>
+      </div>
+    } @else {
+      <div class="galeria__grid">
+        @for (imagen of imagenesGaleria(); track imagen.claveImagen) {
+          <div class="galeria__item">
+            <img [src]="imagen.rutaUrl" [alt]="imagen.nombreArchivo" />
+          </div>
+        }
+      </div>
+    }
 
     <div class="galeria__footer"></div>
   </div>

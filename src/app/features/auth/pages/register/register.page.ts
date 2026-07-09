@@ -1,6 +1,5 @@
 import { Component, signal, OnInit } from '@angular/core'; // IMPORTAMOS SIGNAL DESDE EL NUCLEO DE ANGULAR
 import { Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common'; // REQUERIDO OBLIGATORIAMENTE EN COMPONENTES STANDALONE
 import { FormsModule } from '@angular/forms'; // LIBRERIA INTEGRADA PARA DAR SOPORTE A NGMODEL
 import { AuthTutorService } from '../../../../core/services/auth-tutor.service'; // <-- SE CORRIGE LA RUTA AL NUEVO SERVICIO GLOBAL EN CORE
 import { BannerHeroService } from '../../../landing/services/banner-hero.service'; // <-- INYECCIÓN DEL SERVICIO DE PUBLICACIONES PARA EL CONTROL DE ACCESO
@@ -10,7 +9,7 @@ import { Publicacion } from '../../../landing/models/publicacion.model';
 @Component({
   selector: 'app-register',
   standalone: true, // CONFIGURACION DE LA NUEVA ARQUITECTURA INDEPENDIENTE DE ANGULAR
-  imports: [CommonModule, FormsModule, RouterModule], // INTEGRACION DE HERRAMIENTAS DIRECTAS PARA EL COMPONENTE
+  imports: [FormsModule, RouterModule], // INTEGRACION DE HERRAMIENTAS DIRECTAS PARA EL COMPONENTE
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.css'],
 })
@@ -69,7 +68,7 @@ export class RegisterPage implements OnInit {
     this.bannerService.obtenerBanners().subscribe({
       next: (datos: Publicacion[]) => {
         const tieneConvocatoria = datos.some(
-          (p: Publicacion) => p.categoria === 'Convocatoria' && p.estatusVisible,
+          (p: Publicacion) => p.categoria === 'Convocatorias' && p.estatusVisible,
         );
 
         // SI NO ENCUENTRA NINGUNA CONVOCATORIA ACTIVA SE LEVANTA EL CANDADO DE BLOQUEO
@@ -210,7 +209,7 @@ export class RegisterPage implements OnInit {
     this.authService.registrarTutorCompleto(this.datosRegistro).subscribe({
       next: (respuesta) => {
         this.cargando.set(false);
-        this.mensajeExito = respuesta.message;
+        this.mensajeExito = respuesta.mensaje;
 
         if (respuesta.token) {
           localStorage.setItem('token_control_escolar', respuesta.token); // <-- MANTIENE TU PERSISTENCIA EN EL DISCO CON EL MISMO NOMBRE CLAVE DEL SERVICIO

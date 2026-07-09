@@ -3,325 +3,347 @@
     <div class="contenedor-registro">
       <h1 class="titulo-pantalla">Crear cuenta</h1>
 
-      <div *ngIf="cargandoValidacion()" class="bloque-paso">
-        <p class="subtitulo-pasos">Verificando disponibilidad del sistema...</p>
-      </div>
-
-      <div *ngIf="!cargandoValidacion() && convocatoriaCerrada()" class="bloque-paso">
-        <div class="alerta error" style="text-align: center; margin-top: 20px; font-weight: bold">
-          El periodo de registro digital no está abierto en este momento.
+      @if (cargandoValidacion()) {
+        <div class="bloque-paso">
+          <p class="subtitulo-pasos">Verificando disponibilidad del sistema...</p>
         </div>
-        <p
-          class="subtitulo-pasos"
-          style="margin-top: 15px; text-align: center; line-height: 1.6; margin-bottom: 30px"
-        >
-          No es posible generar solicitudes de nuevas cuentas de tutor en este momento ya que no
-          existen procesos de inscripción vigentes para el ciclo escolar.
-        </p>
-      </div>
-
-      <div *ngIf="!cargandoValidacion() && !convocatoriaCerrada()">
-        <p class="subtitulo-pasos" *ngIf="pasoActual() === 1">Paso 1 de 3 - Datos personales</p>
-        <p class="subtitulo-pasos" *ngIf="pasoActual() === 2">Paso 2 de 3 - Direccion</p>
-        <p class="subtitulo-pasos" *ngIf="pasoActual() === 3">Paso 3 de 3 - Datos de acceso</p>
-
-        <div class="indicador-pasos">
-          <div class="circulo" [class.activo]="pasoActual() >= 1">
-            <span *ngIf="pasoActual() > 1">✓</span>
-            <span *ngIf="pasoActual() === 1">1</span>
+      } @else if (convocatoriaCerrada()) {
+        <div class="bloque-paso">
+          <div class="alerta error" style="text-align: center; margin-top: 20px; font-weight: bold">
+            El periodo de registro digital no está abierto en este momento.
           </div>
-          <div class="linea" [class.activa]="pasoActual() >= 2"></div>
-          <div class="circulo" [class.activo]="pasoActual() >= 2">
-            <span *ngIf="pasoActual() > 2">✓</span>
-            <span *ngIf="pasoActual() <= 2">2</span>
-          </div>
-          <div class="linea" [class.activa]="pasoActual() === 3"></div>
-          <div class="circulo" [class.activo]="pasoActual() === 3">3</div>
+          <p
+            class="subtitulo-pasos"
+            style="margin-top: 15px; text-align: center; line-height: 1.6; margin-bottom: 30px"
+          >
+            No es posible generar solicitudes de nuevas cuentas de tutor en este momento ya que no
+            existen procesos de inscripción vigentes para el ciclo escolar.
+          </p>
         </div>
+      } @else {
+        <div>
+          @if (pasoActual() === 1) {
+            <p class="subtitulo-pasos">Paso 1 de 3 - Datos personales</p>
+          } @else if (pasoActual() === 2) {
+            <p class="subtitulo-pasos">Paso 2 de 3 - Dirección</p>
+          } @else if (pasoActual() === 3) {
+            <p class="subtitulo-pasos">Paso 3 de 3 - Datos de acceso</p>
+          }
 
-        <div class="alerta exito" *ngIf="mensajeExito">{{ mensajeExito }}</div>
-
-        <form (ngSubmit)="procesarRegistroFinal()" #formularioRegistro="ngForm">
-          <div *ngIf="pasoActual() === 1" class="bloque-paso">
-            <div class="fila-campos">
-              <div class="campo flex-1">
-                <label>Nombre(s) <span class="requerido">*</span></label>
-                <input
-                  type="text"
-                  name="nombre"
-                  [(ngModel)]="datosRegistro.nombre"
-                  (input)="limpiarErrorCampo('nombre')"
-                  required
-                  maxlength="50"
-                  placeholder="Maria"
-                  [class.input-error]="erroresCampos['nombre']"
-                />
-                <span class="texto-error-campo" *ngIf="erroresCampos['nombre']">{{
-                  erroresCampos['nombre']
-                }}</span>
-              </div>
-              <div class="campo flex-1">
-                <label>Apellido paterno <span class="requerido">*</span></label>
-                <input
-                  type="text"
-                  name="apellido_paterno"
-                  [(ngModel)]="datosRegistro.apellido_paterno"
-                  (input)="limpiarErrorCampo('apellido_paterno')"
-                  required
-                  maxlength="50"
-                  placeholder="Perez Perez"
-                  [class.input-error]="erroresCampos['apellido_paterno']"
-                />
-                <span class="texto-error-campo" *ngIf="erroresCampos['apellido_paterno']">{{
-                  erroresCampos['apellido_paterno']
-                }}</span>
-              </div>
+          <div class="indicador-pasos">
+            <div class="circulo" [class.activo]="pasoActual() >= 1">
+              @if (pasoActual() > 1) {
+                <span>✓</span>
+              } @else {
+                <span>1</span>
+              }
             </div>
-
-            <div class="campo">
-              <label>Apellido materno <span class="requerido">*</span></label>
-              <input
-                type="text"
-                name="apellido_materno"
-                [(ngModel)]="datosRegistro.apellido_materno"
-                maxlength="50"
-                placeholder="Lopez (opcional)"
-              />
+            <div class="linea" [class.activa]="pasoActual() >= 2"></div>
+            <div class="circulo" [class.activo]="pasoActual() >= 2">
+              @if (pasoActual() > 2) {
+                <span>✓</span>
+              } @else {
+                <span>2</span>
+              }
             </div>
-
-            <div class="campo">
-              <label>CURP <span class="requerido">*</span></label>
-              <input
-                type="text"
-                name="curp_tutor"
-                [(ngModel)]="datosRegistro.curp_tutor"
-                (input)="limpiarErrorCampo('curp_tutor')"
-                required
-                maxlength="18"
-                placeholder="18 CARACTERES"
-                [class.input-error]="erroresCampos['curp_tutor']"
-              />
-              <span class="texto-error-campo" *ngIf="erroresCampos['curp_tutor']">{{
-                erroresCampos['curp_tutor']
-              }}</span>
-            </div>
-
-            <div class="fila-campos">
-              <div class="campo flex-1">
-                <label>Telefono <span class="requerido">*</span></label>
-                <input
-                  type="tel"
-                  name="telefono"
-                  [(ngModel)]="datosRegistro.telefono"
-                  (input)="limpiarErrorCampo('telefono')"
-                  required
-                  maxlength="10"
-                  (keypress)="soloNumeros($event)"
-                  placeholder="2711092999"
-                  [class.input-error]="erroresCampos['telefono']"
-                />
-                <span class="texto-error-campo" *ngIf="erroresCampos['telefono']">{{
-                  erroresCampos['telefono']
-                }}</span>
-              </div>
-              <div class="campo flex-1">
-                <label>Parentesco <span class="requerido">*</span></label>
-                <select name="parentesco" [(ngModel)]="datosRegistro.parentesco" required>
-                  <option value="">Seleccionar</option>
-                  <option value="PADRE">PADRE</option>
-                  <option value="MADRE">MADRE</option>
-                  <option value="TUTOR LEGAL">TUTOR LEGAL</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="bloque-botones-vertical">
-              <button
-                type="button"
-                class="btn-primario-grande"
-                (click)="siguientePaso()"
-                [disabled]="
-                  !datosRegistro.nombre ||
-                  !datosRegistro.apellido_paterno ||
-                  !datosRegistro.curp_tutor ||
-                  !datosRegistro.telefono ||
-                  !datosRegistro.parentesco ||
-                  cargando()
-                "
-              >
-                Siguiente →
-              </button>
-            </div>
+            <div class="linea" [class.activa]="pasoActual() === 3"></div>
+            <div class="circulo" [class.activo]="pasoActual() === 3">3</div>
           </div>
 
-          <div *ngIf="pasoActual() === 2" class="bloque-paso">
-            <div class="campo">
-              <label>Calle y numero <span class="requerido">*</span></label>
-              <input
-                type="text"
-                name="calle_numero"
-                [(ngModel)]="datosRegistro.calle_numero"
-                (input)="limpiarErrorCampo('calle_numero')"
-                required
-                maxlength="100"
-                placeholder="Av. Hidalgo 123"
-                [class.input-error]="erroresCampos['calle_numero']"
-              />
-              <span class="texto-error-campo" *ngIf="erroresCampos['calle_numero']">{{
-                erroresCampos['calle_numero']
-              }}</span>
-            </div>
+          @if (mensajeExito) {
+            <div class="alerta exito">{{ mensajeExito }}</div>
+          }
 
-            <div class="fila-campos">
-              <div class="campo flex-2">
-                <label>Colonia <span class="requerido">*</span></label>
-                <input
-                  type="text"
-                  name="colonia"
-                  [(ngModel)]="datosRegistro.colonia"
-                  (input)="limpiarErrorCampo('colonia')"
-                  required
-                  maxlength="50"
-                  placeholder="Centro"
-                  [class.input-error]="erroresCampos['colonia']"
-                />
-                <span class="texto-error-campo" *ngIf="erroresCampos['colonia']">{{
-                  erroresCampos['colonia']
-                }}</span>
+          <form (ngSubmit)="procesarRegistroFinal()" #formularioRegistro="ngForm">
+            @if (pasoActual() === 1) {
+              <div class="bloque-paso">
+                <div class="fila-campos">
+                  <div class="campo flex-1">
+                    <label>Nombre(s) <span class="requerido">*</span></label>
+                    <input
+                      type="text"
+                      name="nombre"
+                      [(ngModel)]="datosRegistro.nombre"
+                      (input)="limpiarErrorCampo('nombre')"
+                      required
+                      maxlength="50"
+                      placeholder="María"
+                      [class.input-error]="erroresCampos['nombre']"
+                    />
+                    @if (erroresCampos['nombre']) {
+                      <span class="texto-error-campo">{{ erroresCampos['nombre'] }}</span>
+                    }
+                  </div>
+                  <div class="campo flex-1">
+                    <label>Apellido paterno <span class="requerido">*</span></label>
+                    <input
+                      type="text"
+                      name="apellido_paterno"
+                      [(ngModel)]="datosRegistro.apellido_paterno"
+                      (input)="limpiarErrorCampo('apellido_paterno')"
+                      required
+                      maxlength="50"
+                      placeholder="Pérez Pérez"
+                      [class.input-error]="erroresCampos['apellido_paterno']"
+                    />
+                    @if (erroresCampos['apellido_paterno']) {
+                      <span class="texto-error-campo">{{ erroresCampos['apellido_paterno'] }}</span>
+                    }
+                  </div>
+                </div>
+
+                <div class="campo">
+                  <label>Apellido materno <span class="requerido">*</span></label>
+                  <input
+                    type="text"
+                    name="apellido_materno"
+                    [(ngModel)]="datosRegistro.apellido_materno"
+                    maxlength="50"
+                    placeholder="López (opcional)"
+                  />
+                </div>
+
+                <div class="campo">
+                  <label>CURP <span class="requerido">*</span></label>
+                  <input
+                    type="text"
+                    name="curp_tutor"
+                    [(ngModel)]="datosRegistro.curp_tutor"
+                    (input)="limpiarErrorCampo('curp_tutor')"
+                    required
+                    maxlength="18"
+                    placeholder="18 CARACTERES"
+                    [class.input-error]="erroresCampos['curp_tutor']"
+                  />
+                  @if (erroresCampos['curp_tutor']) {
+                    <span class="texto-error-campo">{{ erroresCampos['curp_tutor'] }}</span>
+                  }
+                </div>
+
+                <div class="fila-campos">
+                  <div class="campo flex-1">
+                    <label>Teléfono <span class="requerido">*</span></label>
+                    <input
+                      type="tel"
+                      name="telefono"
+                      [(ngModel)]="datosRegistro.telefono"
+                      (input)="limpiarErrorCampo('telefono')"
+                      required
+                      maxlength="10"
+                      (keypress)="soloNumeros($event)"
+                      placeholder="2711092999"
+                      [class.input-error]="erroresCampos['telefono']"
+                    />
+                    @if (erroresCampos['telefono']) {
+                      <span class="texto-error-campo">{{ erroresCampos['telefono'] }}</span>
+                    }
+                  </div>
+                  <div class="campo flex-1">
+                    <label>Parentesco <span class="requerido">*</span></label>
+                    <select name="parentesco" [(ngModel)]="datosRegistro.parentesco" required>
+                      <option value="">Seleccionar</option>
+                      <option value="PADRE">PADRE</option>
+                      <option value="MADRE">MADRE</option>
+                      <option value="TUTOR LEGAL">TUTOR LEGAL</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="bloque-botones-vertical">
+                  <button
+                    type="button"
+                    class="btn-primario-grande"
+                    (click)="siguientePaso()"
+                    [disabled]="
+                      !datosRegistro.nombre ||
+                      !datosRegistro.apellido_paterno ||
+                      !datosRegistro.curp_tutor ||
+                      !datosRegistro.telefono ||
+                      !datosRegistro.parentesco ||
+                      cargando()
+                    "
+                  >
+                    Siguiente →
+                  </button>
+                </div>
               </div>
-              <div class="campo flex-1">
-                <label>Codigo postal <span class="requerido">*</span></label>
-                <input
-                  type="text"
-                  name="codigo_postal"
-                  [(ngModel)]="datosRegistro.codigo_postal"
-                  (input)="limpiarErrorCampo('codigo_postal')"
-                  required
-                  maxlength="5"
-                  (keypress)="soloNumeros($event)"
-                  placeholder="94470"
-                  [class.input-error]="erroresCampos['codigo_postal']"
-                />
-                <span class="texto-error-campo" *ngIf="erroresCampos['codigo_postal']">{{
-                  erroresCampos['codigo_postal']
-                }}</span>
+            }
+
+            @if (pasoActual() === 2) {
+              <div class="bloque-paso">
+                <div class="campo">
+                  <label>Calle y número <span class="requerido">*</span></label>
+                  <input
+                    type="text"
+                    name="calle_numero"
+                    [(ngModel)]="datosRegistro.calle_numero"
+                    (input)="limpiarErrorCampo('calle_numero')"
+                    required
+                    maxlength="100"
+                    placeholder="Av. Hidalgo 123"
+                    [class.input-error]="erroresCampos['calle_numero']"
+                  />
+                  @if (erroresCampos['calle_numero']) {
+                    <span class="texto-error-campo">{{ erroresCampos['calle_numero'] }}</span>
+                  }
+                </div>
+
+                <div class="fila-campos">
+                  <div class="campo flex-2">
+                    <label>Colonia <span class="requerido">*</span></label>
+                    <input
+                      type="text"
+                      name="colonia"
+                      [(ngModel)]="datosRegistro.colonia"
+                      (input)="limpiarErrorCampo('colonia')"
+                      required
+                      maxlength="50"
+                      placeholder="Centro"
+                      [class.input-error]="erroresCampos['colonia']"
+                    />
+                    @if (erroresCampos['colonia']) {
+                      <span class="texto-error-campo">{{ erroresCampos['colonia'] }}</span>
+                    }
+                  </div>
+                  <div class="campo flex-1">
+                    <label>Código postal <span class="requerido">*</span></label>
+                    <input
+                      type="text"
+                      name="codigo_postal"
+                      [(ngModel)]="datosRegistro.codigo_postal"
+                      (input)="limpiarErrorCampo('codigo_postal')"
+                      required
+                      maxlength="5"
+                      (keypress)="soloNumeros($event)"
+                      placeholder="94470"
+                      [class.input-error]="erroresCampos['codigo_postal']"
+                    />
+                    @if (erroresCampos['codigo_postal']) {
+                      <span class="texto-error-campo">{{ erroresCampos['codigo_postal'] }}</span>
+                    }
+                  </div>
+                </div>
+
+                <div class="campo">
+                  <label>Municipio <span class="requerido">*</span></label>
+                  <input
+                    type="text"
+                    name="municipio"
+                    [(ngModel)]="datosRegistro.municipio"
+                    (input)="limpiarErrorCampo('municipio')"
+                    required
+                    maxlength="50"
+                    placeholder="Fortín de las Flores"
+                    [class.input-error]="erroresCampos['municipio']"
+                  />
+                  @if (erroresCampos['municipio']) {
+                    <span class="texto-error-campo">{{ erroresCampos['municipio'] }}</span>
+                  }
+                </div>
+
+                <div class="bloque-botones-vertical">
+                  <button
+                    type="button"
+                    class="btn-primario-grande"
+                    (click)="siguientePaso()"
+                    [disabled]="
+                      !datosRegistro.calle_numero ||
+                      !datosRegistro.colonia ||
+                      !datosRegistro.codigo_postal ||
+                      !datosRegistro.municipio
+                    "
+                  >
+                    Siguiente →
+                  </button>
+                  <button type="button" class="btn-secundario-grande" (click)="pasoAnterior()">
+                    ← Regresar
+                  </button>
+                </div>
               </div>
-            </div>
+            }
 
-            <div class="campo">
-              <label>Municipio <span class="requerido">*</span></label>
-              <input
-                type="text"
-                name="municipio"
-                [(ngModel)]="datosRegistro.municipio"
-                (input)="limpiarErrorCampo('municipio')"
-                required
-                maxlength="50"
-                placeholder="Fortin de las flores"
-                [class.input-error]="erroresCampos['municipio']"
-              />
-              <span class="texto-error-campo" *ngIf="erroresCampos['municipio']">{{
-                erroresCampos['municipio']
-              }}</span>
-            </div>
+            @if (pasoActual() === 3) {
+              <div class="bloque-paso">
+                <div class="campo">
+                  <label>Correo electrónico <span class="requerido">*</span></label>
+                  <input
+                    type="email"
+                    name="correo"
+                    [(ngModel)]="datosRegistro.correo"
+                    (input)="limpiarErrorCampo('correo')"
+                    required
+                    maxlength="100"
+                    placeholder="correo@gmail.com"
+                    [class.input-error]="erroresCampos['correo']"
+                  />
+                  @if (erroresCampos['correo']) {
+                    <span class="texto-error-campo">{{ erroresCampos['correo'] }}</span>
+                  }
+                </div>
 
-            <div class="bloque-botones-vertical">
-              <button
-                type="button"
-                class="btn-primario-grande"
-                (click)="siguientePaso()"
-                [disabled]="
-                  !datosRegistro.calle_numero ||
-                  !datosRegistro.colonia ||
-                  !datosRegistro.codigo_postal ||
-                  !datosRegistro.municipio
-                "
-              >
-                Siguiente →
-              </button>
-              <button type="button" class="btn-secundario-grande" (click)="pasoAnterior()">
-                ← Regresar
-              </button>
-            </div>
-          </div>
+                <div class="campo">
+                  <label>Contraseña <span class="requerido">*</span></label>
+                  <input
+                    type="password"
+                    name="contrasena"
+                    [(ngModel)]="datosRegistro.contrasena"
+                    (input)="limpiarErrorCampo('contrasena')"
+                    required
+                    maxlength="50"
+                    placeholder="Mínimo 8 caracteres"
+                    [class.input-error]="erroresCampos['contrasena']"
+                  />
+                  @if (erroresCampos['contrasena']) {
+                    <span class="texto-error-campo">{{ erroresCampos['contrasena'] }}</span>
+                  }
+                </div>
 
-          <div *ngIf="pasoActual() === 3" class="bloque-paso">
-            <div class="campo">
-              <label>Correo electronico <span class="requerido">*</span></label>
-              <input
-                type="email"
-                name="correo"
-                [(ngModel)]="datosRegistro.correo"
-                (input)="limpiarErrorCampo('correo')"
-                required
-                maxlength="100"
-                placeholder="correo@gmail.com"
-                [class.input-error]="erroresCampos['correo']"
-              />
-              <span class="texto-error-campo" *ngIf="erroresCampos['correo']">{{
-                erroresCampos['correo']
-              }}</span>
-            </div>
+                <div class="campo">
+                  <label>Confirmar contraseña <span class="requerido">*</span></label>
+                  <input
+                    type="password"
+                    name="confirmarContrasena"
+                    [(ngModel)]="confirmarContrasena"
+                    (input)="limpiarErrorCampo('confirmarContrasena')"
+                    required
+                    maxlength="50"
+                    placeholder="Repite tu contraseña"
+                    [class.input-error]="erroresCampos['confirmarContrasena']"
+                  />
+                  @if (erroresCampos['confirmarContrasena']) {
+                    <span class="texto-error-campo">{{
+                      erroresCampos['confirmarContrasena']
+                    }}</span>
+                  }
+                </div>
 
-            <div class="campo">
-              <label>Contraseña <span class="requerido">*</span></label>
-              <input
-                type="password"
-                name="contrasena"
-                [(ngModel)]="datosRegistro.contrasena"
-                (input)="limpiarErrorCampo('contrasena')"
-                required
-                maxlength="50"
-                placeholder="Minimo 8 caracteres"
-                [class.input-error]="erroresCampos['contrasena']"
-              />
-              <span class="texto-error-campo" *ngIf="erroresCampos['contrasena']">{{
-                erroresCampos['contrasena']
-              }}</span>
-            </div>
-
-            <div class="campo">
-              <label>Confirmar contraseña <span class="requerido">*</span></label>
-              <input
-                type="password"
-                name="confirmarContrasena"
-                [(ngModel)]="confirmarContrasena"
-                (input)="limpiarErrorCampo('confirmarContrasena')"
-                required
-                maxlength="50"
-                placeholder="Repite tu contraseña"
-                [class.input-error]="erroresCampos['confirmarContrasena']"
-              />
-              <span class="texto-error-campo" *ngIf="erroresCampos['confirmarContrasena']">{{
-                erroresCampos['confirmarContrasena']
-              }}</span>
-            </div>
-
-            <div class="bloque-botones-vertical">
-              <button
-                type="submit"
-                class="btn-primario-grande"
-                [disabled]="
-                  !datosRegistro.correo ||
-                  !datosRegistro.contrasena ||
-                  !confirmarContrasena ||
-                  cargando()
-                "
-              >
-                {{ cargando() ? 'Procesando...' : 'Crear cuenta' }}
-              </button>
-              <button
-                type="button"
-                class="btn-secundario-grande"
-                (click)="pasoAnterior()"
-                [disabled]="cargando()"
-              >
-                ← Regresar
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
+                <div class="bloque-botones-vertical">
+                  <button
+                    type="submit"
+                    class="btn-primario-grande"
+                    [disabled]="
+                      !datosRegistro.correo ||
+                      !datosRegistro.contrasena ||
+                      !confirmarContrasena ||
+                      cargando()
+                    "
+                  >
+                    {{ cargando() ? 'Procesando...' : 'Crear cuenta' }}
+                  </button>
+                  <button
+                    type="button"
+                    class="btn-secundario-grande"
+                    (click)="pasoAnterior()"
+                    [disabled]="cargando()"
+                  >
+                    ← Regresar
+                  </button>
+                </div>
+              </div>
+            }
+          </form>
+        </div>
+      }
 
       <div class="enlace-login-inferior">
         ¿Ya tienes cuenta?
@@ -329,6 +351,7 @@
       </div>
     </div>
   </div>
+
   <div class="panel-marca-izquierdo">
     <div class="contenedor-logo-blanco">
       <img
@@ -341,6 +364,6 @@
     <p class="descripcion-marca">
       Crea tu cuenta para inscribir a tu hijo o hija al ciclo escolar.
     </p>
-    <div class="chip-informativo">Facil y Rapido</div>
+    <div class="chip-informativo">Fácil y Rápido</div>
   </div>
 </div>

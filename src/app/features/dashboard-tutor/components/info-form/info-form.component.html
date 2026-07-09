@@ -58,6 +58,8 @@
         />
         @if (isInvalid('curp')) {
           <span class="texto-error-campo">{{ getErroresCurp('curp') }}</span>
+        } @else if (errorCurpServidor) {
+          <span class="texto-error-campo">{{ errorCurpServidor }}</span>
         }
       </div>
 

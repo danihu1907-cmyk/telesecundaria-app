@@ -1,7 +1,7 @@
 <div class="pantalla-overview">
   <app-dashboard-header
-    [nombreTutor]="datos()?.nombre_tutor || 'David Nieves'"
-    [nombreUsuario]="datos()?.nombre_tutor || 'David Nieves'"
+    [nombreTutor]="datos()?.nombreTutor || 'David Nieves'"
+    [nombreUsuario]="datos()?.nombreTutor || 'David Nieves'"
     [inicialesUsuario]="'DN'"
     (cerrarSesion)="onLogout()"
   />
@@ -16,7 +16,7 @@
       <div class="spinner-carga"><p>Consultando registros en el servidor escolar...</p></div>
     } @else {
       <div class="lista-aspirantes">
-        @for (asp of datos()?.aspirantes; track asp.id_aspirante) {
+        @for (asp of datos()?.aspirantes; track asp.claveAspirante) {
           <app-aspirante-card
             [aspirante]="asp"
             (completarDocumentos)="completarDocumentosAspirante($event)"
@@ -24,9 +24,6 @@
         } @empty {
           <div class="estado-vacio">
             <p>Aún no has registrado aspirantes en la convocatoria actual.</p>
-            <button class="btn-agregar" routerLink="/dashboard/register-flow">
-              + Registrar primer aspirante
-            </button>
           </div>
         }
       </div>

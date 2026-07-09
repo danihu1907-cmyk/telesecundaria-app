@@ -1,4 +1,13 @@
-import { Component, output, inject, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  output,
+  inject,
+  Input,
+  OnInit,
+  ChangeDetectorRef,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 
@@ -9,9 +18,12 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
   templateUrl: './info-form.component.html',
   styleUrl: './info-form.component.css',
 })
-export class InfoFormComponent implements OnInit {
+export class InfoFormComponent implements OnInit, OnChanges {
   siguiente = output<any>();
   @Input() datosIniciales: any = null;
+
+  // RECIBE EL ERROR DE CURP QUE VIENE DEL SERVIDOR PARA MOSTRARLO DEBAJO DEL CAMPO
+  @Input() errorCurpServidor: string | null = null;
 
   private fb = inject(FormBuilder);
   private cdr = inject(ChangeDetectorRef);
@@ -35,6 +47,14 @@ export class InfoFormComponent implements OnInit {
     curpHermano: [''],
   });
 
+  // NUEVO METODO DE CICLO DE VIDA: DETECTA CUANDO LOS DATOSINICIALES LLEGAN ASINCRONAMENTE DESDE EL SERVIDOR Y RELLENA LOS INPUTS EN TIEMPO REAL
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['datosIniciales'] && changes['datosIniciales'].currentValue) {
+      this.form.patchValue(changes['datosIniciales'].currentValue);
+      this.cdr.detectChanges();
+    }
+  }
+
   ngOnInit(): void {
     if (this.datosIniciales) {
       this.form.patchValue(this.datosIniciales);
@@ -49,7 +69,7 @@ export class InfoFormComponent implements OnInit {
         this.enviado = false;
       } else {
         campoEnfermedad?.clearValidators();
-        campoEnfermedad?.setValue(''); // Resetea el valor para que no guarde basura
+        campoEnfermedad?.setValue('');
       }
       campoEnfermedad?.updateValueAndValidity({ emitEvent: false });
       this.cdr.detectChanges();
@@ -68,7 +88,7 @@ export class InfoFormComponent implements OnInit {
         this.enviado = false;
       } else {
         campoCurpHermano?.clearValidators();
-        campoCurpHermano?.setValue(''); // Resetea el valor para que no guarde basura
+        campoCurpHermano?.setValue('');
       }
       campoCurpHermano?.updateValueAndValidity({ emitEvent: false });
       this.cdr.detectChanges();
@@ -109,11 +129,15 @@ export class InfoFormComponent implements OnInit {
         return 'La CURP debe tener 18 caracteres';
       }
     }
+    // SI HAY ERROR DEL SERVIDOR PARA LA CURP LO MOSTRAMOS AQUI
+    if (campoNombre === 'curp' && this.errorCurpServidor) {
+      return this.errorCurpServidor;
+    }
     return '';
   }
 
   onSubmit(): void {
-    this.enviado = true; // Marcamos que el usuario ya intentó avanzar
+    this.enviado = true;
 
     if (this.form.invalid) {
       // Marcamos todo como tocado para activar los mensajes visuales de error de los campos visibles

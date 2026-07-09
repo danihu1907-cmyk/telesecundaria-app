@@ -20,7 +20,8 @@ export class OverviewComponent implements OnInit {
   public cargando = this.tutorService.cargando;
 
   ngOnInit() {
-    this.tutorService.obtenerDashboardTutorMock('TUT-2026-MOCK').subscribe();
+    //this.tutorService.obtenerDashboardTutorMock('TUT-2026-MOCK').subscribe();
+    this.tutorService.obtenerDashboardTutor().subscribe();
   }
 
   completarDocumentosAspirante(claveAspirante: string): void {

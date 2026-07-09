@@ -14,7 +14,6 @@
   padding: 1.5rem;
   text-align: center;
   border: 1px solid rgba(217, 217, 217, 1);
-  backdrop-filter: blur(20px);
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
