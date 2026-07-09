@@ -97,6 +97,9 @@
       ],
       "@spartan-ng/helm/calendar": [
         "./libs/ui/calendar/src/index.ts"
+      ],
+      "@spartan-ng/helm/alert-dialog": [
+        "./libs/ui/alert-dialog/src/index.ts"
       ]
     }
   },

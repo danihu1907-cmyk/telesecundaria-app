@@ -25,25 +25,18 @@ import {
 } from '@tanstack/angular-table';
 import { HlmIcon } from '@spartan-ng/helm/icon';
 import { provideIcons, NgIcon } from '@ng-icons/core';
-import {
-  HlmSelect,
-  HlmSelectTrigger,
-  HlmSelectValue,
-  HlmSelectContent,
-  HlmSelectGroup,
-  HlmSelectItem,
-} from '../../../../../../../libs/ui/select/src';
-import { OrdenarColumnas } from './componentes/boton-ordenar-columna';
-import { BotonAccionesColumna } from './componentes/boton-acciones-columna';
-import { SeleccionFilaTabla, SeleccionTituloTabla } from './componentes/columna-seleccion';
-import { TituloColumna } from './componentes/titulo-columna';
-import { EstadoConvocatoria } from './componentes/estado-convocatoria-columna';
-import { DescripcionColumna } from './componentes/descripcion-columna';
-import { FechaFinColumna } from './componentes/fecha-fin-columna';
-import { FechaInicioColumna } from './componentes/fecha-inicio-columna';
-import { CicloEscolar } from './componentes/ciclo-escolar';
-import { CupoMaximo } from './componentes/cupo-maximo';
+import { OrdenarColumnas } from '../componentes/boton-ordenar-columna';
+import { BotonAccionesColumna } from '../componentes/boton-acciones-columna';
+import { SeleccionFilaTabla, SeleccionTituloTabla } from '../componentes/columna-seleccion';
+import { TituloColumna } from './columnas/titulo-columna';
+import { EstadoConvocatoria } from './columnas/estado-convocatoria-columna';
+import { DescripcionColumna } from './columnas/descripcion-columna';
+import { FechaFinColumna } from './columnas/fecha-fin-columna';
+import { FechaInicioColumna } from './columnas/fecha-inicio-columna';
+import { CicloEscolar } from './columnas/ciclo-escolar';
+import { CupoMaximo } from './columnas/cupo-maximo';
 import { HlmButton } from '@spartan-ng/helm/button';
+import { AbrirConvocatorias } from '../../modales/modal-abrir-convocatorias';
 
 @Component({
   selector: 'tabla-convocatorias',
@@ -56,12 +49,7 @@ import { HlmButton } from '@spartan-ng/helm/button';
     NgIcon,
     HlmSelectImports,
     HlmTableImports,
-    HlmSelect,
-    HlmSelectTrigger,
-    HlmSelectValue,
-    HlmSelectContent,
-    HlmSelectGroup,
-    HlmSelectItem,
+    AbrirConvocatorias,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
@@ -130,6 +118,7 @@ import { HlmButton } from '@spartan-ng/helm/button';
                     [attr.key]="row.id"
                     [attr.data-state]="row.getIsSelected() && 'selected'"
                     class="border-b border-border"
+                    (click)="abrirConvocatoria(row.original)"
                   >
                     @for (cell of row.getVisibleCells(); track $index) {
                       <td hlmTd class="px-4">
@@ -154,6 +143,14 @@ import { HlmButton } from '@spartan-ng/helm/button';
                 }
               </tbody>
             </table>
+
+            <!-- modal que abre al hacer click a una fila para ver detalle de convocatorias -->
+            <modal-abrir-convocatorias
+              [detallesConvocatoria]="convocatoriaSeleccionada()"
+              [abierto]="modalAbierto()"
+              (cerrado)="cerrarConvocatoria()"
+            >
+            </modal-abrir-convocatorias>
           </div>
         } @placeholder {
           <div class="flex h-96 items-center justify-center">
@@ -321,9 +318,23 @@ export class TablaConvocatorias {
     {
       id: 'action',
       enableHiding: false,
-      cell: () => flexRenderComponent(BotonAccionesColumna),
+      cell: () =>
+        flexRenderComponent(BotonAccionesColumna, { inputs: { ver: this.abrirConvocatoria } }),
     },
   ];
+
+  protected readonly convocatoriaSeleccionada = signal<Convocatoria | null>(null);
+  protected readonly modalAbierto = signal(false);
+
+  protected readonly abrirConvocatoria = (convocatoria: Convocatoria) => {
+    this.convocatoriaSeleccionada.set(convocatoria);
+    this.modalAbierto.set(true);
+  };
+
+  protected readonly cerrarConvocatoria = () => {
+    this.modalAbierto.set(false);
+    this.convocatoriaSeleccionada.set(null);
+  };
 
   private readonly _orden = signal<SortingState>([]);
 

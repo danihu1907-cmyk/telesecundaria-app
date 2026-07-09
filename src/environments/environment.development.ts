@@ -1,5 +1,8 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3000/api',
+  apiUrl: 'http://localhost:5000/api',
+  apiKey:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGF2ZVVzdWFyaW8iOiJVU0VSLTAwMDAwMDAwMDAwMDEiLCJjbGF2ZUxvZ3VlbyI6IkxPRy0wMDAwMDAwMDAwMDAwNCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkRpcmVjdGl2byIsImV4cCI6MTc4MzM2OTU1NX0.iunSGlLl5kyTRobX6YqkJgJZPFT54jzr7gupwmSX7yg',
 };
+
 /*ACTUALMENTE ESTE NO SE OCUPA , SE OCUPARA CUANDO HAGAMOS LAS PRUEBAS DE MANERA LOCAL CON EL SERVIDOR */

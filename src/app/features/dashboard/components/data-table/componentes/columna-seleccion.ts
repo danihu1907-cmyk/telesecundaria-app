@@ -5,7 +5,7 @@ import {
   type HeaderContext,
   injectFlexRenderContext,
 } from '@tanstack/angular-table';
-import { HlmCheckbox } from '../../../../../../../../libs/ui/checkbox/src';
+import { HlmCheckbox } from '../../../../../../../libs/ui/checkbox/src';
 
 @Component({
   imports: [HlmCheckbox],
@@ -18,6 +18,7 @@ import { HlmCheckbox } from '../../../../../../../../libs/ui/checkbox/src';
       [checked]="_context.table.getIsAllRowsSelected()"
       [indeterminate]="_context.table.getIsSomeRowsSelected()"
       (checkedChange)="_context.table.toggleAllRowsSelected()"
+      (click)="$event.stopPropagation()"
     />
   `,
 })

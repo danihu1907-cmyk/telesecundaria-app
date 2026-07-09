@@ -2,15 +2,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmFieldImports } from '@spartan-ng/helm/field';
 import { HlmInputImports } from '@spartan-ng/helm/input';
-import { HlmDrawerImports } from '../../../../../../libs/ui/drawer/src';
 import { HlmTextareaImports } from '@spartan-ng/helm/textarea';
-import { lucidePlus } from '@ng-icons/lucide';
+import { lucidePlus, lucideArrowLeft } from '@ng-icons/lucide';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import {
-  HlmDatePickerTrigger,
-  HlmDatePicker,
-  provideHlmDatePickerConfig,
-} from '../../../../../../libs/ui/date-picker/src';
+import { HlmDatePickerImports, provideHlmDatePickerConfig } from '@spartan-ng/helm/date-picker';
+import { HlmDrawerImports } from '@spartan-ng/helm/drawer';
 
 @Component({
   selector: 'crear-convocatorias',
@@ -22,13 +18,13 @@ import {
     HlmInputImports,
     NgIcon,
     HlmTextareaImports,
-    HlmDatePickerTrigger,
-    HlmDatePicker,
+    HlmDatePickerImports,
   ],
   providers: [
     provideHlmDatePickerConfig({ autoCloseOnSelect: true }),
     provideIcons({
       lucidePlus,
+      lucideArrowLeft,
     }),
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -104,8 +100,11 @@ import {
         <!-- Botones -->
         <hlm-drawer-footer>
           <div class="grid grid-cols-2 gap-3">
-            <button hlmDrawerClose hlmBtn variant="outline">Cancelar</button>
-            <button hlmBtn type="submit">Crear convocatoria</button>
+            <button hlmDrawerClose hlmBtn variant="outline">
+              <ng-icon name="lucideArrowLeft" />
+              Salir
+            </button>
+            <button hlmBtn type="submit"><ng-icon name="lucidePlus" />Crear convocatoria</button>
           </div>
         </hlm-drawer-footer>
       </hlm-drawer-content>
