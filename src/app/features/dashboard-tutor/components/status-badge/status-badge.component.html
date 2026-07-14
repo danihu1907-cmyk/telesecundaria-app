@@ -1,10 +1,5 @@
-<span
-  class="badge"
-  [ngClass]="{
-    'en-revision': label === 'En revisión',
-    'documentos-incompletos': label === 'Documentos incompletos',
-    completo: label === 'Completo',
-  }"
->
-  {{ label }}
-</span>
+@if (estatus() !== 'Oculto') {
+  <span class="badge" [ngClass]="claseCss">
+    {{ label | uppercase }}
+  </span>
+}

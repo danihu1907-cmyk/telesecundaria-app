@@ -1,3 +1,4 @@
+/* ESTILOS GENERALES DE ESTRUCTURA */
 .seccion {
   margin-bottom: 28px;
 }
@@ -7,7 +8,6 @@
   font-weight: 700;
   color: var(--color-texto-oscuro);
   margin-bottom: 10px;
-  font-family: var(--font-sistema);
 }
 
 .separador {
@@ -23,11 +23,11 @@
   gap: 16px;
 }
 
+/* COMPONENTES DE FORMULARIO */
 .campo {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  font-family: var(--font-sistema);
 }
 
 .campo-condicional {
@@ -56,7 +56,6 @@
   font-size: 0.88rem;
   color: var(--color-texto-oscuro);
   background-color: var(--color-blanco);
-  font-family: var(--font-sistema);
   transition: border-color 0.2s;
 }
 
@@ -80,6 +79,7 @@
   color: #dc3545;
 }
 
+/* OPCIONES RADIO BUTTONS */
 .radio-grupo {
   display: flex;
   gap: 20px;
@@ -104,6 +104,7 @@
   cursor: pointer;
 }
 
+/* SECCIÓN DE BOTONES DE ACCIÓN */
 .bloque-botones {
   display: flex;
   justify-content: flex-end;
@@ -111,17 +112,21 @@
   margin-top: 8px;
 }
 
-.btn-primario {
+/* OPTIMIZACIÓN: AGRUPACIÓN DE PROPIEDADES COMPARTIDAS PARA ELIMINAR CÓDIGO DUPLICADO EN BOTONES */
+.btn-primario,
+.btn-secundario {
   height: 36px;
   padding: 0 18px;
-  background-color: var(--color-primario);
-  color: var(--color-blanco);
-  border: none;
   border-radius: var(--radius-general);
   font-size: 0.85rem;
   font-weight: 600;
-  font-family: var(--font-sistema);
   cursor: pointer;
+}
+
+.btn-primario {
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+  border: none;
   transition: opacity 0.2s;
 }
 
@@ -130,16 +135,9 @@
 }
 
 .btn-secundario {
-  height: 36px;
-  padding: 0 18px;
   background-color: var(--color-blanco);
   color: var(--color-texto-oscuro);
   border: 1px solid var(--color-borde);
-  border-radius: var(--radius-general);
-  font-size: 0.85rem;
-  font-weight: 600;
-  font-family: var(--font-sistema);
-  cursor: pointer;
   transition: background-color 0.2s;
 }
 
@@ -147,6 +145,7 @@
   background-color: var(--color-gris-hover);
 }
 
+/* CONFIGURACIÓN COMPLETA DE MEDIA QUERIES PARA ADAPTACIÓN GRADUAL */
 @media (max-width: 1200px) {
   .grid-dos-columnas {
     gap: 14px;

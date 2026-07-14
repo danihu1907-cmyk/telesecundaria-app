@@ -1,9 +1,10 @@
+/* CONTENEDOR TARJETA PRINCIPAL */
 .card {
   background-color: var(--color-blanco);
   border: 1px solid var(--color-borde);
   border-radius: var(--radius-general);
   padding: 16px 20px;
-  font-family: var(--font-sistema);
+  font-family: var(--font-sistema); /* APLICADO A NIVEL GLOBAL DE LA TARJETA */
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -29,6 +30,7 @@
   color: var(--color-texto-oscuro);
 }
 
+/* BOTÓN DE ACCIÓN DINÁMICO */
 .btn-completar {
   height: 36px;
   padding: 0 16px;
@@ -40,7 +42,7 @@
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  font-family: var(--font-sistema);
+  /* OPTIMIZACIÓN: ELIMINADA LA TIPOGRAFÍA DUPLICADA POR HERENCIA EN CASCADA DE .card */
   transition: opacity 0.2s;
 }
 
@@ -48,6 +50,7 @@
   opacity: 0.9;
 }
 
+/* COMPONENTES DE LA BARRA DE PROGRESO DE SEGUIMIENTO */
 .progreso-wrap {
   display: flex;
   flex-direction: column;
@@ -86,6 +89,7 @@
   color: var(--color-texto-oscuro);
 }
 
+/* MEDIA QUERIES TOTALMENTE COMPATIBLES */
 @media (max-width: 1200px) {
   .nombre {
     font-size: 0.88rem;

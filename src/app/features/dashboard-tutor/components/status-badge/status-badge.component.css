@@ -1,11 +1,15 @@
 .badge {
   display: inline-block;
-  padding: 3px 10px;
-  border-radius: 50px;
+  padding: 0.5em 0.9em;
+  font-family: var(--font-base);
   font-size: 0.75rem;
-  font-weight: 600;
-  font-family: var(--font-sistema);
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
   white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: var(--radius-general); /* USA EL RADIO CORPORATIVO DE TU ARCHIVO GLOBAL */
+  text-transform: uppercase;
 }
 
 .badge.documentos-incompletos {
@@ -26,6 +30,32 @@
   border: 1px solid #fde68a;
 }
 
+/* =========================================================================
+   CLASES ACTIVAS PROCESADAS POR EL GETTER DINÁMICO
+   ========================================================================= */
+
+/* EN PROCESO: AMARILLO */
+.status-proceso {
+  background-color: var(--color-alerta-fondo);
+  color: var(--color-alerta);
+  border: 1px solid var(--color-alerta-borde);
+}
+
+/* ACEPTADO: VERDE */
+.status-exito {
+  background-color: var(--color-exito-fondo);
+  color: var(--color-exito);
+  border: 1px solid var(--color-exito-borde);
+}
+
+/* RECHAZADO: ROJO */
+.status-error {
+  background-color: var(--color-error-fondo);
+  color: var(--color-error);
+  border: 1px solid var(--color-error-borde);
+}
+
+/* MEDIA QUERIES TOTALMENTE COMPATIBLES */
 @media (max-width: 1200px) {
   .badge {
     font-size: 0.73rem;
@@ -47,13 +77,13 @@
 @media (max-width: 479px) {
   .badge {
     font-size: 0.7rem;
-    padding: 2px 8px;
+    padding: 4px 8px; /* OPTIMIZADO: EVITA QUE EL TEXTO EN EM SE COLAPSE TOTALMENTE */
   }
 }
 
 @media (max-width: 360px) {
   .badge {
     font-size: 0.68rem;
-    padding: 2px 6px;
+    padding: 3px 6px;
   }
 }

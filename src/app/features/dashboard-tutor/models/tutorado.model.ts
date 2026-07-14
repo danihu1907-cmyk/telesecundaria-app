@@ -1,3 +1,7 @@
+// ============================================================================
+// 1. REGISTRO DE ASPIRANTES (PASO 1) - Modelos Reales de tu API /Aspirantes
+// ============================================================================
+
 export interface RegistrarAspiranteRequest {
   nombre: string;
   apellidoPaterno: string;
@@ -12,9 +16,6 @@ export interface RegistrarAspiranteRequest {
   claveTutorAspirante: string; // Se recupera desde el módulo de Auth
 }
 
-/**
- * Estructura exacta que devuelve el GET /api/Aspirantes
- */
 export interface Aspirante {
   claveAspirante: string;
   nombre: string;
@@ -32,6 +33,7 @@ export interface Aspirante {
   claveTutorAspirante: string;
   estado: boolean;
 }
+
 export interface RegistrarAspiranteResponse {
   claveAspirante: string;
   nombre: string;
@@ -49,51 +51,53 @@ export interface RegistrarAspiranteResponse {
   claveTutorAspirante: string;
   estado: boolean;
 }
-export interface RegistrarAdjuncionesRequest {
-  ClaveTutor: string;
-  ClaveAspirante: string;
-  ActaNacimiento: File;
-  Curp: File;
-  ComprobanteDomicilio: File;
-  CertificadoPrimaria: File;
-  ConstanciaEstudios?: File; // Opcional en tu flujo
+
+// ============================================================================
+// 2. CONTROL DE ADJUNCIONES (PASO 2) - Modelos Dinámicos Basados en Swagger
+// ============================================================================
+
+export interface TipoDocumento {
+  claveTipoDocumento: string;
+  nombreDocumento: string;
+  area: 'Preinscripción' | 'Inscripción' | 'Laboral' | string;
+  descripcion: string;
+  estado: boolean;
+}
+
+export interface DocumentoCargado {
+  claveTipoDocumento: string;
+}
+
+export interface EstadoAdjuncion {
+  claveAspirante: string;
+  documentosCargados: DocumentoCargado[];
+  todosCompletos: boolean;
 }
 
 /**
- * Modelo exclusivo para el control visual dentro de la memoria RAM del componente.
- * Sirve para saber qué archivo seleccionó el usuario y pintar los botones en verde.
+ * Reemplaza por completo a 'ControlArchivoVista' y 'RegistrarAdjuncionesRequest'.
+ * Este objeto maneja de forma dinámica la UI en la RAM de Angular para pintar las tarjetas.
  */
-export interface ControlArchivoVista {
-  llaveFormulario:
-    | 'ActaNacimiento'
-    | 'Curp'
-    | 'ComprobanteDomicilio'
-    | 'CertificadoPrimaria'
-    | 'ConstanciaEstudios';
-  nombreEtiqueta: string; // Ej: "Acta de Nacimiento"
-  archivoSeleccionado: File | null; // El archivo físico en la RAM
-  esObligatorio: boolean;
+export interface TarjetaDocumento {
+  claveTipoDocumento: string; // Viene de TipoDocumento.claveTipoDocumento (Ej: "TIPO-0004")
+  nombreDocumento: string; // Viene de TipoDocumento.nombreDocumento (Ej: "CURP")
+  descripcion: string; // Viene de TipoDocumento.descripcion
+  archivoSeleccionado: File | null; // El archivo físico seleccionado en el input (temporal en RAM)
+  cargadoEnServidor: boolean; // TRUE si ya existe en el estado del alumno. Pinta "Listo ✓"
 }
 
 // ============================================================================
-// 3. DASHBOARD / OVERVIEW DEL TUTOR (PANTALLAS 6 Y 7)
+// 3. DASHBOARD / OVERVIEW DEL TUTOR (PANTALLAS 6 Y 7) - Modelos Reales
 // ============================================================================
 
-/**
- * Datos individuales de cada hijo registrado para pintar sus tarjetas.
- */
 export interface AspiranteTarjetaDashboard {
   claveAspirante: string;
-  nombreCompleto: string; // LO CONSTRUIMOS EN EL SERVICIO CONCATENANDO LOS TRES CAMPOS
-  estatusTramite: string; // VIENE DE estatusAspirante DEL API
-  porcentajeProgreso: number; // SE CALCULA EN EL SERVICIO SEGUN EL ESTATUS
+  nombreCompleto: string; // Se construye en el servicio concatenando los tres campos
+  estatusTramite: string; // Viene de estatusAspirante del API
+  porcentajeProgreso: number; // Se calcula en el servicio según el estatus
 }
 
-/**
- * Respuesta completa del servidor para armar el Dashboard del tutor.
- * El atributo 'aspirantes' es un arreglo que puede traer 0, 1 o más hijos.
- */
 export interface DashboardTutorResponse {
-  nombreTutor: string; // LO OBTENEMOS DEL LOCALSTORAGE DESPUES DEL LOGIN
+  nombreTutor: string; // Lo obtenemos del LocalStorage después del login
   aspirantes: AspiranteTarjetaDashboard[];
 }

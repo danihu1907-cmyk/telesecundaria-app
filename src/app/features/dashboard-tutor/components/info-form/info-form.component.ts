@@ -11,6 +11,9 @@ import {
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 
+// EXPRESSION REGULAR OFICIAL PARA VALIDAR LA ESTRUCTURA DE LA CURP EN MÉXICO
+const CURP_REGEXP = /^[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]\d$/i;
+
 @Component({
   selector: 'app-info-form',
   standalone: true,
@@ -35,7 +38,16 @@ export class InfoFormComponent implements OnInit, OnChanges {
     nombre: ['', Validators.required],
     apellidoPaterno: ['', Validators.required],
     apellidoMaterno: ['', Validators.required],
-    curp: ['', [Validators.required, Validators.minLength(18), Validators.maxLength(18)]],
+    // MODIFICADO: SE AÑADE VALIDATORS.PATTERN PARA MANEJAR ESTRUCTURA OFICIAL DESDE EL FRONT-END
+    curp: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(18),
+        Validators.maxLength(18),
+        Validators.pattern(CURP_REGEXP),
+      ],
+    ],
     escuelaProcedencia: ['', Validators.required],
     promedioPrimaria: [
       null as number | null,
@@ -79,10 +91,12 @@ export class InfoFormComponent implements OnInit, OnChanges {
     this.form.get('hermanoTexto')?.valueChanges.subscribe((valor) => {
       const campoCurpHermano = this.form.get('curpHermano');
       if (valor === 'Sí') {
+        // MODIFICADO: SE AGREGA EL VALIDATOR PATTERN TAMBIÉN PARA LA CURP DEL HERMANO
         campoCurpHermano?.setValidators([
           Validators.required,
           Validators.minLength(18),
           Validators.maxLength(18),
+          Validators.pattern(CURP_REGEXP),
         ]);
         // RESETEA enviado PARA DAR OPORTUNIDAD AL USUARIO DE ESCRIBIR SIN VER ERRORES
         this.enviado = false;
@@ -92,6 +106,11 @@ export class InfoFormComponent implements OnInit, OnChanges {
       }
       campoCurpHermano?.updateValueAndValidity({ emitEvent: false });
       this.cdr.detectChanges();
+    });
+
+    // NUEVO BLOQUE: LIMPIA EL ERROR DEL SERVIDOR INMEDIATAMENTE CUANDO EL USUARIO CORRIGE O ESCRIBE
+    this.form.get('curp')?.valueChanges.subscribe(() => {
+      this.errorCurpServidor = null;
     });
   }
 
@@ -128,10 +147,10 @@ export class InfoFormComponent implements OnInit, OnChanges {
       if (control.errors['minlength'] || control.errors['maxlength']) {
         return 'La CURP debe tener 18 caracteres';
       }
-    }
-    // SI HAY ERROR DEL SERVIDOR PARA LA CURP LO MOSTRAMOS AQUI
-    if (campoNombre === 'curp' && this.errorCurpServidor) {
-      return this.errorCurpServidor;
+      // NUEVO BLOQUE: SE CORRIGE MENSAJE CUANDO LA REGEX INTERNA SE ACTIVA
+      if (control.errors['pattern']) {
+        return 'El formato de la CURP es incorrecto (Estructura oficial)';
+      }
     }
     return '';
   }

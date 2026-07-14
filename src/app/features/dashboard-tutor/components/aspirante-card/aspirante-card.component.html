@@ -3,7 +3,8 @@
     <span class="nombre">{{ aspirante().nombreCompleto }} - {{ aspirante().claveAspirante }}</span>
     <div class="card-acciones">
       <app-status-badge [estatus]="aspirante().estatusTramite" />
-      @if (aspirante().porcentajeProgreso < 100) {
+
+      @if (aspirante().estatusTramite === 'Documentos incompletos') {
         <button
           class="btn-completar"
           (click)="completarDocumentos.emit(aspirante().claveAspirante)"
@@ -13,6 +14,7 @@
       }
     </div>
   </div>
+
   <div class="progreso-wrap">
     <div class="barra-fondo">
       <div class="barra-relleno" [style.width.%]="aspirante().porcentajeProgreso"></div>

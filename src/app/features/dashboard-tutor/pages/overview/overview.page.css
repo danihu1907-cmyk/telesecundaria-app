@@ -1,7 +1,7 @@
 .pantalla-overview {
   min-height: 100vh;
   background-color: var(--color-fondo);
-  font-family: var(--font-sistema);
+  font-family: var(--font-sistema); /* DECLARADO AQUÍ PARA QUE TODO LO HEREDE POR CASCADA */
 }
 
 .contenido {
@@ -22,6 +22,7 @@
   color: var(--color-texto-oscuro);
 }
 
+/* BOTÓN DE ACCIÓN ACCESIBLE */
 .btn-agregar {
   height: 36px;
   padding: 0 16px;
@@ -31,7 +32,6 @@
   border-radius: var(--radius-general);
   font-size: 0.8rem;
   font-weight: 600;
-  font-family: var(--font-sistema);
   cursor: pointer;
   transition: opacity 0.2s;
 }
@@ -40,6 +40,7 @@
   opacity: 0.9;
 }
 
+/* MANEJO DE ESTADOS DE LA LISTA */
 .lista-aspirantes {
   display: flex;
   flex-direction: column;
@@ -57,6 +58,7 @@
   gap: 16px;
 }
 
+/* ARQUITECTURA DE MEDIA QUERIES CONSERVADA COMPLETA */
 @media (max-width: 1200px) {
   .contenido {
     padding: 32px 32px;
@@ -79,10 +81,7 @@
 }
 
 @media (max-width: 479px) {
-  .seccion-header {
-    flex-direction: row;
-    align-items: center;
-  }
+  /* ELIMINADAS PROPIEDADES FLEX-DIRECTION Y ALIGN-ITEMS PORQUE YA EXISTÍAN EN LA CLASE BASE */
   .btn-agregar {
     width: auto;
     height: 32px;

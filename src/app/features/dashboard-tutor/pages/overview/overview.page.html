@@ -1,8 +1,7 @@
 <div class="pantalla-overview">
   <app-dashboard-header
-    [nombreTutor]="datos()?.nombreTutor || 'David Nieves'"
-    [nombreUsuario]="datos()?.nombreTutor || 'David Nieves'"
-    [inicialesUsuario]="'DN'"
+    [nombreTutor]="datos()?.nombreTutor || ''"
+    [inicialesUsuario]="inicialesTutor()"
     (cerrarSesion)="onLogout()"
   />
 

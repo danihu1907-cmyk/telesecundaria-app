@@ -33,6 +33,9 @@ html {
   --color-texto-deshabilitado: #888888;
 
   /* ALERTAS Y ESTADOS DEL SISTEMA */
+  --color-alerta: #b45309;
+  --color-alerta-fondo: #fef3c7;
+  --color-alerta-borde: #fcd34d;
   --color-error: #991b1b;
   --color-error-fondo: #fee2e2;
   --color-error-borde: #f8d7da;

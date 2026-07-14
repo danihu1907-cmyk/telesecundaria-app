@@ -13,8 +13,8 @@
         <div class="usuario-info">
           <span class="bienvenido">¡Bienvenido de nuevo!</span>
           <span class="usuario-nombre">
-            <span class="nombre-completo">{{ nombreUsuario() }}</span>
-            <span class="nombre-corto">{{ nombreUsuario().split(' ')[0] }}</span>
+            <span class="nombre-completo">{{ nombreTutor() }}</span>
+            <span class="nombre-corto">{{ nombreCorto() }}</span>
           </span>
         </div>
         <svg
@@ -37,7 +37,6 @@
 
       @if (dropdownAbierto()) {
         <div class="dropdown">
-          <div class="dropdown-separador"></div>
           <button class="dropdown-item" (click)="onCerrarSesion()">
             <svg
               width="14"

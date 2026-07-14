@@ -1,7 +1,7 @@
 .pantalla-register {
   min-height: 100vh;
   background-color: var(--color-fondo);
-  font-family: var(--font-sistema);
+  font-family: var(--font-sistema); /* INHERIT GLOBAL */
 }
 
 .contenido {
@@ -57,72 +57,82 @@
   margin-bottom: 18px;
 }
 
+/* CORRECCIÓN: CAMBIAMOS A FLEX VERTICAL PARA QUE LAS TARJETAS QUEDEN UNA SOBRE OTRA SIEMPRE */
 .grid-documentos {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
   margin-bottom: 24px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
+/* CORRECCIÓN: AGREGAMOS ANCHO FIJO CONTROLADO PARA PREVENIR SALIDAS VISUALES */
 .fila-documento {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 14px;
+  padding: 14px 16px;
   border: 1px solid var(--color-borde);
   border-radius: var(--radius-general);
-  gap: 10px;
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #ffffff;
 }
+
 .doc-acciones {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0; /* IMPIDE QUE LOS BOTONES SE ENCOJAN O DEFORMEN */
 }
 
 .doc-info {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
   flex: 1;
   min-width: 0;
 }
 
+/* CORRECCIÓN: ELIMINAMOS NOWRAP PARA EL TEXTO Y AGREGAMOS AJUSTE DE PALABRAS */
 .doc-nombre {
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: var(--color-texto-oscuro);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  text-transform: uppercase;
+  word-wrap: break-word;
 }
 
+/* CORRECCIÓN: ELIMINAMOS NOWRAP PARA QUE LAS DESCRIPCIONES DE 3 MESES COMPARTAN LÍNEAS */
 .doc-desc {
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   color: var(--color-gris-placeholder);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.4;
+  word-wrap: break-word;
 }
+
+/* REGLA AGREGADA: ALERTA DE ERROR REMOTO CONTROLADA PARA EVITAR FLOTADOS EN PANTALLA */
+.alerta.error {
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  color: #ef4444;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 0.85rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .btn-primario:disabled {
   background-color: var(--color-deshabilitado);
   color: var(--color-texto-deshabilitado);
   cursor: not-allowed;
   opacity: 1;
 }
-.btn-quitar-archivo {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #6b7280;
-  padding: 4px;
-  display: flex;
-  align-items: center;
-  border-radius: 50%;
-  transition: color 0.2s;
-}
-.btn-quitar-archivo:hover {
-  color: #dc2626;
-}
+
 .btn-upload {
   height: 30px;
   padding: 0 14px;
@@ -131,7 +141,6 @@
   border-radius: var(--radius-general);
   font-size: 0.75rem;
   font-weight: 600;
-  font-family: var(--font-sistema);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -166,14 +175,10 @@
   border-radius: var(--radius-general);
   font-size: 0.85rem;
   font-weight: 600;
-  font-family: var(--font-sistema);
   cursor: pointer;
   transition: opacity 0.2s;
 }
 
-.btn-primario:hover {
-  opacity: 0.9;
-}
 .btn-primario:hover:not(:disabled) {
   opacity: 0.9;
 }
@@ -187,7 +192,6 @@
   border-radius: var(--radius-general);
   font-size: 0.85rem;
   font-weight: 600;
-  font-family: var(--font-sistema);
   cursor: pointer;
   transition: background-color 0.2s;
 }
@@ -196,6 +200,7 @@
   background-color: var(--color-gris-hover);
 }
 
+/* MEDIA QUERIES TOTALMENTE COMPATIBLES */
 @media (max-width: 1200px) {
   .contenido {
     padding: 32px 32px;
@@ -224,9 +229,6 @@
   }
   .seccion-documentos {
     min-height: unset;
-  }
-  .grid-documentos {
-    grid-template-columns: 1fr;
   }
 }
 

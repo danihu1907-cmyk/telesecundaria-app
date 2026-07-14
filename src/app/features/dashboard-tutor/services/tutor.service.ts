@@ -145,21 +145,24 @@ export class TutorService {
 import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, tap, map } from 'rxjs';
+import { Observable, tap, map, forkJoin, of } from 'rxjs';
+import { switchMap, catchError } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import {
   RegistrarAspiranteRequest,
   RegistrarAspiranteResponse,
   DashboardTutorResponse,
   AspiranteTarjetaDashboard,
-  Aspirante, // Importamos tu nueva interfaz base para el GET
+  Aspirante,
+  TipoDocumento,
+  EstadoAdjuncion,
 } from '../models/tutorado.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TutorService {
-  // INYECCIÓN MODERNA DE DEPENDENCIAS
+  // INYECCIÓN MODERNA DE DEPENDENCIAS UTILIZANDO INJECT
   private http = inject(HttpClient);
   private router = inject(Router);
 
@@ -167,15 +170,14 @@ export class TutorService {
   private datosDashboardSignal = signal<DashboardTutorResponse | null>(null);
   private cargandoSignal = signal<boolean>(false);
 
-  // EXPUESTAS PARA LECTURA EN COMPONENTES
+  // EXUESTAS PARA LECTURA EN COMPONENTES
   public datosDashboard = this.datosDashboardSignal.asReadonly();
   public cargando = this.cargandoSignal.asReadonly();
 
   // =========================================================================
-  // VERSION 2: ESCENARIO REAL CON SERVIDOR
+  // ESCENARIO REAL CON SERVIDOR (MOCK ELIMINADO COMPLETAMENTE)
   // =========================================================================
 
-  // OBTIENE LOS ASPIRANTES DEL TUTOR FILTRANDO POR SU CLAVE Y RETORNA EL DASHBOARD
   obtenerDashboardTutor(): Observable<DashboardTutorResponse> {
     this.cargandoSignal.set(true);
 
@@ -183,47 +185,104 @@ export class TutorService {
     const nombreTutor = localStorage.getItem('nombreTutor') ?? '';
     const url = `${environment.apiUrl}/Aspirantes`;
 
-    // 1. Tipamos con Aspirante[] porque es la estructura exacta que devuelve tu GET
     return this.http.get<Aspirante[]>(url).pipe(
-      map((aspirantes): DashboardTutorResponse => {
-        // 2. Filtramos en el frontend por la clave del tutor activo
-        const aspirantesFiltrados = aspirantes
-          .filter((a) => a.claveTutorAspirante === claveTutorAspirante)
-          .map(
-            (a): AspiranteTarjetaDashboard => ({
+      map((aspirantes) => aspirantes.filter((a) => a.claveTutorAspirante === claveTutorAspirante)),
+
+      switchMap((aspirantesFiltrados): Observable<AspiranteTarjetaDashboard[]> => {
+        if (aspirantesFiltrados.length === 0) {
+          return of([]);
+        }
+
+        const peticionesAspirantes = aspirantesFiltrados.map((a) => {
+          // ESCENARIO A: SI EL ADMINISTRADOR YA LO ACEPTÓ -> 100% DE PROGRESO AUTOMÁTICO
+          if (a.estatusAspirante === 'Aceptado') {
+            return of({
               claveAspirante: a.claveAspirante,
-              // 3. Concatenamos de forma segura previniendo valores vacíos
               nombreCompleto:
                 `${a.nombre ?? ''} ${a.apellidoPaterno ?? ''} ${a.apellidoMaterno ?? ''}`
                   .trim()
                   .toUpperCase(),
               estatusTramite: a.estatusAspirante,
-              // 4. Calculamos el progreso según el estatus real de tu modelo
-              porcentajeProgreso: a.estatusAspirante === 'En proceso' ? 50 : 100,
-            }),
-          );
+              porcentajeProgreso: 100,
+            });
+          }
 
-        // 5. Devolvemos el objeto que cumple estrictamente con DashboardTutorResponse
+          // ESCENARIO B: SI ESTÁ 'EN PROCESO' O 'RECHAZADO' EN LA BASE DE DATOS -> LÓGICA DE ARCHIVOS
+          return this.getEstadoAdjuncion(a.claveAspirante).pipe(
+            map((estadoAdj: EstadoAdjuncion): AspiranteTarjetaDashboard => {
+              // OBTENEMOS LAS PROPIEDADES DIRECTAS DESDE EL JSON DEL ENDPOINT DEL SERVIDOR
+              const estanTodosCompletos = estadoAdj && estadoAdj.todosCompletos === true;
+
+              // CONTAMOS CUÁNTOS DOCUMENTOS TIENE GUARDADOS FÍSICAMENTE EN EL SERVIDOR
+              const totalArchivosSubidos =
+                estadoAdj && estadoAdj.documentosCargados ? estadoAdj.documentosCargados.length : 0;
+
+              // LÓGICA MATEMÁTICA REAL: 25% BASE + 15% POR CADA ARCHIVO (SI ESTÁN TODOS PASA A 100%)
+              const calculoProgreso = 25 + totalArchivosSubidos * 15;
+              let progresoReal = calculoProgreso > 100 ? 100 : calculoProgreso;
+
+              // APLICACIÓN DE LA LÓGICA VIRTUAL RETORNANDO A LOS ESTADOS ORIGINALES DE LA BD
+              let estatusCalculado = a.estatusAspirante;
+
+              if (a.estatusAspirante === 'En proceso') {
+                if (!estanTodosCompletos) {
+                  estatusCalculado = 'Documentos incompletos';
+                  progresoReal = 25 + totalArchivosSubidos * 15;
+                } else if (estanTodosCompletos) {
+                  estatusCalculado = 'En proceso';
+                  progresoReal = 100;
+                }
+              } else if (a.estatusAspirante === 'Rechazado') {
+                progresoReal = estanTodosCompletos ? 100 : 25 + totalArchivosSubidos * 15;
+              }
+
+              return {
+                claveAspirante: a.claveAspirante,
+                nombreCompleto:
+                  `${a.nombre ?? ''} ${a.apellidoPaterno ?? ''} ${a.apellidoMaterno ?? ''}`
+                    .trim()
+                    .toUpperCase(),
+                estatusTramite: estatusCalculado,
+                porcentajeProgreso: progresoReal,
+              };
+            }),
+            catchError(() =>
+              of({
+                claveAspirante: a.claveAspirante,
+                nombreCompleto:
+                  `${a.nombre ?? ''} ${a.apellidoPaterno ?? ''} ${a.apellidoMaterno ?? ''}`
+                    .trim()
+                    .toUpperCase(),
+                estatusTramite: a.estatusAspirante,
+                porcentajeProgreso: 25,
+              }),
+            ),
+          );
+        });
+
+        return forkJoin(peticionesAspirantes) as Observable<AspiranteTarjetaDashboard[]>;
+      }),
+
+      map((tarjetasMapeadas): DashboardTutorResponse => {
         return {
           nombreTutor: nombreTutor,
-          aspirantes: aspirantesFiltrados,
+          aspirantes: tarjetasMapeadas,
         };
       }),
+
       tap({
         next: (dashboardData) => {
-          // Guardamos el resultado transformado en el Signal reactivo
           this.datosDashboardSignal.set(dashboardData);
           this.cargandoSignal.set(false);
         },
         error: (error) => {
-          console.error('Error al cargar aspirantes:', error);
+          console.error('Error crítico al procesar el Dashboard con progreso dinámico:', error);
           this.cargandoSignal.set(false);
         },
       }),
     );
   }
 
-  // NUEVO MÉTODO: CONECTA DIRECTO AL GET DE ASPIRANTES PARA BUSCAR AL ALUMNO COMPLETO POR SU CLAVE CON TODOS SUS CAMPOS REALES DE LA BASE DE DATOS
   obtenerAspirantePorClave(clave: string): Observable<Aspirante | undefined> {
     const url = `${environment.apiUrl}/Aspirantes`;
     return this.http
@@ -231,35 +290,47 @@ export class TutorService {
       .pipe(map((aspirantes) => aspirantes.find((a) => a.claveAspirante === clave)));
   }
 
-  // NUEVO MÉTODO: CONECTA CON EL ENDPOINT PUT SOLICITADO EN SWAGGER PARA LA ACTUALIZACION DEL PASO 1
   actualizarAspirantePaso1(clave: string, payload: any): Observable<any> {
     const url = `${environment.apiUrl}/Aspirantes/${clave}`;
     return this.http.put(url, payload);
   }
 
-  // REGISTRA UN NUEVO ASPIRANTE Y GUARDA SU CLAVE EN LOCALSTORAGE (PASO 1)
   registrarAspirantePaso1(
     payload: RegistrarAspiranteRequest,
   ): Observable<RegistrarAspiranteResponse> {
     const url = `${environment.apiUrl}/Aspirantes`;
-
-    // Aquí usa correctamente tu RegistrarAspiranteResponse
     return this.http.post<RegistrarAspiranteResponse>(url, payload).pipe(
       tap((res) => {
         if (res && res.claveAspirante) {
-          // GUARDAMOS LA CLAVE DEL ASPIRANTE PARA USARLA EN EL PASO 2 DE DOCUMENTOS
           localStorage.setItem('claveAspirante', res.claveAspirante);
         }
       }),
     );
   }
-  registrarAdjuncionesPaso2(formData: FormData): Observable<any> {
-    const url = `${environment.apiUrl}/Aspirantes/Adjunciones`;
-    return this.http.post(url, formData);
+
+  getTipoDocumentos(): Observable<TipoDocumento[]> {
+    const url = `${environment.apiUrl}/TipoDocumentos`;
+    return this.http.get<TipoDocumento[]>(url);
   }
+
+  getEstadoAdjuncion(claveAspirante: string): Observable<EstadoAdjuncion> {
+    const url = `${environment.apiUrl}/Adjunciones/documentos/estado/${claveAspirante}`;
+    return this.http.get<EstadoAdjuncion>(url);
+  }
+
+  subirDocumentoTemporal(formData: FormData): Observable<any> {
+    const url = `${environment.apiUrl}/Adjunciones/documentos/temp`;
+    return this.http.post<any>(url, formData);
+  }
+
+  finalizarTramite(payload: any): Observable<any> {
+    const url = `${environment.apiUrl}/Adjunciones/finalizar`;
+    return this.http.post<any>(url, payload);
+  }
+
   logout(): void {
-    localStorage.clear(); // Limpia claves de tutor, aspirantes, etc.
+    localStorage.clear();
     this.datosDashboardSignal.set(null);
-    this.router.navigate(['/auth/login']); // Ajusta la ruta a tu login real
+    this.router.navigate(['/auth/login']);
   }
 }
