@@ -1,4 +1,55 @@
 <div class="pantalla-split-auth">
+  <div class="panel-formulario-derecho">
+    <div class="contenedor-registro">
+      <h2 class="titulo-pantalla">Inscripción</h2>
+
+      @if (cargandoValidacion()) {
+        <div class="subtitulo-pasos">Validando estado del período de inscripciones...</div>
+      } @else {
+        <div class="bloque-paso">
+          @if (tieneConvocatoriaActiva()) {
+            <div>
+              <p class="subtitulo-pasos">Selecciona una opción para continuar</p>
+              <div class="bloque-botones-vertical">
+                <button type="button" class="btn-primario-grande con-icono" routerLink="/register">
+                  Crear cuenta nueva
+                </button>
+              </div>
+            </div>
+          } @else {
+            <div style="margin-bottom: 20px">
+              <div class="alerta error" style="text-align: center; font-weight: 600">
+                El periodo de registro digital no está abierto en este momento.
+              </div>
+              <p class="subtitulo-pasos" style="color: #777">
+                Las opciones de registro se habilitarán automáticamente cuando se publique la
+                convocatoria oficial.
+              </p>
+            </div>
+          }
+
+          <div class="bloque-botones-vertical">
+            @if (tieneConvocatoriaActiva()) {
+              <div class="separador-o">
+                <span class="linea-divisor"></span>
+                <span class="letra-o">o</span>
+                <span class="linea-divisor"></span>
+              </div>
+            }
+
+            <button type="button" class="btn-secundario-grande con-icono" routerLink="/login">
+              Ya tengo una cuenta
+            </button>
+          </div>
+        </div>
+      }
+
+      <p class="texto-privacidad-inferior">
+        Tu información está protegida y solo será usada para el proceso de inscripción.
+      </p>
+    </div>
+  </div>
+
   <div class="panel-marca-izquierdo">
     <div class="contenedor-logo-blanco">
       <img
@@ -10,52 +61,5 @@
     <h1 class="titulo-marca">INSCRIPCIÓN CICLO 2026–2027</h1>
     <p class="descripcion-marca">Para inscribir a tu hijo necesitas una cuenta de tutor.</p>
     <div class="chip-informativo">Ciclo escolar 2026–2027</div>
-  </div>
-
-  <div class="panel-formulario-derecho">
-    <div class="contenedor-registro">
-      <h2 class="titulo-pantalla">Inscripción</h2>
-
-      <div *ngIf="cargandoValidacion()" class="subtitulo-pasos">
-        Validando estado del período de inscripciones...
-      </div>
-
-      <div *ngIf="!cargandoValidacion()" class="bloque-paso">
-        <div *ngIf="tieneConvocatoriaActiva()">
-          <p class="subtitulo-pasos">Selecciona una opción para continuar</p>
-          <div class="bloque-botones-vertical">
-            <button type="button" class="btn-primario-grande con-icono" routerLink="/register">
-              <span class="icono">👤</span> Crear cuenta nueva
-            </button>
-          </div>
-        </div>
-
-        <div *ngIf="!tieneConvocatoriaActiva()" style="margin-bottom: 20px">
-          <div class="alerta error" style="text-align: center; font-weight: 600">
-            ⚠️ El periodo de registro digital no está abierto en este momento.
-          </div>
-          <p class="subtitulo-pasos" style="color: #777">
-            Las opciones de registro se habilitarán automáticamente cuando se publique la
-            convocatoria oficial.
-          </p>
-        </div>
-
-        <div class="bloque-botones-vertical">
-          <div class="separador-o" *ngIf="tieneConvocatoriaActiva()">
-            <span class="linea-divisor"></span>
-            <span class="letra-o">o</span>
-            <span class="linea-divisor"></span>
-          </div>
-
-          <button type="button" class="btn-secundario-grande con-icono" routerLink="/login">
-            <span class="icono">🚪</span> Ya tengo una cuenta (Iniciar Sesión)
-          </button>
-        </div>
-      </div>
-
-      <p class="texto-privacidad-inferior">
-        Tu información está protegida y solo será usada para el proceso de inscripción.
-      </p>
-    </div>
   </div>
 </div>

@@ -1,9 +1,23 @@
-@if (banners() && banners().length > 0) {
+@if (cargando()) {
+  <div class="hero__loading">
+    <div class="hero__spinner"></div>
+  </div>
+} @else if (hayError()) {
+  <div class="hero__loading">
+    <p style="color: white; text-align: center">
+      No se pudo cargar el contenido en este momento. Intenta más tarde.
+    </p>
+  </div>
+} @else if (banners().length === 0) {
+  <div class="hero__loading">
+    <p style="color: white; text-align: center">No hay publicaciones disponibles por el momento.</p>
+  </div>
+} @else {
   <div style="position: relative; overflow: hidden">
     <section class="hero">
       <div class="hero__banner">
         <img
-          [src]="banners()[indiceActual()].claveImagenPrincipal"
+          [src]="obtenerUrlImagen(banners()[indiceActual()].claveImagenPrincipal)"
           [alt]="banners()[indiceActual()].titulo"
         />
       </div>
@@ -13,90 +27,84 @@
           <h1 class="hero__title">{{ banners()[indiceActual()].titulo }}</h1>
           <p class="hero__subtitle">{{ banners()[indiceActual()].subtitulo }}</p>
 
-          <p
-            *ngIf="banners()[indiceActual()].cuerpoContenido"
-            style="font-size: 14px; opacity: 0.8; margin-bottom: 20px; max-width: 600px"
-          >
-            {{ banners()[indiceActual()].cuerpoContenido }}
-          </p>
+          @if (banners()[indiceActual()].cuerpoContenido) {
+            <p style="font-size: 14px; opacity: 0.8; margin-bottom: 20px; max-width: 600px">
+              {{ banners()[indiceActual()].cuerpoContenido }}
+            </p>
+          }
         </div>
 
         <div>
-          <div
-            *ngIf="banners()[indiceActual()].claveConvocatoria; else botonNormal"
-            style="display: flex; gap: 15px; flex-wrap: wrap"
-          >
-            <a
-              [href]="banners()[indiceActual()].claveConvocatoria"
-              download
-              class="hero__btn--download"
-            >
-              Descargar Requisitos PDF
-            </a>
+          @if (banners()[indiceActual()].claveConvocatoria) {
+            <div style="display: flex; gap: 15px; flex-wrap: wrap">
+              <a
+                [href]="banners()[indiceActual()].claveConvocatoria"
+                download
+                class="hero__btn--download"
+              >
+                Descargar Requisitos PDF
+              </a>
 
-            <button routerLink="/welcome" class="hero__btn hero__btn--registro">
-              Registrate aqui
-            </button>
-          </div>
-
-          <ng-template #botonNormal>
+              <button routerLink="/welcome" class="hero__btn hero__btn--registro">
+                Regístrate aquí
+              </button>
+            </div>
+          } @else {
             <button class="hero__btn">Explorar</button>
-          </ng-template>
+          }
         </div>
       </div>
     </section>
 
-    <div *ngIf="banners().length > 1">
-      <button
-        (click)="anterior()"
-        style="
-          position: absolute;
-          left: 20px;
-          top: 50%;
-          transform: translateY(-50%);
-          background: rgba(0, 0, 0, 0.4);
-          color: white;
-          border: none;
-          width: 45px;
-          height: 45px;
-          border-radius: 50%;
-          cursor: pointer;
-          font-size: 22px;
-          z-index: 20;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        "
-      >
-        ❮
-      </button>
-      <button
-        (click)="siguiente()"
-        style="
-          position: absolute;
-          right: 20px;
-          top: 50%;
-          transform: translateY(-50%);
-          background: rgba(0, 0, 0, 0.4);
-          color: white;
-          border: none;
-          width: 45px;
-          height: 45px;
-          border-radius: 50%;
-          cursor: pointer;
-          font-size: 22px;
-          z-index: 20;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        "
-      >
-        ❯
-      </button>
-    </div>
-  </div>
-} @else {
-  <div style="padding: 40px; text-align: center; color: #94a3b8; font-weight: bold">
-    Cargando la cartelera escolar con Signals...
+    @if (banners().length > 1) {
+      <div>
+        <button
+          (click)="anterior()"
+          style="
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.4);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 22px;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          ❮
+        </button>
+        <button
+          (click)="siguiente()"
+          style="
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.4);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 22px;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          ❯
+        </button>
+      </div>
+    }
   </div>
 }

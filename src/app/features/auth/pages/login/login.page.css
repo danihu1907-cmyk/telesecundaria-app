@@ -1,4 +1,24 @@
 /* ===== CONTENEDOR ENVOLVENTE COMPLETO SPLIT LAYOUT ===== */
+/* ALERTA DE ERROR GLOBAL — SE MUESTRA CUANDO LAS CREDENCIALES SON INCORRECTAS */
+.alerta {
+  padding: 10px 14px;
+  border-radius: var(--radius-general);
+  margin-bottom: 16px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-align: center;
+  text-transform: lowercase;
+}
+
+.alerta.error {
+  background-color: var(--color-error-fondo);
+  color: var(--color-error);
+  border: 1px solid var(--color-error-borde);
+}
+.campo input:invalid {
+  box-shadow: none;
+  outline: none;
+}
 .pantalla-split-auth {
   display: flex;
   width: 100%;
@@ -14,7 +34,7 @@
   font-family: var(--font-sistema) !important;
 }
 
-/* LOGO MÓVIL: OCULTO POR DEFECTO EN COMPUTADORA */
+/* LOGO MOVIL: OCULTO POR DEFECTO EN COMPUTADORA */
 .logo-movil {
   display: none;
   height: 50px;
@@ -102,9 +122,8 @@
 .contenedor-login {
   width: 480px;
   max-width: 100%;
-  background-color: var(--color-blanco);
   border-radius: 16px;
-  padding: 10px 10px;
+  padding: 10px 40px;
   box-sizing: border-box;
   text-align: center;
 }
@@ -112,10 +131,10 @@
 /* TITULOS VISUALES SUPERIORES */
 .titulo-pantalla {
   font-size: 1.8rem;
-  font-weight: 800;
+  font-weight: 600;
   color: var(--color-texto-oscuro);
-  margin: 0 0 4px 0;
-  letter-spacing: -0.5px;
+  margin: 0 0 24px 0;
+  letter-spacing: 0;
 }
 
 .subtitulo-pasos {
@@ -138,6 +157,12 @@
   font-weight: 700;
   color: var(--color-texto-oscuro);
   margin-bottom: 5px;
+}
+
+/* ASTERISCO DE CAMPO REQUERIDO */
+.requerido {
+  color: #dc3545;
+  margin-left: 2px;
 }
 
 .campo input {
@@ -169,14 +194,16 @@
   margin-bottom: 15px;
 }
 
-.enlace-recuperar span {
+/* COLOR VERDE AL ENLACE DE RECUPERAR CONTRASEÑA */
+.enlace-recuperar-link {
   font-size: 0.8rem;
   color: var(--color-primario);
   cursor: pointer;
   font-weight: 600;
+  text-decoration: none;
 }
 
-.enlace-recuperar span:hover {
+.enlace-recuperar-link:hover {
   text-decoration: underline;
 }
 
@@ -223,12 +250,12 @@
   opacity: 0.9;
 }
 
-button:disabled {
-  background-color: var(--color-deshabilitado) !important;
-  color: var(--color-texto-deshabilitado) !important;
-  border: none !important;
+/* ESTADO DESHABILITADO ESPECIFICO DEL BOTON DE LOGIN */
+.btn-primario-grande:disabled {
+  background-color: var(--color-deshabilitado);
+  color: var(--color-texto-deshabilitado);
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: 1;
 }
 
 /* ENLACES INFERIORES */
@@ -259,7 +286,7 @@ button:disabled {
     display: none !important;
   }
 
-  /* MOSTRAR EL LOGO AQUÍ YA QUE LA COLUMNA VERDE SE DETECTÓ COMO OCULTA */
+  /* MOSTRAR EL LOGO AQUI YA QUE LA COLUMNA VERDE SE DETECTO COMO OCULTA */
   .logo-movil {
     display: block !important;
   }

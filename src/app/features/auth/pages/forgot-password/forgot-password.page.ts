@@ -1,6 +1,5 @@
 import { Component, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthTutorService } from '../../../../core/services/auth-tutor.service'; // <-- INYECCIÓN AJUSTADA CON EL NOMBRE EXACTO DEL SERVICIO
 import { RecuperarPasswordRequest } from '../../models/auth.models';
@@ -8,7 +7,7 @@ import { RecuperarPasswordRequest } from '../../models/auth.models';
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [FormsModule, RouterModule],
   templateUrl: './forgot-password.page.html',
   styleUrls: ['./forgot-password.page.css'],
 })
@@ -58,7 +57,7 @@ export class ForgotPasswordPage {
     this.authTutorService.recuperarContrasena(payload).subscribe({
       next: (respuesta) => {
         this.cargando.set(false);
-        this.mensajeExito = respuesta.message;
+        this.mensajeExito = respuesta.mensaje;
         this.correoEnviado.set(true);
       },
       error: (err) => {

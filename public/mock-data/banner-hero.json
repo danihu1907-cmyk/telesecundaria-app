@@ -3,7 +3,7 @@
     "clavePublicacion": "PUB-001",
     "titulo": "¡Inscripciones Abiertas Ciclo 2026-2027!",
     "subtitulo": "Asegura el lugar de tu hijo en nuestra Telesecundaria.",
-    "cuerpoContenido": "El proceso de preinscripción digital ya comenzó.",
+    "cuerpoContenido": "El proceso falso de preinscripción digital ya comenzó.",
     "categoria": "Convocatoria",
     "fechaAparicion": "2026-06-01T00:00:00",
     "fechaRetiro": null,
@@ -13,7 +13,7 @@
     "claveImagenSecundaria": null,
     "claveImagenTercera": null,
     "fechaRegistro": "2026-05-30T10:00:00",
-    "destacado": true,
+    "destacado": false,
     "estatusVisible": false
   },
   {

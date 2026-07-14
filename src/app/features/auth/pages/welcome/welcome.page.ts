@@ -1,13 +1,12 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { BannerHeroService } from '../../../landing/services/banner-hero.service'; // <-- Ajusta la ruta relativa según tu árbol
 import { Publicacion } from '../../../landing/models/publicacion.model';
 
 @Component({
   selector: 'app-welcome',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [RouterModule],
   templateUrl: './welcome.page.html',
   styleUrls: ['./welcome.page.css'],
 })
@@ -26,7 +25,7 @@ export class WelcomePage implements OnInit {
       next: (datos: Publicacion[]) => {
         // Buscamos si existe alguna publicación que sea "Convocatoria" y que sea visible
         const convocatoriaActiva = datos.some(
-          (p: Publicacion) => p.categoria === 'Convocatoria' && p.estatusVisible,
+          (p: Publicacion) => p.categoria === 'Convocatorias' && p.estatusVisible,
         );
 
         this.tieneConvocatoriaActiva.set(convocatoriaActiva);

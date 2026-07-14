@@ -10,11 +10,10 @@
 }
 
 .estadisticas__item {
-  background: var(--color-fondo);
-  border-radius: 8px;
+  border-radius: 24px;
   padding: 1.5rem;
   text-align: center;
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(217, 217, 217, 1);
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;

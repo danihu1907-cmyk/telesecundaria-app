@@ -1,0 +1,104 @@
+.pantalla-overview {
+  min-height: 100vh;
+  background-color: var(--color-fondo);
+  font-family: var(--font-sistema); /* DECLARADO AQUÍ PARA QUE TODO LO HEREDE POR CASCADA */
+}
+
+.contenido {
+  padding: 32px 40px;
+  margin: 0 auto;
+}
+
+.seccion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.titulo-seccion {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-texto-oscuro);
+}
+
+/* BOTÓN DE ACCIÓN ACCESIBLE */
+.btn-agregar {
+  height: 36px;
+  padding: 0 16px;
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+  border: none;
+  border-radius: var(--radius-general);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-agregar:hover {
+  opacity: 0.9;
+}
+
+/* MANEJO DE ESTADOS DE LA LISTA */
+.lista-aspirantes {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.estado-vacio {
+  text-align: center;
+  padding: 40px 0;
+  color: var(--color-gris-placeholder);
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ARQUITECTURA DE MEDIA QUERIES CONSERVADA COMPLETA */
+@media (max-width: 1200px) {
+  .contenido {
+    padding: 32px 32px;
+  }
+}
+
+@media (max-width: 992px) {
+  .contenido {
+    padding: 28px 24px;
+  }
+}
+
+@media (max-width: 767px) {
+  .contenido {
+    padding: 20px 16px;
+  }
+  .titulo-seccion {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 479px) {
+  /* ELIMINADAS PROPIEDADES FLEX-DIRECTION Y ALIGN-ITEMS PORQUE YA EXISTÍAN EN LA CLASE BASE */
+  .btn-agregar {
+    width: auto;
+    height: 32px;
+    padding: 0 12px;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .contenido {
+    padding: 12px 10px;
+  }
+  .titulo-seccion {
+    font-size: 0.95rem;
+  }
+  .btn-agregar {
+    font-size: 0.75rem;
+    height: 32px;
+  }
+}

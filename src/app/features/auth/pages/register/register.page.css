@@ -96,20 +96,23 @@
 .contenedor-registro {
   width: 100%;
   max-width: 480px;
-  background-color: var(--color-blanco);
   border-radius: 16px;
-  padding: 10px 10px;
+  padding: 10px 40px;
   box-sizing: border-box;
   text-align: center;
+}
+.requerido {
+  color: #dc3545;
+  margin-left: 2px;
 }
 
 /* TITULOS VISUALES SUPERIORES */
 .titulo-pantalla {
   font-size: 1.8rem;
-  font-weight: 800;
+  font-weight: 600;
   color: var(--color-texto-oscuro);
   margin: 0 0 4px 0;
-  letter-spacing: -0.5px;
+  letter-spacing: 0px;
 }
 
 .subtitulo-pasos {

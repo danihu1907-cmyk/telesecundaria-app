@@ -1,4 +1,71 @@
 <div class="pantalla-split-auth">
+  <div class="panel-formulario-derecho">
+    <div class="contenedor-login">
+      <img src="images/logo-telesecundaria.png" alt="Logo Telesecundaria" class="logo-movil" />
+
+      <h1 class="titulo-pantalla">Inicia sesión con tu cuenta</h1>
+
+      @if (mensajeErrorGlobal) {
+        <div class="alerta error">{{ mensajeErrorGlobal }}</div>
+      }
+
+      <form (ngSubmit)="ejecutarLogin()" #formularioLogin="ngForm">
+        <div class="campo">
+          <label>Correo electrónico <span class="requerido">*</span></label>
+          <input
+            type="email"
+            name="correo"
+            [(ngModel)]="datosLogin.correo"
+            (input)="limpiarErrorCampo('correo')"
+            placeholder="correo@gmail.com"
+            required
+            [class.input-error]="erroresCampos['correo']"
+          />
+          @if (erroresCampos['correo']) {
+            <span class="texto-error-campo">{{ erroresCampos['correo'] }}</span>
+          }
+        </div>
+
+        <div class="campo">
+          <label>Contraseña <span class="requerido">*</span></label>
+          <input
+            type="password"
+            name="contrasenia"
+            [(ngModel)]="datosLogin.contrasenia"
+            (input)="limpiarErrorCampo('contrasenia')"
+            placeholder="Ingresa tu contraseña"
+            required
+            [class.input-error]="erroresCampos['contrasenia']"
+          />
+          @if (erroresCampos['contrasenia']) {
+            <span class="texto-error-campo">{{ erroresCampos['contrasenia'] }}</span>
+          }
+        </div>
+
+        <div class="enlace-recuperar">
+          <a routerLink="/forgot-password" class="enlace-recuperar-link">
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
+
+        <div class="bloque-botones-vertical">
+          <button
+            type="submit"
+            class="btn-primario-grande"
+            [disabled]="!datosLogin.correo || !datosLogin.contrasenia || cargando()"
+          >
+            {{ cargando() ? 'Ingresando...' : 'Ingresar' }}
+          </button>
+        </div>
+      </form>
+
+      <div class="enlace-login-inferior">
+        ¿No tienes cuenta?
+        <strong routerLink="/register" style="cursor: pointer">Regístrate aquí</strong>
+      </div>
+    </div>
+  </div>
+
   <div class="panel-marca-izquierdo">
     <div class="contenedor-logo-blanco">
       <img
@@ -12,74 +79,5 @@
       Inicia sesión para gestionar las inscripciones y consultar el estado del alumno.
     </p>
     <div class="chip-informativo">Control Escolar</div>
-  </div>
-
-  <div class="panel-formulario-derecho">
-    <div class="contenedor-login">
-      <img src="images/logo-telesecundaria.png" alt="Logo Telesecundaria" class="logo-movil" />
-
-      <h1 class="titulo-pantalla">INICIAR SESIÓN</h1>
-      <p class="subtitulo-pasos">Ingresa tus credenciales de acceso</p>
-
-      <div class="alerta error" *ngIf="mensajeErrorGlobal">{{ mensajeErrorGlobal }}</div>
-
-      <form (ngSubmit)="ejecutarLogin()" #formularioLogin="ngForm">
-        <div class="campo">
-          <label>Correo electrónico</label>
-          <input
-            type="email"
-            name="correo"
-            [(ngModel)]="datosLogin.correo"
-            (input)="limpiarErrorCampo('correo')"
-            placeholder="correo@gmail.com"
-            required
-            [class.input-error]="erroresCampos['correo']"
-          />
-          <span class="texto-error-campo" *ngIf="erroresCampos['correo']">{{
-            erroresCampos['correo']
-          }}</span>
-        </div>
-
-        <div class="campo">
-          <label>Contraseña</label>
-          <input
-            type="password"
-            name="contrasena"
-            [(ngModel)]="datosLogin.contrasena"
-            (input)="limpiarErrorCampo('contrasena')"
-            placeholder="Ingresa tu contraseña"
-            required
-            [class.input-error]="erroresCampos['contrasena']"
-          />
-          <span class="texto-error-campo" *ngIf="erroresCampos['contrasena']">{{
-            erroresCampos['contrasena']
-          }}</span>
-        </div>
-
-        <div class="enlace-recuperar">
-          <a
-            routerLink="/forgot-password"
-            style="cursor: pointer; text-decoration: none; color: inherit"
-          >
-            ¿Olvidaste tu contraseña?
-          </a>
-        </div>
-
-        <div class="bloque-botones-vertical">
-          <button
-            type="submit"
-            class="btn-primario-grande"
-            [disabled]="!datosLogin.correo || !datosLogin.contrasena || cargando()"
-          >
-            {{ cargando() ? 'Ingresando...' : 'Ingresar' }}
-          </button>
-        </div>
-      </form>
-
-      <div class="enlace-login-inferior">
-        ¿No tienes cuenta?
-        <strong routerLink="/register" style="cursor: pointer">Regístrate aquí</strong>
-      </div>
-    </div>
   </div>
 </div>

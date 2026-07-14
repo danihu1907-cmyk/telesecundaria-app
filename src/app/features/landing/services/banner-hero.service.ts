@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { Publicacion } from '../models/publicacion.model'; // <-- Cambiado al nuevo modelo oficial
+import { GaleriaImagen } from '../models/galeria.model';
 
 @Injectable({
   providedIn: 'root',
@@ -19,10 +20,17 @@ export class BannerHeroService {
 
     // 1. En producción apuntamos al endpoint exacto que vimos en Swagger: /api/Publicaciones
     // 2. En desarrollo seguimos apuntando a tus datos simulados (JSON local)
-    const url = environment.production
+
+    /*const url = environment.production
       ? `${environment.apiUrl}/api/Publicaciones`
-      : 'mock-data/banner-hero.json'; // Tu archivo local de pruebas (donde harcodeas las claves)
+      : 'mock-data/banner-hero.json'; */
+    const url = `${environment.apiUrl}/Publicaciones`;
 
     return this.http.get<Publicacion[]>(url);
+  }
+
+  obtenerImagenes(): Observable<GaleriaImagen[]> {
+    const url = `${environment.apiUrl}/GaleriaImagenes`;
+    return this.http.get<GaleriaImagen[]>(url);
   }
 }
