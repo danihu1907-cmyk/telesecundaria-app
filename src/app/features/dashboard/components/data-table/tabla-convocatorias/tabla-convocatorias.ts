@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, signal, TrackByFunction } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+  signal,
+  TrackByFunction,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { type Convocatoria, DATA_CONVOCATORIAS } from '../../../models/convocatorias.models';
 import { BarraAccionesConvocatorias } from './barra-acciones-convocatorias';
@@ -37,6 +44,8 @@ import { CicloEscolar } from './columnas/ciclo-escolar';
 import { CupoMaximo } from './columnas/cupo-maximo';
 import { HlmButton } from '@spartan-ng/helm/button';
 import { AbrirConvocatorias } from '../../modales/modal-abrir-convocatorias';
+import { ConvocatoriasService } from '../../../services/convocatorias.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'tabla-convocatorias',
@@ -80,6 +89,18 @@ import { AbrirConvocatorias } from '../../modales/modal-abrir-convocatorias';
       <!-- contenedor de la tabla -->
       <div class="min-h-0 min-w-0 flex-1 overflow-hidden rounded-lg border border-border">
         @defer {
+          @if (cargando()) {
+            <div class="flex h-96 items-center justify-center">
+              <ng-icon name="lucideLoader" class="h-8 w-8 animate-spin" />
+              <span class="ml-3 text-muted-foreground">Cargando convocatorias...</span>
+            </div>
+          } @else if (error()) {
+            <div class="flex flex-col h-96 items-center justify-center gap-4">
+              <p class="text-red-600">{{ error() }}</p>
+              <button hlmBtn variant="outline" (click)="recargarDatos()">Reintentar</button>
+            </div>
+          }
+
           <div
             hlmTableContainer
             class="h-full w-full min-h-0 min-w-0 overflow-y-auto overflow-x-auto overscroll-contain"
@@ -242,7 +263,19 @@ import { AbrirConvocatorias } from '../../modales/modal-abrir-convocatorias';
     </div>
   `,
 })
-export class TablaConvocatorias {
+export class TablaConvocatorias implements OnInit {
+  private convocatoriasService = inject(ConvocatoriasService);
+
+  //Señales del servicio
+  cargando = this.convocatoriasService.cargando;
+  error = this.convocatoriasService.error;
+
+  // Datos de la tabla con toSignal
+  private convocatoriasData = toSignal(
+    this.convocatoriasService.obtenerConvocatorias(),
+    { initialValue: [] }, // Valor inicial para evitar undefined
+  );
+
   protected readonly trackBy: TrackByFunction<Convocatoria> = (_: number, p: Convocatoria) =>
     p.claveConvocatoria;
 
@@ -344,7 +377,7 @@ export class TablaConvocatorias {
   });
 
   public readonly table = createAngularTable<Convocatoria>(() => ({
-    data: DATA_CONVOCATORIAS,
+    data: this.convocatoriasData(),
     columns: this._columnas,
     state: {
       sorting: this._orden(),
@@ -370,4 +403,19 @@ export class TablaConvocatorias {
       },
     },
   }));
+
+  //Cargar datos al inicializar
+  ngOnInit(): void {
+    this.cargarDatos();
+  }
+
+  //Método para cargar datos desde la API
+  cargarDatos(): void {
+    this.convocatoriasService.obtenerConvocatorias();
+  }
+
+  recargarDatos(): void {
+    this.convocatoriasService.limpiarError();
+    this.cargarDatos();
+  }
 }

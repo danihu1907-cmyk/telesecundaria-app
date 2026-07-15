@@ -7,7 +7,36 @@ export type Convocatoria = {
   estado: EstadoConvocatoria;
   cicloEscolar: string;
   cupoMaximo: number;
+  cupoDisponible?: number;
+  activacion: boolean;
+  fechaRegistro: Date;
 };
+
+// Respuesta de API con paginación
+export interface ApiResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+// Request para crear/actualizar
+export interface CreateConvocatoriaRequest {
+  claveConvocatoria: string;
+  titulo: string;
+  descripcion: string;
+  fechaInicio: Date;
+  fechaFin: Date;
+  estado: EstadoConvocatoria;
+  cicloEscolar: string;
+  cupoMaximo: number;
+  cupoDisponible?: number;
+  activacion: boolean;
+  fechaRegistro: Date;
+}
+
+export type UpdateConvocatoriaRequest = Partial<CreateConvocatoriaRequest>;
 
 export type EstadoConvocatoria = 'Activa' | 'Cerrada' | 'En Pausa';
 
@@ -50,6 +79,9 @@ export const DATA_CONVOCATORIAS: Convocatoria[] = Array.from({ length: 100 }, (_
     fechaFin: randomDate(new Date(anioInicio, 11, 1), new Date(anioFin, 6, 31)),
     cicloEscolar: `${anioInicio}-${anioFin}`,
     cupoMaximo: Math.floor(Math.random() * 200) + 50,
+    cupoDisponible: Math.floor(Math.random() * 200) + 50,
     estado: ESTADOS[Math.floor(Math.random() * ESTADOS.length)],
+    activacion: Math.random() > 0.5,
+    fechaRegistro: randomDate(new Date(2020, 0, 1), new Date()),
   };
 });
