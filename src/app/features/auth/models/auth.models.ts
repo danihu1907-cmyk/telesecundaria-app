@@ -1,29 +1,29 @@
 export interface LoginRequest {
   correo: string;
-  contrasenia: string; // BIEN - ASI LO PIDE EL API
+  contrasenia: string; // EN EL LOGIN TU API PIDE CONTRASENIA CON ENYE
 }
 
 export interface RegistroTutorRequest {
   // DATOS PERSONALES Y DE ACCESO
   nombre: string;
-  apellido_paterno: string;
-  apellido_materno?: string;
-  curp_tutor: string;
+  apellidoPaterno: string;
+  apellidoMaterno?: string;
+  curpTutor: string;
   telefono: string;
   parentesco: string;
   correo: string;
   contrasena: string;
-
   // DATOS DEL DOMICILIO
-  calle_numero: string;
+  calleNumero: string;
   colonia: string;
-  codigo_postal: string;
+  codigoPostal: string;
   municipio: string;
 }
 
 export interface RecuperarPasswordRequest {
   correo: string;
 }
+
 export interface AuthResponse {
   token: string;
   claveToken: string;
@@ -32,4 +32,14 @@ export interface AuthResponse {
   mensaje: string;
 }
 
-/* LO NUEVO PARA CONSUMIR */
+export interface RegistroTutorResponse {
+  claveTutorAspirante: string;
+  nombre: string;
+  apellidoPaterno: string;
+  apellidoMaterno?: string;
+  curpTutor: string;
+  telefono: string;
+  correo: string;
+  parentesco: string;
+  estado: boolean;
+}

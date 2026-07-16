@@ -26,12 +26,12 @@ export class RegisterPage implements OnInit {
   // DICCIONARIO DE ERRORES INDEPENDIENTES CON TEXTO EN MINÚSCULAS TIPO ORACIÓN
   erroresCampos: { [key: string]: string | null } = {
     nombre: null,
-    apellido_paterno: null,
-    curp_tutor: null,
+    apellidoPaterno: null, // CORREGIDO A CAMELCASE
+    curpTutor: null, // CORREGIDO A CAMELCASE
     telefono: null,
-    calle_numero: null,
+    calleNumero: null, // CORREGIDO A CAMELCASE
     colonia: null,
-    codigo_postal: null,
+    codigoPostal: null, // CORREGIDO A CAMELCASE
     municipio: null,
     correo: null,
     contrasena: null,
@@ -39,16 +39,17 @@ export class RegisterPage implements OnInit {
   };
 
   // OBJETO UNIFICADO QUE RECOLECTARA LOS PARAMETROS DURANTE EL PROCESO
+  // CORREGIDO: SE CAMBIARON LAS PROPIEDADES INTERNAS A CAMELCASE PARA DAR CUMPLIMIENTO A LA INTERFAZ REGISTROTUTORREQUEST
   datosRegistro: RegistroTutorRequest = {
     nombre: '',
-    apellido_paterno: '',
-    apellido_materno: '',
-    curp_tutor: '',
+    apellidoPaterno: '',
+    apellidoMaterno: '',
+    curpTutor: '',
     telefono: '',
     parentesco: '',
-    calle_numero: '',
+    calleNumero: '',
     colonia: '',
-    codigo_postal: '',
+    codigoPostal: '',
     municipio: '',
     correo: '',
     contrasena: '',
@@ -104,7 +105,7 @@ export class RegisterPage implements OnInit {
 
     if (this.pasoActual() === 1) {
       this.erroresCampos['telefono'] = null;
-      this.erroresCampos['curp_tutor'] = null;
+      this.erroresCampos['curpTutor'] = null; // CORREGIDO A CAMELCASE
 
       let tieneErrores = false;
 
@@ -116,8 +117,9 @@ export class RegisterPage implements OnInit {
       }
 
       const patronCurp = /^[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]\d$/i;
-      if (!patronCurp.test(this.datosRegistro.curp_tutor)) {
-        this.erroresCampos['curp_tutor'] = 'El formato de la CURP ingresada no es válido.';
+      if (!patronCurp.test(this.datosRegistro.curpTutor)) {
+        // CORREGIDO A CAMELCASE
+        this.erroresCampos['curpTutor'] = 'El formato de la CURP ingresada no es válido.'; // CORREGIDO A CAMELCASE
         tieneErrores = true;
       }
 
@@ -126,41 +128,46 @@ export class RegisterPage implements OnInit {
         return;
       }
 
-      this.datosRegistro.curp_tutor = this.datosRegistro.curp_tutor.toUpperCase();
+      this.datosRegistro.curpTutor = this.datosRegistro.curpTutor.toUpperCase(); // CORREGIDO A CAMELCASE
       this.cargando.set(true); // SE ESTABLECE EL VALOR EN TRUE CON LA SINTAXIS DE SIGNALS
 
       console.log('DISPARANDO DISPONIBILIDAD DE CURP HACIA EL SERVICIO...');
 
-      this.authService.verificarCurpUnica(this.datosRegistro.curp_tutor).subscribe({
-        next: (existeCurp) => {
+      this.authService.verificarCurpUnica(this.datosRegistro.curpTutor).subscribe({
+        // CORREGIDO A CAMELCASE
+        next: (tutorExistente) => {
           this.cargando.set(false);
-          console.log('RESPUESTA EXITOSA DE LA API. ¿EXISTE LA CURP?:', existeCurp);
+          console.log('RESPUESTA DE LA API. EL TUTOR YA EXISTE CON ESA CURP:', tutorExistente);
 
-          if (existeCurp) {
-            this.erroresCampos['curp_tutor'] =
-              `La CURP ${this.datosRegistro.curp_tutor} ya se encuentra registrada.`;
-          } else {
-            this.pasoActual.set(2); // ACTUALIZACIÓN TOTALMENTE REACTIVA QUE ENTERA AL HTML AL INSTANTE
-            console.log('CAMBIO EXITOSO REALIZADO AL PASO DOS.');
-          }
+          // CORRECCIÓN: SI EL NEXT SE DISPARA SIGNIFICA QUE EL API ENCONTRO UN REGISTRO ASOCIADO (CODIGO 200) POR ENDE LA CURP NO ES UNICA
+          this.erroresCampos['curpTutor'] =
+            `La CURP ${this.datosRegistro.curpTutor} ya se encuentra registrada.`;
         },
         error: (err) => {
           this.cargando.set(false);
-          console.error('ERROR DETECTADO EN EL FLUJO HTTP DE LA API:', err);
-          this.pasoActual.set(2); // PERMITIMOS EL AVANCE ANTE ERRORES CRÍTICOS DE CONEXIÓN
+
+          // CORRECCIÓN: SI EL ERROR ES UN 404 SIGNIFICA QUE LA CURP ESTA DISPONIBLE PARA REGISTRO
+          if (err.status === 404) {
+            console.log('CURP LIBRE Y DISPONIBLE. AVANZANDO AL PASO DOS SIN COMPROMISOS.');
+            this.pasoActual.set(2); // ACTUALIZACIÓN TOTALMENTE REACTIVA QUE ENTERA AL HTML AL INSTANTE
+          } else {
+            console.error('ERROR CRITICO DE RED O DEL SERVIDOR:', err);
+            this.erroresCampos['curpTutor'] = 'No se pudo verificar la CURP. Intente más tarde.';
+          }
         },
       });
       return;
     }
 
     if (this.pasoActual() === 2) {
-      this.erroresCampos['codigo_postal'] = null;
+      this.erroresCampos['codigoPostal'] = null; // CORREGIDO A CAMELCASE
 
       let tieneErroresPasoDos = false;
 
       const patronCodigoPostal = /^\d{5}$/;
-      if (!patronCodigoPostal.test(this.datosRegistro.codigo_postal)) {
-        this.erroresCampos['codigo_postal'] =
+      if (!patronCodigoPostal.test(this.datosRegistro.codigoPostal)) {
+        // CORREGIDO A CAMELCASE
+        this.erroresCampos['codigoPostal'] = // CORREGIDO A CAMELCASE
           'El código postal debe contener exactamente 5 números.';
         tieneErroresPasoDos = true;
       }
@@ -209,10 +216,12 @@ export class RegisterPage implements OnInit {
     this.authService.registrarTutorCompleto(this.datosRegistro).subscribe({
       next: (respuesta) => {
         this.cargando.set(false);
-        this.mensajeExito = respuesta.mensaje;
+        // CORRECCIÓN: ADAPTADO A LA RESPUESTA REAL REGISTROTUTORRESPONSE DE LA API QUE COMPROBAMOS EN SWAGGER
+        this.mensajeExito = 'Registro realizado con éxito. Redireccionando...';
 
-        if (respuesta.token) {
-          localStorage.setItem('token_control_escolar', respuesta.token); // <-- MANTIENE TU PERSISTENCIA EN EL DISCO CON EL MISMO NOMBRE CLAVE DEL SERVICIO
+        if (respuesta.claveTutorAspirante) {
+          localStorage.setItem('claveTutorAspirante', respuesta.claveTutorAspirante); // <-- MANTIENE TU PERSISTENCIA EN EL DISCO CON EL NOMBRE CLAVE EXACTO DE LA RESPUESTA DEL BACKEND
+          localStorage.setItem('nombreTutor', `${respuesta.nombre} ${respuesta.apellidoPaterno}`); // <-- CONFIGURAMOS EL NOMBRE COMPLETO PARA PINTAR LAS INICIALES EN EL DASHBOARD
         }
 
         setTimeout(() => {
@@ -221,7 +230,9 @@ export class RegisterPage implements OnInit {
       },
       error: (err) => {
         this.cargando.set(false);
-        this.erroresCampos['correo'] = err.message || 'Ocurrió un error al procesar el registro.';
+        // CORRECCIÓN: CAPTURA COMPATIBLE PARA EXTRAER ERRORES DESDE LAS EXCEPCIONES HTTP DE .NET
+        this.erroresCampos['correo'] =
+          err.error?.mensaje || err.message || 'Ocurrió un error al procesar el registro.';
       },
     });
   }

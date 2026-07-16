@@ -78,16 +78,16 @@
                     <label>Apellido paterno <span class="requerido">*</span></label>
                     <input
                       type="text"
-                      name="apellido_paterno"
-                      [(ngModel)]="datosRegistro.apellido_paterno"
-                      (input)="limpiarErrorCampo('apellido_paterno')"
+                      name="apellidoPaterno"
+                      [(ngModel)]="datosRegistro.apellidoPaterno"
+                      (input)="limpiarErrorCampo('apellidoPaterno')"
                       required
                       maxlength="50"
                       placeholder="Pérez Pérez"
-                      [class.input-error]="erroresCampos['apellido_paterno']"
+                      [class.input-error]="erroresCampos['apellidoPaterno']"
                     />
-                    @if (erroresCampos['apellido_paterno']) {
-                      <span class="texto-error-campo">{{ erroresCampos['apellido_paterno'] }}</span>
+                    @if (erroresCampos['apellidoPaterno']) {
+                      <span class="texto-error-campo">{{ erroresCampos['apellidoPaterno'] }}</span>
                     }
                   </div>
                 </div>
@@ -96,8 +96,8 @@
                   <label>Apellido materno <span class="requerido">*</span></label>
                   <input
                     type="text"
-                    name="apellido_materno"
-                    [(ngModel)]="datosRegistro.apellido_materno"
+                    name="apellidoMaterno"
+                    [(ngModel)]="datosRegistro.apellidoMaterno"
                     maxlength="50"
                     placeholder="López (opcional)"
                   />
@@ -107,16 +107,16 @@
                   <label>CURP <span class="requerido">*</span></label>
                   <input
                     type="text"
-                    name="curp_tutor"
-                    [(ngModel)]="datosRegistro.curp_tutor"
-                    (input)="limpiarErrorCampo('curp_tutor')"
+                    name="curpTutor"
+                    [(ngModel)]="datosRegistro.curpTutor"
+                    (input)="limpiarErrorCampo('curpTutor')"
                     required
                     maxlength="18"
                     placeholder="18 CARACTERES"
-                    [class.input-error]="erroresCampos['curp_tutor']"
+                    [class.input-error]="erroresCampos['curpTutor']"
                   />
-                  @if (erroresCampos['curp_tutor']) {
-                    <span class="texto-error-campo">{{ erroresCampos['curp_tutor'] }}</span>
+                  @if (erroresCampos['curpTutor']) {
+                    <span class="texto-error-campo">{{ erroresCampos['curpTutor'] }}</span>
                   }
                 </div>
 
@@ -156,8 +156,8 @@
                     (click)="siguientePaso()"
                     [disabled]="
                       !datosRegistro.nombre ||
-                      !datosRegistro.apellido_paterno ||
-                      !datosRegistro.curp_tutor ||
+                      !datosRegistro.apellidoPaterno ||
+                      !datosRegistro.curpTutor ||
                       !datosRegistro.telefono ||
                       !datosRegistro.parentesco ||
                       cargando()
@@ -175,16 +175,16 @@
                   <label>Calle y número <span class="requerido">*</span></label>
                   <input
                     type="text"
-                    name="calle_numero"
-                    [(ngModel)]="datosRegistro.calle_numero"
-                    (input)="limpiarErrorCampo('calle_numero')"
+                    name="calleNumero"
+                    [(ngModel)]="datosRegistro.calleNumero"
+                    (input)="limpiarErrorCampo('calleNumero')"
                     required
                     maxlength="100"
                     placeholder="Av. Hidalgo 123"
-                    [class.input-error]="erroresCampos['calle_numero']"
+                    [class.input-error]="erroresCampos['calleNumero']"
                   />
-                  @if (erroresCampos['calle_numero']) {
-                    <span class="texto-error-campo">{{ erroresCampos['calle_numero'] }}</span>
+                  @if (erroresCampos['calleNumero']) {
+                    <span class="texto-error-campo">{{ erroresCampos['calleNumero'] }}</span>
                   }
                 </div>
 
@@ -209,17 +209,17 @@
                     <label>Código postal <span class="requerido">*</span></label>
                     <input
                       type="text"
-                      name="codigo_postal"
-                      [(ngModel)]="datosRegistro.codigo_postal"
-                      (input)="limpiarErrorCampo('codigo_postal')"
+                      name="codigoPostal"
+                      [(ngModel)]="datosRegistro.codigoPostal"
+                      (input)="limpiarErrorCampo('codigoPostal')"
                       required
                       maxlength="5"
                       (keypress)="soloNumeros($event)"
                       placeholder="94470"
-                      [class.input-error]="erroresCampos['codigo_postal']"
+                      [class.input-error]="erroresCampos['codigoPostal']"
                     />
-                    @if (erroresCampos['codigo_postal']) {
-                      <span class="texto-error-campo">{{ erroresCampos['codigo_postal'] }}</span>
+                    @if (erroresCampos['codigoPostal']) {
+                      <span class="texto-error-campo">{{ erroresCampos['codigoPostal'] }}</span>
                     }
                   </div>
                 </div>
@@ -247,9 +247,9 @@
                     class="btn-primario-grande"
                     (click)="siguientePaso()"
                     [disabled]="
-                      !datosRegistro.calle_numero ||
+                      !datosRegistro.calleNumero ||
                       !datosRegistro.colonia ||
-                      !datosRegistro.codigo_postal ||
+                      !datosRegistro.codigoPostal ||
                       !datosRegistro.municipio
                     "
                   >
