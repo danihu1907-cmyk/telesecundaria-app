@@ -4,6 +4,7 @@ import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
   RegistroTutorRequest,
+  RegistroTutorResponse, // LINEA AGREGADA: IMPORTAMOS EL NUEVO MODELO DE RESPUESTA DE REGISTRO
   AuthResponse,
   LoginRequest,
   RecuperarPasswordRequest,
@@ -72,15 +73,17 @@ export class AuthTutorService {
   }
 
   // VERIFICAR SI UNA CURP YA ESTA REGISTRADA EN EL SISTEMA
-  verificarCurpUnica(curp: string): Observable<any> {
+  // RETORNA EL OBJETO DEL TUTOR SI EXISTE O FALLA CON 404 SI NO EXISTE
+  verificarCurpUnica(curp: string): Observable<RegistroTutorResponse> {
     const url = `${environment.apiUrl}/TutorAspirante/curp/${curp}`;
-    return this.http.get<any>(url);
+    return this.http.get<RegistroTutorResponse>(url);
   }
 
   // REGISTRAR UN NUEVO TUTOR CON DIRECCION
-  registrarTutorCompleto(payload: RegistroTutorRequest): Observable<AuthResponse> {
+  // CORRECCIÓN: SE ACTUALIZÓ EL TIPADO DE RETORNO A RegistroTutorResponse DE ACUERDO CON SWAGGER
+  registrarTutorCompleto(payload: RegistroTutorRequest): Observable<RegistroTutorResponse> {
     const url = `${environment.apiUrl}/TutorAspirante`;
-    return this.http.post<AuthResponse>(url, payload);
+    return this.http.post<RegistroTutorResponse>(url, payload);
   }
 
   // INICIO DE SESION DEL TUTOR ASPIRANTE
@@ -108,8 +111,9 @@ export class AuthTutorService {
   }
 
   // RECUPERACION DE CONTRASENA
+  // CORRECCIÓN: SE ELIMINÓ UN PUNTO Y COMA EXTRA AL FINAL DE LA URL QUE HACÍA FALLAR LA PETICIÓN
   recuperarContrasena(payload: RecuperarPasswordRequest): Observable<AuthResponse> {
-    const url = `${environment.apiUrl}/v1/Auth/recuperar-contrasena;`;
+    const url = `${environment.apiUrl}/v1/Auth/recuperar-contrasena`;
     return this.http.post<AuthResponse>(url, payload);
   }
 }
