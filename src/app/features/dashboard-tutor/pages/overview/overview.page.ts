@@ -36,7 +36,7 @@ export class OverviewComponent implements OnInit {
   }
 
   completarDocumentosAspirante(claveAspirante: string): void {
-    this.router.navigate(['/dashboard/register-flow'], {
+    this.router.navigate(['/dashboard-tutor/register-flow'], {
       queryParams: { claveAspirante: claveAspirante },
     });
   }

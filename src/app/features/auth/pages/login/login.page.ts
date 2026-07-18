@@ -69,7 +69,7 @@ export class LoginPage {
       next: (respuesta) => {
         this.cargando.set(false);
         console.log('Login exitoso:', respuesta);
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/dashboard-tutor']);
       },
       error: (err) => {
         this.cargando.set(false);
