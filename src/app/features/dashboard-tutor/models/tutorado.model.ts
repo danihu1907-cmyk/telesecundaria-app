@@ -65,7 +65,10 @@ export interface TipoDocumento {
 }
 
 export interface DocumentoCargado {
-  claveTipoDocumento: string;
+  claveDocAspirante: string;
+  tipoDocumento: string;
+  rutaUrl: string;
+  estatus: 'Pendiente' | 'Aceptado' | 'Rechazado';
 }
 
 export interface EstadoAdjuncion {
@@ -94,7 +97,8 @@ export interface AspiranteTarjetaDashboard {
   claveAspirante: string;
   nombreCompleto: string; // Se construye en el servicio concatenando los tres campos
   estatusTramite: string; // Viene de estatusAspirante del API
-  porcentajeProgreso: number; // Se calcula en el servicio según el estatus
+  porcentajeProgreso: number;
+  tieneDocumentosRechazados?: boolean;
 }
 
 export interface DashboardTutorResponse {

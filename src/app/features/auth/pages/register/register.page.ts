@@ -225,7 +225,7 @@ export class RegisterPage implements OnInit {
         }
 
         setTimeout(() => {
-          this.router.navigate(['/dashboard/convocatorias']);
+          this.router.navigate(['/dashboard-tutor/convocatorias']);
         }, 2000);
       },
       error: (err) => {

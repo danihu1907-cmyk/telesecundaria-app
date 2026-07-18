@@ -38,22 +38,9 @@ export const routes: Routes = [
         (m) => m.ForgotPasswordPage,
       ),
   },
-
-  // =========================================================================
-  // NOTA EN MAYUSCULAS PARA EL FUTURO:
-  // CUANDO TU EQUIPO GENERE LAS CARPETAS DEL DASHBOARD O FORMULARIOS DE INSCRIPCION,
-  // SOLO DEBERAS COPIAR EL SIGUIENTE BLOQUE AQUI ABAJO PARA PROTEGERLAS:
-  //
-  // {
-  //   path: 'dashboard',
-  //   canActivate: [authTutorGuard],
-  //   loadComponent: () => import('./features/dashboard/dashboard.page').then(m => m.DashboardPage)
-  // }
-  // =========================================================================
-
   // DASHBOARD PRINCIPAL - LISTA DE ASPIRANTES (PROTEGIDO CON GUARD)
   {
-    path: 'dashboard',
+    path: 'dashboard-tutor',
     canActivate: [authTutorGuard],
     loadComponent: () =>
       import('./features/dashboard-tutor/pages/overview/overview.page').then(
@@ -63,7 +50,7 @@ export const routes: Routes = [
 
   // REGISTRO DE NUEVO ASPIRANTE Y CARGA DE DOCUMENTOS (PROTEGIDO CON GUARD)
   {
-    path: 'dashboard/register-flow',
+    path: 'dashboard-tutor/register-flow',
     canActivate: [authTutorGuard],
     loadComponent: () =>
       import('./features/dashboard-tutor/pages/register-flow/register-flow.page').then(
