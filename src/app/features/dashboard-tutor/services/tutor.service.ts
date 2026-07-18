@@ -184,6 +184,15 @@ export class TutorService {
     return this.http.post<any>(url, payload);
   }
 
+  corregirDocumentoRechazado(claveDocAspirante: string, archivo: File): Observable<any> {
+    const url = `${environment.apiUrl}/Adjunciones/documentos/${claveDocAspirante}/corregir`;
+    const formData = new FormData();
+
+    formData.append('Archivo', archivo, archivo.name);
+
+    return this.http.patch<any>(url, formData);
+  }
+
   logout(): void {
     localStorage.clear();
     this.datosDashboardSignal.set(null);
