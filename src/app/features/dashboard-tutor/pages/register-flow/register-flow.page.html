@@ -12,9 +12,77 @@
 
     <div class="contenedor-wrap">
       <div class="contenedor-tarjeta">
-        <app-progress-stepper [pasoActual]="pasoActual()" [finalizado]="enviado()" />
+        @if (!modoCorreccion()) {
+          <app-progress-stepper [pasoActual]="pasoActual()" [finalizado]="enviado()" />
+        }
 
-        @if (pasoActual() === 1) {
+        @if (modoCorreccion()) {
+          <div class="seccion-documentos">
+            <h3 class="subtitulo-seccion">Corregir documentos rechazados</h3>
+
+            @if (mensajeErrorGlobal()) {
+              <div class="alerta error">{{ mensajeErrorGlobal() }}</div>
+            }
+
+            <div class="grid-documentos">
+              @for (doc of documentosCorreccion(); track doc.claveDocAspirante) {
+                <div class="fila-documento">
+                  <div class="doc-info">
+                    <span class="doc-nombre">{{ doc.tipoDocumento }}</span>
+                    <span class="doc-desc">{{
+                      doc.descripcion || 'Formato PDF • Máximo 5MB'
+                    }}</span>
+                    @if (doc.estatus === 'Rechazado' && doc.motivoRechazo) {
+                      <span class="doc-desc">Motivo: {{ doc.motivoRechazo }}</span>
+                    }
+                  </div>
+
+                  <div class="doc-acciones">
+                    <app-status-badge [estatus]="doc.estatus ?? ''" />
+
+                    @if (doc.estatus === 'Rechazado') {
+                      <label class="btn-upload">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                          <path
+                            d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                        Corregir
+                        <input
+                          type="file"
+                          accept="application/pdf"
+                          style="display: none"
+                          (change)="onArchivoCorreccion(doc.claveDocAspirante, $event)"
+                        />
+                      </label>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+
+            <div class="bloque-botones">
+              @if (reenviado()) {
+                <button class="btn-primario" routerLink="/dashboard-tutor">Volver al inicio</button>
+              } @else if (reenviando()) {
+                <button class="btn-primario" [disabled]="true">Enviando...</button>
+              } @else {
+                <button class="btn-secundario" routerLink="/dashboard-tutor">Cancelar</button>
+                <button
+                  class="btn-primario"
+                  [disabled]="!correccionCompleta()"
+                  (click)="onReenviar()"
+                >
+                  Reenviar a revisión →
+                </button>
+              }
+            </div>
+          </div>
+        } @else if (pasoActual() === 1) {
           <div class="seccion-documentos">
             @if (mensajeErrorGlobal()) {
               <div class="alerta error">{{ mensajeErrorGlobal() }}</div>
@@ -34,9 +102,7 @@
               </button>
             </div>
           </div>
-        }
-
-        @if (pasoActual() === 2) {
+        } @else if (pasoActual() === 2) {
           <div class="seccion-documentos">
             <h3 class="subtitulo-seccion">Documentos requeridos</h3>
 

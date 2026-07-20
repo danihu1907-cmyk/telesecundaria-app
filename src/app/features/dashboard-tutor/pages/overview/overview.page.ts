@@ -41,6 +41,12 @@ export class OverviewComponent implements OnInit {
     });
   }
 
+  // NUEVO METODO: NAVEGA A LA PANTALLA DE CORRECCION DE DOCUMENTOS RECHAZADOS
+  corregirDocumentosAspirante(claveAspirante: string): void {
+    this.router.navigate(['/dashboard-tutor/register-flow'], {
+      queryParams: { claveAspirante: claveAspirante, modo: 'corregir' },
+    });
+  }
   onLogout() {
     this.tutorService.logout();
   }

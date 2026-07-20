@@ -12,6 +12,11 @@
           Completar documentos →
         </button>
       }
+      @if (aspirante().estatusTramite === 'Rechazado') {
+        <button class="btn-corregir" (click)="corregirDocumentos.emit(aspirante().claveAspirante)">
+          Corregir documentos →
+        </button>
+      }
     </div>
   </div>
 
