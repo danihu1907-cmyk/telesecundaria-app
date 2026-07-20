@@ -37,14 +37,6 @@
         <div>
           @if (banners()[indiceActual()].claveConvocatoria) {
             <div style="display: flex; gap: 15px; flex-wrap: wrap">
-              <a
-                [href]="banners()[indiceActual()].claveConvocatoria"
-                download
-                class="hero__btn--download"
-              >
-                Descargar Requisitos PDF
-              </a>
-
               <button routerLink="/welcome" class="hero__btn hero__btn--registro">
                 Regístrate aquí
               </button>

@@ -75,31 +75,6 @@
   background: var(--color-blanco);
   color: var(--color-primario);
 }
-
-.hero__btn--download {
-  background: transparent;
-  border: 1.5px solid var(--color-blanco);
-  color: var(--color-blanco);
-  padding: 0.6rem 1.5rem;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  font-family: var(--font-base);
-  transition:
-    background 0.3s ease,
-    color 0.3s ease;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.hero__btn--download:hover {
-  background: var(--color-blanco);
-  color: var(--color-primario);
-}
-
 /* AGREGADO: Regla base global para controlar el comportamiento y la animación de las flechas */
 div[style*='position: relative'] > div > button {
   transform: translateY(-50%) !important;
