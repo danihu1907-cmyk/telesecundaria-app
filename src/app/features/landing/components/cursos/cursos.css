@@ -16,25 +16,6 @@
   color: var(--color-primario);
 }
 
-.cursos__ver-todos {
-  color: var(--color-primario);
-  font-size: 13px;
-  font-weight: 500;
-  text-decoration: none;
-  border: 1.5px solid var(--color-primario);
-  padding: 0.4rem 1rem;
-  border-radius: 20px;
-  transition:
-    background 0.3s ease,
-    color 0.3s ease;
-  white-space: nowrap;
-}
-
-.cursos__ver-todos:hover {
-  background: var(--color-primario);
-  color: var(--color-blanco);
-}
-
 .cursos__grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -106,6 +87,77 @@
   opacity: 0.85;
 }
 
+.cursos-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 1rem; /* Margen de seguridad para pantallas mini */
+}
+
+.cursos-modal__content {
+  background-color: var(--color-blanco);
+  padding: 2.5rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  animation: cursosPopUp 0.25s ease-out forwards;
+}
+
+.cursos-modal__titulo {
+  color: var(--color-primario);
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.cursos-modal__texto {
+  color: var(--color-texto);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  opacity: 0.9;
+}
+
+.cursos-modal__btn {
+  background: var(--color-primario);
+  color: var(--color-blanco);
+  border: none;
+  padding: 0.6rem 1.5rem;
+  font-weight: 500;
+  font-size: 13px;
+  border-radius: 20px; /* Sigue la estética redonda de tus otros botones */
+  width: 100%;
+  cursor: pointer;
+  font-family: var(--font-base);
+  transition: opacity 0.3s ease;
+}
+
+.cursos-modal__btn:hover {
+  opacity: 0.85;
+}
+
+@keyframes cursosPopUp {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 /* ===== MEDIA QUERIES ===== */
 
 @media (max-width: 479px) {
@@ -115,9 +167,11 @@
   .cursos__titulo {
     font-size: 1.4rem;
   }
-  .cursos__ver-todos {
-    font-size: 11px;
-    padding: 0.3rem 0.75rem;
+  .cursos-modal__content {
+    padding: 1.75rem 1.25rem;
+  }
+  .cursos-modal__titulo {
+    font-size: 1.15rem;
   }
 }
 
@@ -127,6 +181,14 @@
   }
   .cursos {
     padding: 2.5rem 0;
+  }
+  .cursos__card {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem 1.25rem;
+  }
+  .cursos__btn {
+    width: 100%;
   }
 }
 
