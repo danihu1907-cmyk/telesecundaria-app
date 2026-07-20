@@ -49,6 +49,23 @@
 .btn-completar:hover {
   opacity: 0.9;
 }
+.btn-corregir {
+  height: 36px;
+  padding: 0 16px;
+  background-color: var(--color-error);
+  color: var(--color-blanco);
+  border: none;
+  border-radius: var(--radius-general);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+
+.btn-corregir:hover {
+  opacity: 0.9;
+}
 
 /* COMPONENTES DE LA BARRA DE PROGRESO DE SEGUIMIENTO */
 .progreso-wrap {

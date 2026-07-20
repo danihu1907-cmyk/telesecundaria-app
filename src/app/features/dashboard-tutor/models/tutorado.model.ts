@@ -68,7 +68,9 @@ export interface DocumentoCargado {
   claveDocAspirante: string;
   tipoDocumento: string;
   rutaUrl: string;
-  estatus: 'Pendiente' | 'Aceptado' | 'Rechazado';
+  estatus?: 'Pendiente' | 'Aceptado' | 'Rechazado';
+  descripcion?: string;
+  motivoRechazo?: string | null;
 }
 
 export interface EstadoAdjuncion {
@@ -77,10 +79,18 @@ export interface EstadoAdjuncion {
   todosCompletos: boolean;
 }
 
-/**
- * Reemplaza por completo a 'ControlArchivoVista' y 'RegistrarAdjuncionesRequest'.
- * Este objeto maneja de forma dinámica la UI en la RAM de Angular para pintar las tarjetas.
- */
+export interface AdjuncionResponse {
+  claveAdjuncion: string;
+  claveTutor: string;
+  claveAspirante: string;
+  estatusGral: string;
+  documentos: DocumentoCargado[];
+}
+export interface FinalizarAdjuncionRequest {
+  ClaveTutor: string;
+  ClaveAspirante: string;
+}
+
 export interface TarjetaDocumento {
   claveTipoDocumento: string; // Viene de TipoDocumento.claveTipoDocumento (Ej: "TIPO-0004")
   nombreDocumento: string; // Viene de TipoDocumento.nombreDocumento (Ej: "CURP")
