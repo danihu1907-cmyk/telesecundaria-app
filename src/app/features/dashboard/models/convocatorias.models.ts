@@ -23,22 +23,29 @@ export interface ApiResponse<T> {
 
 // Request para crear/actualizar
 export interface CreateConvocatoriaRequest {
-  claveConvocatoria: string;
   titulo: string;
+  subtitulo: string;
   descripcion: string;
   fechaInicio: Date;
   fechaFin: Date;
-  estado: EstadoConvocatoria;
   cicloEscolar: string;
   cupoMaximo: number;
-  cupoDisponible?: number;
-  activacion: boolean;
-  fechaRegistro: Date;
+  nombreUsuario: string;
+  claveImagen: string;
 }
 
-export type UpdateConvocatoriaRequest = Partial<CreateConvocatoriaRequest>;
+export interface UpdateConvocatoriaRequest {
+  claveConvocatoria: string;
+  titulo: string;
+  subtitulo: string;
+  descripcion: string;
+  cupoMaximo: number;
+  nombreUsuario: string;
+  claveImagen: string;
+  destacadoTexto: string;
+}
 
-export type EstadoConvocatoria = 'Activa' | 'Cerrada' | 'En Pausa';
+export type EstadoConvocatoria = 'Activa' | 'Cerrada' | 'Programada';
 
 export const ESTADO_COLORS: Record<EstadoConvocatoria, { bg: string; text: string }> = {
   Activa: {
@@ -49,7 +56,7 @@ export const ESTADO_COLORS: Record<EstadoConvocatoria, { bg: string; text: strin
     bg: 'bg-red-100 dark:bg-red-950',
     text: 'text-red-700 dark:text-red-300',
   },
-  'En Pausa': {
+  Programada: {
     bg: 'bg-yellow-100 dark:bg-yellow-950',
     text: 'text-yellow-700 dark:text-yellow-300',
   },
@@ -60,7 +67,7 @@ function randomDate(start: Date, end: Date): Date {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 }
 
-const ESTADOS: EstadoConvocatoria[] = ['Activa', 'Cerrada', 'En Pausa'];
+const ESTADOS: EstadoConvocatoria[] = ['Activa', 'Cerrada', 'Programada'];
 
 export function getRandomEstado(): EstadoConvocatoria {
   const randomIndex = Math.floor(Math.random() * ESTADOS.length);

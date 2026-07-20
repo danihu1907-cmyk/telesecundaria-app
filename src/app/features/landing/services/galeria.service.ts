@@ -17,7 +17,7 @@ export class GaleriaService {
     // 1. En producción apuntamos al endpoint de la API en C#
     // 2. En desarrollo seguimos apuntando a tus datos simulados (JSON local en public)
     const url = environment.production
-      ? `${environment.apiUrl}/api/Galeria`
+      ? `${environment.apiUrl}/Galeria`
       : 'mock-data/galeria.json';
 
     return this.http.get<GaleriaElemento[]>(url);

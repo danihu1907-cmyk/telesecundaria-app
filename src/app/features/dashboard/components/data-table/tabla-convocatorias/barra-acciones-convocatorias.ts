@@ -116,7 +116,7 @@ export class BarraAccionesConvocatorias {
   protected readonly _estatus = signal([
     'Activa',
     'Cerrada',
-    'En Pausa',
+    'Programada',
   ] satisfies EstadoConvocatoria[]);
   protected readonly _estadoEstatus = signal<'closed' | 'open'>('closed');
 

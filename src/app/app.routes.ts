@@ -17,6 +17,7 @@ import { Cotejos } from './features/dashboard/pages/cotejos/cotejos';
 import { Inscripciones } from './features/dashboard/pages/inscripciones/inscripciones';
 import { Usuarios } from './features/dashboard/pages/usuarios/usuarios';
 import { Expedientes } from './features/dashboard/pages/expedientes/expedientes';
+import { Galeria } from './features/dashboard/pages/galeria/galeria';
 
 export const routes: Routes = [
   //  Página principal o Landing Page pública
@@ -76,6 +77,7 @@ export const routes: Routes = [
       { path: 'cotejos', component: Cotejos, data: { title: 'Cotejos' } },
       { path: 'expedientes', component: Expedientes, data: { title: 'Expedientes' } },
       { path: 'usuarios', component: Usuarios, data: { title: 'Usuarios' } },
+      { path: 'galeria', component: Galeria, data: { title: 'Galería' } },
     ],
   },
 

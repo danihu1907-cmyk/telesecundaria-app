@@ -93,6 +93,15 @@ import { SidebarItemComponent } from './sidebar-item';
               (navigate)="navegar('/dashboard/usuarios')"
             />
 
+            <!-- Galeria -->
+            <app-sidebar-item
+              label="Galería"
+              icon="lucideFolderPlus"
+              [active]="isActive('/dashboard/galeria')"
+              [collapsed]="collapsed"
+              (navigate)="navegar('/dashboard/galeria')"
+            />
+
             @for (group of menuGroups; track group.label) {
               <div class="flex flex-col">
                 <!-- Group Header -->

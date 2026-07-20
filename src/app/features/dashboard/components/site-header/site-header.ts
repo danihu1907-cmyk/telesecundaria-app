@@ -7,7 +7,7 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucidePlus } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { hlmH3 } from '../../../../../../libs/ui/typography/src/lib/hlm-h3';
-import { CrearConvocatorias } from '../modales/modal-crear-convocatorias';
+import { CrearConvocatorias } from '../modales/convocatorias/modal-crear-convocatorias';
 
 @Component({
   selector: 'site-header',

@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, input } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideEllipsis, lucideEye, lucidePencil, lucideTrash2 } from '@ng-icons/lucide';
+import { lucideEllipsis, lucideEye, lucidePencil, lucideCircleX } from '@ng-icons/lucide';
 import { HlmButton } from '@spartan-ng/helm/button';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmIcon } from '@spartan-ng/helm/icon';
@@ -30,7 +30,7 @@ import {
     HlmDropdownMenuItem,
     HlmAlertDialogImports,
   ],
-  providers: [provideIcons({ lucideEllipsis, lucidePencil, lucideTrash2, lucideEye })],
+  providers: [provideIcons({ lucideEllipsis, lucidePencil, lucideCircleX, lucideEye })],
   template: `
     <button
       hlmBtn
@@ -59,8 +59,8 @@ import {
         <hlm-dropdown-menu-separator />
         <!-- boton eliminar-->
         <button [hlmAlertDialogTriggerFor]="deleteDialog" hlmDropdownMenuItem variant="destructive">
-          <ng-icon name="lucideTrash2" />
-          Eliminar
+          <ng-icon name="lucideCircleX" />
+          Cancelar
         </button>
       </hlm-dropdown-menu>
     </ng-template>
@@ -70,17 +70,17 @@ import {
       <hlm-alert-dialog-content *hlmAlertDialogPortal="let ctx">
         <hlm-alert-dialog-header>
           <hlm-alert-dialog-media>
-            <ng-icon name="lucideTrash2" />
+            <ng-icon name="lucideCircleX" />
           </hlm-alert-dialog-media>
-          <h2 hlmAlertDialogTitle class="font-semibold">¿Borrar Convocatoria?</h2>
+          <h2 hlmAlertDialogTitle class="font-semibold">¿Cancelar Convocatoria?</h2>
           <p hlmAlertDialogDescription>
-            Esta acción no se puede deshacer. Esto eliminará permanentemente la convocatoria.
-            ¿Deseas continuar?
+            Al cancelar la convocatoria, no estará disponible para los usuarios. Esta acción no se
+            puede deshacer. ¿Deseas continuar?
           </p>
         </hlm-alert-dialog-header>
         <hlm-alert-dialog-footer>
-          <button hlmAlertDialogCancel>Cancelar</button>
-          <button hlmAlertDialogAction variant="destructive">Eliminar</button>
+          <button hlmAlertDialogCancel>Salir</button>
+          <button hlmAlertDialogAction variant="destructive">Cancelar convocatoria</button>
         </hlm-alert-dialog-footer>
       </hlm-alert-dialog-content>
     </hlm-alert-dialog>

@@ -8,7 +8,8 @@ import { lucidePlus, lucidePencil, lucideArrowLeft } from '@ng-icons/lucide';
 import { provideIcons, NgIcon } from '@ng-icons/core';
 import { HlmDatePickerImports, provideHlmDatePickerConfig } from '@spartan-ng/helm/date-picker';
 import { HlmDrawerImports } from '@spartan-ng/helm/drawer';
-import { Convocatoria } from '../../models/convocatorias.models';
+import { HlmSheetImports } from '@spartan-ng/helm/sheet';
+import { Convocatoria } from '../../../models/convocatorias.models';
 
 @Component({
   selector: 'modal-abrir-convocatorias',
@@ -22,6 +23,7 @@ import { Convocatoria } from '../../models/convocatorias.models';
     HlmDatePickerImports,
     CommonModule,
     NgIcon,
+    HlmSheetImports,
   ],
   providers: [
     provideHlmDatePickerConfig({ autoCloseOnSelect: true }),
@@ -33,20 +35,20 @@ import { Convocatoria } from '../../models/convocatorias.models';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <hlm-drawer
+    <hlm-sheet
       [state]="abierto() ? 'open' : 'closed'"
       (closed)="cerrado.emit()"
-      hlmDrawerTrigger
-      direction="right"
+      hlmSheetTrigger
+      side="right"
     >
       <!-- Modal -->
-      <hlm-drawer-content *hlmDrawerPortal="let ctx">
-        <hlm-drawer-header>
-          <h2 hlmDrawerTitle>{{ detallesConvocatoria()?.titulo }}</h2>
-          <p hlmDrawerDescription>
+      <hlm-sheet-content *hlmSheetPortal="let ctx">
+        <hlm-sheet-header>
+          <h2 hlmSheetTitle>{{ detallesConvocatoria()?.titulo }}</h2>
+          <p hlmSheetDescription>
             {{ detallesConvocatoria()?.descripcion }}
           </p>
-        </hlm-drawer-header>
+        </hlm-sheet-header>
 
         <hlm-field-group class="px-4 pt-4 ">
           <!-- Fechas -->
@@ -83,9 +85,9 @@ import { Convocatoria } from '../../models/convocatorias.models';
           </div>
         </hlm-field-group>
         <!-- Botones -->
-        <hlm-drawer-footer>
+        <hlm-sheet-footer>
           <div class="grid grid-cols-2 gap-3">
-            <button hlmDrawerClose hlmBtn variant="outline">
+            <button hlmSheetClose hlmBtn variant="outline">
               <ng-icon name="lucideArrowLeft" />Salir
             </button>
             <button hlmBtn type="submit">
@@ -93,9 +95,9 @@ import { Convocatoria } from '../../models/convocatorias.models';
               Editar convocatoria
             </button>
           </div>
-        </hlm-drawer-footer>
-      </hlm-drawer-content>
-    </hlm-drawer>
+        </hlm-sheet-footer>
+      </hlm-sheet-content>
+    </hlm-sheet>
   `,
 })
 export class AbrirConvocatorias {

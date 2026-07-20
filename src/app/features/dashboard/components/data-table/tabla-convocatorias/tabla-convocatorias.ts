@@ -7,7 +7,7 @@ import {
   TrackByFunction,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { type Convocatoria, DATA_CONVOCATORIAS } from '../../../models/convocatorias.models';
+import { type Convocatoria } from '../../../models/convocatorias.models';
 import { BarraAccionesConvocatorias } from './barra-acciones-convocatorias';
 import {
   lucideChevronLeft,
@@ -43,7 +43,7 @@ import { FechaInicioColumna } from './columnas/fecha-inicio-columna';
 import { CicloEscolar } from './columnas/ciclo-escolar';
 import { CupoMaximo } from './columnas/cupo-maximo';
 import { HlmButton } from '@spartan-ng/helm/button';
-import { AbrirConvocatorias } from '../../modales/modal-abrir-convocatorias';
+import { AbrirConvocatorias } from '../../modales/convocatorias/modal-abrir-convocatorias';
 import { ConvocatoriasService } from '../../../services/convocatorias.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -142,7 +142,15 @@ import { toSignal } from '@angular/core/rxjs-interop';
                     (click)="abrirConvocatoria(row.original)"
                   >
                     @for (cell of row.getVisibleCells(); track $index) {
-                      <td hlmTd class="px-4">
+                      <td
+                        hlmTd
+                        class="px-4"
+                        (click)="
+                          cell.column.id === 'select' || cell.column.id === 'action'
+                            ? $event.stopPropagation()
+                            : null
+                        "
+                      >
                         <ng-container
                           *flexRender="
                             cell.column.columnDef.cell;

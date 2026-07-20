@@ -100,6 +100,21 @@
       ],
       "@spartan-ng/helm/alert-dialog": [
         "./libs/ui/alert-dialog/src/index.ts"
+      ],
+      "@spartan-ng/helm/slider": [
+        "./libs/ui/slider/src/index.ts"
+      ],
+      "@spartan-ng/helm/switch": [
+        "./libs/ui/switch/src/index.ts"
+      ],
+      "@spartan-ng/helm/item": [
+        "./libs/ui/item/src/index.ts"
+      ],
+      "@spartan-ng/helm/radio-group": [
+        "./libs/ui/radio-group/src/index.ts"
+      ],
+      "@spartan-ng/helm/sonner": [
+        "./libs/ui/sonner/src/index.ts"
       ]
     }
   },

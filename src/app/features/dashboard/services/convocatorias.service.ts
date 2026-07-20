@@ -1,7 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { environment } from '../../../../environments/environment';
-import type { Convocatoria, ApiResponse } from '../models/convocatorias.models';
+import type {
+  Convocatoria,
+  CreateConvocatoriaRequest,
+  UpdateConvocatoriaRequest,
+} from '../models/convocatorias.models';
 import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -62,23 +66,44 @@ export class ConvocatoriasService {
   }
 
   // Crear nueva convocatoria
-  crearConvocatoria(data: Partial<Convocatoria>): Observable<Convocatoria | null> {
+  crearConvocatoria(data: CreateConvocatoriaRequest): Observable<Convocatoria | null> {
+    this.cargandoSignal.set(true);
+    this.errorSignal.set(null);
+
+    console.log('Enviando datos:', data);
+
     return this.http.post<Convocatoria>(this.apiUrl, data).pipe(
+      tap((response) => {
+        console.log('Convocatoria creada:', response);
+        this.cargandoSignal.set(false);
+      }),
       catchError((error) => {
         console.error('Error al crear convocatoria:', error);
         this.errorSignal.set(error.message || 'Error al crear convocatoria');
-        return of(null); // Retorna un observable con null en caso de error
+        this.cargandoSignal.set(false);
+        return of(null);
       }),
     );
   }
 
   // Actualizar convocatoria
-  actualizarConvocatoria(id: string, data: Partial<Convocatoria>): Observable<Convocatoria | null> {
+  actualizarConvocatoria(
+    id: string,
+    data: UpdateConvocatoriaRequest,
+  ): Observable<Convocatoria | null> {
+    this.cargandoSignal.set(true);
+    this.errorSignal.set(null);
+
     return this.http.put<Convocatoria>(`${this.apiUrl}/${id}`, data).pipe(
+      tap((response) => {
+        console.log('✅ Convocatoria actualizada:', response);
+        this.cargandoSignal.set(false);
+      }),
       catchError((error) => {
-        console.error('Error al actualizar convocatoria:', error);
+        console.error('❌ Error al actualizar convocatoria:', error);
         this.errorSignal.set(error.message || 'Error al actualizar convocatoria');
-        return of(null); // Retorna un observable con null en caso de error
+        this.cargandoSignal.set(false);
+        return of(null);
       }),
     );
   }
