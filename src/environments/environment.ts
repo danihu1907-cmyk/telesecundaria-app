@@ -1,5 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://telesecundaria.com/api',
+  apiUrl: 'http://localhost:5000/api',
 };
-3;

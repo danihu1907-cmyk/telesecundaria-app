@@ -15,6 +15,10 @@ export class Navbar {
     this.menuAbierto = !this.menuAbierto;
   }
 
+  cerrarMenu() {
+    this.menuAbierto = false;
+  }
+
   navegarA(id: string) {
     this.menuAbierto = false;
     setTimeout(() => {
