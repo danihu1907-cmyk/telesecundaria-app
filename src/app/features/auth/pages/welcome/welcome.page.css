@@ -30,6 +30,16 @@
   color: var(--color-blanco);
 }
 
+/*.panel-marca-izquierdo {
+  flex: 1;
+  box-sizing: border-box;
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    url('../../../../../../public/images/collageBanner.png');
+  background-size: cover;
+  background-position: center;
+}*/
+
 /* CONTENEDOR BLANCO DEL LOGO */
 .contenedor-logo-blanco {
   background-color: var(--color-blanco);
@@ -94,9 +104,8 @@
 .contenedor-registro {
   width: 480px;
   max-width: 100%;
-  background-color: var(--color-blanco);
   border-radius: 16px;
-  padding: 10px 10px; /* Reducido para encajar orgánicamente en el Split Panel */
+  padding: 10px 40px; /* Reducido para encajar orgánicamente en el Split Panel */
   box-sizing: border-box;
   text-align: center;
 }
@@ -104,7 +113,7 @@
 /* TITULOS VISUALES SUPERIORES */
 .titulo-pantalla {
   font-size: 1.8rem;
-  font-weight: 800;
+  font-weight: 600;
   color: var(--color-texto-oscuro);
   margin: 0 0 4px 0;
   letter-spacing: -0.5px;
@@ -332,8 +341,7 @@ button:disabled {
     overflow-y: auto;
   }
   .panel-marca-izquierdo {
-    padding: 30px 20px;
-    min-height: 280px;
+    display: none !important;
   }
   .titulo-marca {
     font-size: 1.6rem;

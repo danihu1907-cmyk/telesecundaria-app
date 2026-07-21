@@ -11,6 +11,7 @@
 /* FORZAMOS A QUE ESTE COMPONENTE ESPECIFICO INTERCAMBIE A LA FUENTE INTER DE TU VARIABLES GLOBAL */
 .pantalla-split-auth,
 .pantalla-split-auth * {
+  box-sizing: border-box;
   font-family: var(
     --font-sistema
   ) !important; /* ACTIVA INTER SOLO PARA EL COMPONENTE DE REGISTRO */
@@ -28,7 +29,6 @@
   align-items: center;
   padding: 40px;
   text-align: center;
-  box-sizing: border-box;
   color: var(--color-blanco);
 }
 
@@ -88,7 +88,6 @@
   justify-content: center;
   background-color: #fcfcfc;
   padding: 30px;
-  box-sizing: border-box;
   overflow-y: auto;
 }
 
@@ -96,20 +95,22 @@
 .contenedor-registro {
   width: 100%;
   max-width: 480px;
-  background-color: var(--color-blanco);
   border-radius: 16px;
-  padding: 10px 10px;
-  box-sizing: border-box;
+  padding: 10px 40px;
   text-align: center;
+}
+.requerido {
+  color: #dc3545;
+  margin-left: 2px;
 }
 
 /* TITULOS VISUALES SUPERIORES */
 .titulo-pantalla {
   font-size: 1.8rem;
-  font-weight: 800;
+  font-weight: 600;
   color: var(--color-texto-oscuro);
   margin: 0 0 4px 0;
-  letter-spacing: -0.5px;
+  letter-spacing: 0px;
 }
 
 .subtitulo-pasos {
@@ -160,7 +161,7 @@
   background-color: var(--color-primario);
 }
 
-/* ARQUITECTURA DE FILAS COMPARTIDAS (HORIZONTAL GRID) */
+/*(HORIZONTAL GRID) */
 .fila-campos {
   display: flex;
   gap: 15px;
@@ -174,7 +175,7 @@
   flex: 2;
 }
 
-/* DISEÑO MINIMALISTA DE LOS CAMPOS DE TEXTO EN TU MAQUETA */
+/*CAMPOS DE TEXTO EN TU MAQUETA */
 .campo {
   display: flex;
   flex-direction: column;
@@ -199,7 +200,6 @@
   font-size: 0.9rem;
   color: var(--color-texto-oscuro);
   background-color: var(--color-blanco);
-  box-sizing: border-box;
   transition: border-color 0.2s;
 }
 
@@ -238,7 +238,6 @@
   margin-top: 22px;
   align-items: center;
   width: 100%;
-  box-sizing: border-box;
 }
 
 /* BOTON PRIMARIO: ANCHO PERFECTAMENTE ENLAZADO DE PUNTA A PUNTA DE LOS INPUTS */
@@ -253,7 +252,6 @@
   font-weight: 600;
   cursor: pointer;
   transition: opacity 0.2s;
-  box-sizing: border-box;
 }
 
 .btn-primario-grande:hover:not(:disabled) {
@@ -272,7 +270,6 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
-  box-sizing: border-box;
 }
 
 .btn-secundario-grande:hover:not(:disabled) {
@@ -341,7 +338,7 @@ button:disabled {
 
 @media (max-width: 767px) {
   .pantalla-split-auth {
-    flex-direction: column; /* EL CONTENEDOR GENERAL TRABAJA EN UNA SOLA COLUMNA */
+    flex-direction: column;
     overflow-y: auto;
   }
 
@@ -378,12 +375,6 @@ button:disabled {
 
   .titulo-pantalla {
     font-size: 1.5rem;
-  }
-}
-
-@media (min-width: 768px) {
-  .contenedor-registro {
-    max-width: 480px;
   }
 }
 

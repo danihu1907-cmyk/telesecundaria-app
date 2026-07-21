@@ -18,24 +18,25 @@ import { Inscripciones } from './features/dashboard/pages/inscripciones/inscripc
 import { Usuarios } from './features/dashboard/pages/usuarios/usuarios';
 import { Expedientes } from './features/dashboard/pages/expedientes/expedientes';
 import { Galeria } from './features/dashboard/pages/galeria/galeria';
+import { authTutorGuard } from './core/guards/auth-tutor.guard';
 
 export const routes: Routes = [
-  //  Página principal o Landing Page pública
+  // PAGINA PRINCIPAL O LANDING PAGE PUBLICA
   {
     path: '',
     component: LandingPage,
   },
 
-  //  Redirección por defecto si entran a /auth a secas -> Ahora va al Welcome
+  // REDIRECCION POR DEFECTO SI ENTRAN A /auth A SECAS -> AHORA VA AL WELCOME
   {
     path: 'auth',
-    redirectTo: 'welcome', // CORREGIDO: Su entrada lógica ahora es la bienvenida
+    redirectTo: 'welcome',
     pathMatch: 'full',
   },
 
-  // PANTALLAS DE AUTENTICACIÓN INDEPENDIENTES (Cada una con su URL)
+  // PANTALLAS DE AUTENTICACION INDEPENDIENTES (TODAS SON PUBLICAS Y EXISTEN)
   {
-    path: 'welcome', //AGREGADO: Nueva ruta para la pantalla de bienvenida
+    path: 'welcome',
     loadComponent: () =>
       import('./features/auth/pages/welcome/welcome.page').then((m) => m.WelcomePage),
   },
@@ -84,6 +85,26 @@ export const routes: Routes = [
   {
     path: 'LoginDashboard',
     component: LoginDashboard,
+  },
+
+  // DASHBOARD PRINCIPAL - LISTA DE ASPIRANTES (PROTEGIDO CON GUARD)
+  {
+    path: 'dashboard-tutor',
+    canActivate: [authTutorGuard],
+    loadComponent: () =>
+      import('./features/dashboard-tutor/pages/overview/overview.page').then(
+        (m) => m.OverviewComponent,
+      ),
+  },
+
+  // REGISTRO DE NUEVO ASPIRANTE Y CARGA DE DOCUMENTOS (PROTEGIDO CON GUARD)
+  {
+    path: 'dashboard-tutor/register-flow',
+    canActivate: [authTutorGuard],
+    loadComponent: () =>
+      import('./features/dashboard-tutor/pages/register-flow/register-flow.page').then(
+        (m) => m.RegisterFlowComponent,
+      ),
   },
 
   // Comodín por si escriben cualquier otra ruta (Redirige a la Landing)

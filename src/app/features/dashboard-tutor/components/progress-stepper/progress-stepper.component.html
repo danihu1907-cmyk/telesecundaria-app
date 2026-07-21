@@ -1,0 +1,54 @@
+<div class="stepper">
+  <div class="fila-circulos">
+    <div
+      class="circulo"
+      [class.activo]="pasoActual() >= 1"
+      [class.completado]="pasoActual() > 1 || finalizado()"
+    >
+      @if (pasoActual() > 1 || finalizado()) {
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path
+            d="M2 7L5.5 10.5L12 3.5"
+            stroke="white"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      } @else {
+        1
+      }
+    </div>
+
+    <div class="linea" [class.completada]="pasoActual() > 1 || finalizado()"></div>
+
+    <div class="circulo" [class.activo]="pasoActual() === 2" [class.completado]="finalizado()">
+      @if (finalizado()) {
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path
+            d="M2 7L5.5 10.5L12 3.5"
+            stroke="white"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      } @else {
+        2
+      }
+    </div>
+  </div>
+
+  <div class="fila-labels">
+    <span
+      class="label"
+      [class.activo]="pasoActual() >= 1"
+      [class.completado]="pasoActual() > 1 || finalizado()"
+    >
+      Información personal
+    </span>
+    <span class="label" [class.activo]="pasoActual() === 2" [class.completado]="finalizado()">
+      Documentos
+    </span>
+  </div>
+</div>

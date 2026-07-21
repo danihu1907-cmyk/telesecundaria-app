@@ -1,0 +1,174 @@
+<form [formGroup]="form" novalidate>
+  <div class="seccion">
+    <h3 class="seccion-titulo">Datos del aspirante</h3>
+    <div class="separador"></div>
+
+    <div class="grid-dos-columnas">
+      <div class="campo">
+        <label for="nombre">Nombres (s) <span class="requerido">*</span></label>
+        <input
+          id="nombre"
+          type="text"
+          formControlName="nombre"
+          placeholder="Ingrese su nombre"
+          [class.input-error]="isInvalid('nombre')"
+        />
+        @if (isInvalid('nombre')) {
+          <span class="texto-error-campo">Este campo es obligatorio</span>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="apellidoPaterno">Apellido paterno <span class="requerido">*</span></label>
+        <input
+          id="apellidoPaterno"
+          type="text"
+          formControlName="apellidoPaterno"
+          placeholder="Ingrese su apellido paterno"
+          [class.input-error]="isInvalid('apellidoPaterno')"
+        />
+        @if (isInvalid('apellidoPaterno')) {
+          <span class="texto-error-campo">Este campo es obligatorio</span>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="apellidoMaterno">Apellido materno <span class="requerido">*</span></label>
+        <input
+          id="apellidoMaterno"
+          type="text"
+          formControlName="apellidoMaterno"
+          placeholder="Ingrese su apellido materno"
+          [class.input-error]="isInvalid('apellidoMaterno')"
+        />
+        @if (isInvalid('apellidoMaterno')) {
+          <span class="texto-error-campo">Este campo es obligatorio</span>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="curp">CURP <span class="requerido">*</span></label>
+        <input
+          id="curp"
+          type="text"
+          formControlName="curp"
+          placeholder="Ingrese su curp"
+          maxlength="18"
+          [class.input-error]="isInvalid('curp')"
+        />
+        @if (isInvalid('curp')) {
+          <span class="texto-error-campo">{{ getErroresCurp('curp') }}</span>
+        } @else if (errorCurpServidor) {
+          <span class="texto-error-campo">{{ errorCurpServidor }}</span>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="escuelaProcedencia"
+          >Escuela de procedencia <span class="requerido">*</span></label
+        >
+        <input
+          id="escuelaProcedencia"
+          type="text"
+          formControlName="escuelaProcedencia"
+          placeholder="Ingrese la primaria"
+          [class.input-error]="isInvalid('escuelaProcedencia')"
+        />
+        @if (isInvalid('escuelaProcedencia')) {
+          <span class="texto-error-campo">Este campo es obligatorio</span>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="promedioPrimaria">Promedio de primaria <span class="requerido">*</span></label>
+        <input
+          id="promedioPrimaria"
+          type="number"
+          formControlName="promedioPrimaria"
+          placeholder="Ej. 9.0"
+          min="0"
+          max="10"
+          step="0.1"
+          [class.input-error]="isInvalid('promedioPrimaria')"
+        />
+        @if (isInvalid('promedioPrimaria')) {
+          <span class="texto-error-campo">Ingrese un promedio válido</span>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="seccion">
+    <h3 class="seccion-titulo">Información adicional</h3>
+    <div class="separador"></div>
+
+    <div class="grid-dos-columnas">
+      <div class="campo">
+        <label
+          >¿El aspirante presenta alguna enfermedad o condición médica?
+          <span class="requerido">*</span></label
+        >
+        <div class="radio-grupo">
+          <label class="radio-label"
+            ><input type="radio" formControlName="discapacidadTexto" value="Sí" /> Sí</label
+          >
+          <label class="radio-label"
+            ><input type="radio" formControlName="discapacidadTexto" value="No" /> No</label
+          >
+        </div>
+
+        @if (tieneCondicion) {
+          <div class="campo campo-condicional">
+            <label for="nombreEnfermedad"
+              >Especifique la enfermedad o condición médica <span class="requerido">*</span></label
+            >
+            <input
+              id="nombreEnfermedad"
+              type="text"
+              formControlName="nombreEnfermedad"
+              placeholder="Ej. Asma, diabetes, epilepsia"
+              [class.input-error]="isInvalid('nombreEnfermedad')"
+            />
+            @if (isInvalid('nombreEnfermedad')) {
+              <span class="texto-error-campo">Este campo es obligatorio</span>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="campo">
+        <label
+          >¿El aspirante tiene algún hermano inscrito en esta escuela?
+          <span class="requerido">*</span></label
+        >
+        <div class="radio-grupo">
+          <label class="radio-label"
+            ><input type="radio" formControlName="hermanoTexto" value="Sí" /> Sí</label
+          >
+          <label class="radio-label"
+            ><input type="radio" formControlName="hermanoTexto" value="No" /> No</label
+          >
+        </div>
+
+        @if (tieneHermano) {
+          <div class="campo campo-condicional">
+            <label for="curpHermano"
+              >CURP del hermano inscrito <span class="requerido">*</span></label
+            >
+            <input
+              id="curpHermano"
+              type="text"
+              formControlName="curpHermano"
+              placeholder="Ingrese la CURP del hermano"
+              maxlength="18"
+              [class.input-error]="isInvalid('curpHermano')"
+            />
+            @if (isInvalid('curpHermano')) {
+              <span class="texto-error-campo">{{ getErroresCurp('curpHermano') }}</span>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</form>

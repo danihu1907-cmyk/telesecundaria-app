@@ -2,10 +2,10 @@
   <div class="container">
     <div class="cursos__header">
       <h2 class="cursos__titulo">Cursos disponibles</h2>
-      <a href="#" class="cursos__ver-todos">Ver todos los cursos</a>
     </div>
 
     <div class="cursos__grid">
+      <!-- Tarjeta: Español -->
       <div class="cursos__card">
         <div class="cursos__icono">
           <svg
@@ -30,9 +30,10 @@
             seguridad.
           </p>
         </div>
-        <button class="cursos__btn">Ver curso</button>
+        <button class="cursos__btn" (click)="abrirModal()">Ver curso</button>
       </div>
 
+      <!-- Tarjeta: Matemáticas -->
       <div class="cursos__card">
         <div class="cursos__icono">
           <svg
@@ -55,9 +56,10 @@
           <h3>Matemáticas</h3>
           <p>Desarrollamos el pensamiento lógico y la resolución de problemas aplicados.</p>
         </div>
-        <button class="cursos__btn">Ver curso</button>
+        <button class="cursos__btn" (click)="abrirModal()">Ver curso</button>
       </div>
 
+      <!-- Tarjeta: Ciencias -->
       <div class="cursos__card">
         <div class="cursos__icono">
           <svg
@@ -83,9 +85,10 @@
             análisis.
           </p>
         </div>
-        <button class="cursos__btn">Ver curso</button>
+        <button class="cursos__btn" (click)="abrirModal()">Ver curso</button>
       </div>
 
+      <!-- Tarjeta: Geografía -->
       <div class="cursos__card">
         <div class="cursos__icono">
           <svg
@@ -113,9 +116,10 @@
             territorio.
           </p>
         </div>
-        <button class="cursos__btn">Ver curso</button>
+        <button class="cursos__btn" (click)="abrirModal()">Ver curso</button>
       </div>
 
+      <!-- Tarjeta: Historia -->
       <div class="cursos__card">
         <div class="cursos__icono">
           <svg
@@ -137,8 +141,21 @@
           <h3>Historia</h3>
           <p>Analizamos los procesos históricos para entender el presente y construir el futuro.</p>
         </div>
-        <button class="cursos__btn">Ver curso</button>
+        <button class="cursos__btn" (click)="abrirModal()">Ver curso</button>
       </div>
     </div>
   </div>
 </section>
+
+<!-- MODAL ESTRUCTURAL DE PRÓXIMAMENTE -->
+@if (mostrarAvisoProximamente()) {
+  <div class="cursos-modal" (click)="cerrarModal()">
+    <div class="cursos-modal__content" (click)="$event.stopPropagation()">
+      <h2 class="cursos-modal__titulo">Próximamente disponible</h2>
+      <p class="cursos-modal__texto">
+        Estamos diseñando nuevos cursos para complementar el aprendizaje.
+      </p>
+      <button class="cursos-modal__btn" (click)="cerrarModal()">Entendido</button>
+    </div>
+  </div>
+}
