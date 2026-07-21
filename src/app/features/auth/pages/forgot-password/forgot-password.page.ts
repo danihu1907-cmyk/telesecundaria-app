@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthTutorService } from '../../../../core/services/auth-tutor.service'; // <-- INYECCIÓN AJUSTADA CON EL NOMBRE EXACTO DEL SERVICIO
-import { RecuperarPasswordRequest } from '../../models/auth.models';
+import { SolicitarCodigoRequest } from '../../models/auth.models';
 
 @Component({
   selector: 'app-forgot-password',
@@ -44,7 +44,7 @@ export class ForgotPasswordPage {
     this.cargando.set(true);
 
     // CONSTRUCCIÓN DEL OBJETO CON LA ESTRUCTURA ESPERADA POR LA INTERFAZ RECUPERARPASSWORDREQUEST
-    const payload: RecuperarPasswordRequest = {
+    const payload: SolicitarCodigoRequest = {
       correo: this.correoRecuperacion.toLowerCase().trim(),
     };
 
@@ -54,7 +54,7 @@ export class ForgotPasswordPage {
     );
 
     // LLAMADA DIRECTA AL MÉTODO EXISTENTE EN TU SERVICIO (COMPATIBLE CON MOCK Y CON SERVIDOR REAL)
-    this.authTutorService.recuperarContrasena(payload).subscribe({
+    this.authTutorService.solicitarCodigo(payload).subscribe({
       next: (respuesta) => {
         this.cargando.set(false);
         this.mensajeExito = respuesta.mensaje;
@@ -62,11 +62,9 @@ export class ForgotPasswordPage {
       },
       error: (err) => {
         this.cargando.set(false);
-        // CAPTURA EL ERROR QUE DISPARA TU CONTROLADOR INTERNO (EXCELENTE PARA MANEJAR "CORREO NO REGISTRADO")
+        // CAPTURA EL ERROR QUE DISPARA TU CONTROLADOR INTERNO
         this.mensajeErrorGlobal = err.message || 'Ocurrió un error al procesar la solicitud.';
       },
     });
   }
-
-  // SE ELIMINÓ LA FUNCIÓN irALogin() PORQUE YA SE GESTIONA CON ROUTERLINK DIRECTAMENTE EN EL ARCHIVO HTML
 }
