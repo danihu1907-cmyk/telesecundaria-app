@@ -103,6 +103,18 @@ export class AuthTutorService {
       }),
     );
   }
+  // NUEVO: LLAMA AL ENDPOINT DE REFRESH, USANDO LA COOKIE HTTPONLY QUE EL NAVEGADOR MANDA SOLO
+  refreshToken(): Observable<AuthResponse> {
+    const url = `${environment.apiUrl}/v1/Auth/Tutor/refresh-token`;
+    return this.http.post<AuthResponse>(url, {}, { withCredentials: true }).pipe(
+      tap((res) => {
+        if (res && res.token) {
+          this.tokenSignal.set(res.token);
+          localStorage.setItem('token_control_escolar', res.token);
+        }
+      }),
+    );
+  }
 
   // CIERRE DE SESION DEL TUTOR ASPIRANTE
   logout(claveToken: string): Observable<any> {
