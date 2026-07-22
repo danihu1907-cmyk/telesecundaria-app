@@ -7,7 +7,11 @@ import {
   RegistroTutorResponse, // LINEA AGREGADA: IMPORTAMOS EL NUEVO MODELO DE RESPUESTA DE REGISTRO
   AuthResponse,
   LoginRequest,
-  RecuperarPasswordRequest,
+  SolicitarCodigoRequest,
+  RecuperacionResponse,
+  ValidarCodigoRequest,
+  ValidarCodigoResponse,
+  ConfirmarCambioRequest,
 } from '../../features/auth/models/auth.models';
 
 @Injectable({
@@ -99,6 +103,18 @@ export class AuthTutorService {
       }),
     );
   }
+  // NUEVO: LLAMA AL ENDPOINT DE REFRESH, USANDO LA COOKIE HTTPONLY QUE EL NAVEGADOR MANDA SOLO
+  refreshToken(): Observable<AuthResponse> {
+    const url = `${environment.apiUrl}/v1/Auth/Tutor/refresh-token`;
+    return this.http.post<AuthResponse>(url, {}, { withCredentials: true }).pipe(
+      tap((res) => {
+        if (res && res.token) {
+          this.tokenSignal.set(res.token);
+          localStorage.setItem('token_control_escolar', res.token);
+        }
+      }),
+    );
+  }
 
   // CIERRE DE SESION DEL TUTOR ASPIRANTE
   logout(claveToken: string): Observable<any> {
@@ -111,9 +127,20 @@ export class AuthTutorService {
   }
 
   // RECUPERACION DE CONTRASENA
-  // CORRECCIÓN: SE ELIMINÓ UN PUNTO Y COMA EXTRA AL FINAL DE LA URL QUE HACÍA FALLAR LA PETICIÓN
-  recuperarContrasena(payload: RecuperarPasswordRequest): Observable<AuthResponse> {
-    const url = `${environment.apiUrl}/v1/Auth/recuperar-contrasena`;
-    return this.http.post<AuthResponse>(url, payload);
+  solicitarCodigo(payload: SolicitarCodigoRequest): Observable<RecuperacionResponse> {
+    const url = `${environment.apiUrl}/v1/Auth/Tutor/solicitar-codigo`;
+    return this.http.post<RecuperacionResponse>(url, payload);
+  }
+
+  // VALIDA EL CODIGO DE 6 DIGITOS Y REGRESA EL TOKEN DE CONFIRMACION
+  validarCodigo(payload: ValidarCodigoRequest): Observable<ValidarCodigoResponse> {
+    const url = `${environment.apiUrl}/v1/Auth/Tutor/validar-codigo`;
+    return this.http.post<ValidarCodigoResponse>(url, payload);
+  }
+
+  // CAMBIA LA CONTRASENA REAL USANDO EL TOKEN DE CONFIRMACION
+  confirmarCambioContrasena(payload: ConfirmarCambioRequest): Observable<RecuperacionResponse> {
+    const url = `${environment.apiUrl}/v1/Auth/Tutor/confirmar-cambio`;
+    return this.http.post<RecuperacionResponse>(url, payload);
   }
 }
