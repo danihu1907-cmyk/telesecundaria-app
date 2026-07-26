@@ -101,8 +101,6 @@ export class RegisterPage implements OnInit {
 
   // LÓGICA DE CONTROL DE PASOS REESCRITA UTILIZANDO LOS METODOS .SET() DE LOS SIGNALS
   siguientePaso(): void {
-    console.log('SE HIZO CLIC EN SIGUIENTE. PASO ACTUAL:', this.pasoActual());
-
     if (this.pasoActual() === 1) {
       this.erroresCampos['telefono'] = null;
       this.erroresCampos['curpTutor'] = null; // CORREGIDO A CAMELCASE
@@ -124,21 +122,15 @@ export class RegisterPage implements OnInit {
       }
 
       if (tieneErrores) {
-        console.log('FLUJO DETENIDO POR ERRORES DE FORMATO VISIBLES.');
         return;
       }
 
       this.datosRegistro.curpTutor = this.datosRegistro.curpTutor.toUpperCase(); // CORREGIDO A CAMELCASE
       this.cargando.set(true); // SE ESTABLECE EL VALOR EN TRUE CON LA SINTAXIS DE SIGNALS
-
-      console.log('DISPARANDO DISPONIBILIDAD DE CURP HACIA EL SERVICIO...');
-
       this.authService.verificarCurpUnica(this.datosRegistro.curpTutor).subscribe({
         // CORREGIDO A CAMELCASE
         next: (tutorExistente) => {
           this.cargando.set(false);
-          console.log('RESPUESTA DE LA API. EL TUTOR YA EXISTE CON ESA CURP:', tutorExistente);
-
           // CORRECCIÓN: SI EL NEXT SE DISPARA SIGNIFICA QUE EL API ENCONTRO UN REGISTRO ASOCIADO (CODIGO 200) POR ENDE LA CURP NO ES UNICA
           this.erroresCampos['curpTutor'] =
             `La CURP ${this.datosRegistro.curpTutor} ya se encuentra registrada.`;
@@ -148,7 +140,6 @@ export class RegisterPage implements OnInit {
 
           // CORRECCIÓN: SI EL ERROR ES UN 404 SIGNIFICA QUE LA CURP ESTA DISPONIBLE PARA REGISTRO
           if (err.status === 404) {
-            console.log('CURP LIBRE Y DISPONIBLE. AVANZANDO AL PASO DOS SIN COMPROMISOS.');
             this.pasoActual.set(2); // ACTUALIZACIÓN TOTALMENTE REACTIVA QUE ENTERA AL HTML AL INSTANTE
           } else {
             console.error('ERROR CRITICO DE RED O DEL SERVIDOR:', err);

@@ -8,21 +8,28 @@ export const authTutorInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthTutorService);
   const router = inject(Router);
 
+  // FILTRO CLAVE: ESTE INTERCEPTOR SOLO DEBE ACTUAR SOBRE ENDPOINTS QUE EXIGEN [Authorize(Roles = "Tutor")]
+  // EN EL BACKEND. HOY ESO SOLO APLICA A LAS RUTAS DE AUTH Y REGISTRO DE TUTOR ASPIRANTE.
+  // AdjuncionesController NO TIENE [Authorize], ASÍ QUE NO SE INCLUYE ACÁ.
+  const esRutaDeTutor = req.url.includes('/Auth/Tutor') || req.url.includes('/TutorAspirante');
+
+  // SI LA PETICIÓN NO ES DE TUTOR, LA DEJAMOS PASAR INTACTA (OTRO INTERCEPTOR O NINGUNO SE ENCARGA)
+  if (!esRutaDeTutor) {
+    return next(req);
+  }
+
   // OBTENEMOS EL TOKEN EN TIEMPO REAL DESDE EL SIGNAL DE MEMORIA RAM
   const token = authService.tokenActual();
-
-  console.log('INTERCEPTOR HTTP: GESTIONANDO PETICIÓN HACIA:', req.url);
-
   let peticion = req;
 
-  // SI EL TUTOR TIENE UN TOKEN, CLONAMOS LA PETICIÓN Y LE AGREGAMOS EL HEADER DE PRIVACIDAD
+  // SI EL TUTOR TIENE UN TOKEN, CLONAMOS LA PETICIÓN Y LE AGREGAMOS EL HEADER DE AUTORIZACIÓN
+  // NOTA: NO SE MANDA withCredentials AQUÍ. ESTA PETICIÓN SOLO NECESITA EL JWT EN EL HEADER;
+  // LA COOKIE DEL REFRESH TOKEN SOLO LA USA EL MÉTODO refreshToken() DEL SERVICIO.
   if (token) {
-    console.log(' INYECTANDO TOKEN DE CONTROL ESCOLAR EN LAS CABECERAS DE LA PETICIÓN.');
     peticion = req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`,
       },
-      withCredentials: true, //NECESARIO PARA QUE VIAJE LA COOKIE DEL REFRESH TOKEN
     });
   }
 
@@ -39,41 +46,28 @@ export const authTutorInterceptor: HttpInterceptorFn = (req, next) => {
           switchMap((respuesta) => {
             const peticionRenovada = req.clone({
               setHeaders: { Authorization: `Bearer ${respuesta.token}` },
-              withCredentials: true,
             });
             return next(peticionRenovada);
           }),
           catchError((errorRefresh) => {
-            // SI EL SERVIDOR RESPONDE 401 SIGNIFICA QUE EL TOKEN EXPIRÓ O LA SESIÓN SE CERRÓ EN EL BACKEND
             console.warn(
               'INTERCEPTOR HTTP: TOKEN INVÁLIDO O EXPIRADO (401). LIMPIANDO ESTADO Y EXPULSANDO AL USUARIO.',
             );
-
-            // CORRECCIÓN CLAVE: INVOCAMOS LA FUNCIÓN DE CERRAR SESIÓN DE TU SERVICIO PARA BORRAR LOCALSTORAGE
             authService.cerrarSesion();
-
-            // REDIRIGIMOS INMEDIATAMENTE AL LOGIN
             router.navigate(['/login']);
-
             return throwError(() => errorRefresh);
           }),
         );
       }
 
-      // SI EL SERVIDOR RESPONDE 401 SIGNIFICA QUE EL TOKEN EXPIRÓ O LA SESIÓN SE CERRÓ EN EL BACKEND
       if (error.status === 401) {
         console.warn(
           'INTERCEPTOR HTTP: TOKEN INVÁLIDO O EXPIRADO (401). LIMPIANDO ESTADO Y EXPULSANDO AL USUARIO.',
         );
-
-        // CORRECCIÓN CLAVE: INVOCAMOS LA FUNCIÓN DE CERRAR SESIÓN DE TU SERVICIO PARA BORRAR LOCALSTORAGE
         authService.cerrarSesion();
-
-        // REDIRIGIMOS INMEDIATAMENTE AL LOGIN
         router.navigate(['/login']);
       }
 
-      // DEVOLVEMOS EL ERROR PARA QUE EL COMPONENTE TAMBIÉN SE ENTERE SI ES NECESARIO
       return throwError(() => error);
     }),
   );
