@@ -58,7 +58,6 @@ export class LoginPage {
 
     // 4. SI cualquiera de los dos (o ambos) falló, AQUÍ es donde detenemos todo
     if (tieneErrores) {
-      console.log('Validación fallida. Errores visuales activados en pantalla.');
       return;
     }
 
@@ -68,7 +67,6 @@ export class LoginPage {
     this.authService.login(this.datosLogin).subscribe({
       next: (respuesta) => {
         this.cargando.set(false);
-        console.log('Login exitoso:', respuesta);
         this.router.navigate(['/dashboard-tutor']);
       },
       error: (err) => {

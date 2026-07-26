@@ -5,9 +5,6 @@ import { AuthTutorService } from '../services/auth-tutor.service'; // RUTA APUNT
 export const authTutorGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthTutorService);
   const router = inject(Router);
-
-  console.log('GUARD DE SEGURIDAD EXCLUSIVO: EVALUANDO INTENTO DE NAVEGACIÓN A:', state.url);
-
   // REGLA CLAVE 1: EL TUTOR DEBE TENER UN TOKEN EN EL LOCALSTORAGE (SESIÓN INICIADA)
   if (!authService.sesionActiva()) {
     console.warn('ACCESO DENEGADO POR EL GUARD: NO EXISTE SESIÓN ACTIVA. REDIRIGIENDO AL LOGIN.');
@@ -28,6 +25,5 @@ export const authTutorGuard: CanActivateFn = (route, state) => {
   }
 
   // SI EL TUTOR ESTÁ AUTENTICADO Y LA CONVOCATORIA EXISTE ABIERTA, CONCEDE EL PASO
-  console.log('VALIDACIÓN EXITOSA: EL TUTOR TIENE ACCESO AUTORIZADO A LA RUTA PRIVADA.');
   return true;
 };

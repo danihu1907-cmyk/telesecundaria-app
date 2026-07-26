@@ -20,16 +20,12 @@ export const authTutorInterceptor: HttpInterceptorFn = (req, next) => {
 
   // OBTENEMOS EL TOKEN EN TIEMPO REAL DESDE EL SIGNAL DE MEMORIA RAM
   const token = authService.tokenActual();
-
-  console.log('INTERCEPTOR HTTP TUTOR: GESTIONANDO PETICIÓN HACIA:', req.url);
-
   let peticion = req;
 
   // SI EL TUTOR TIENE UN TOKEN, CLONAMOS LA PETICIÓN Y LE AGREGAMOS EL HEADER DE AUTORIZACIÓN
   // NOTA: NO SE MANDA withCredentials AQUÍ. ESTA PETICIÓN SOLO NECESITA EL JWT EN EL HEADER;
   // LA COOKIE DEL REFRESH TOKEN SOLO LA USA EL MÉTODO refreshToken() DEL SERVICIO.
   if (token) {
-    console.log(' INYECTANDO TOKEN DE CONTROL ESCOLAR EN LAS CABECERAS DE LA PETICIÓN.');
     peticion = req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`,
