@@ -60,6 +60,7 @@ export class TutorService {
                 `${a.nombre ?? ''} ${a.apellidoPaterno ?? ''} ${a.apellidoMaterno ?? ''}`
                   .trim()
                   .toUpperCase(),
+              curp: a.curp,
               estatusTramite: a.estatusAspirante,
               porcentajeProgreso: 100,
             });
@@ -103,6 +104,7 @@ export class TutorService {
                   `${a.nombre ?? ''} ${a.apellidoPaterno ?? ''} ${a.apellidoMaterno ?? ''}`
                     .trim()
                     .toUpperCase(),
+                curp: a.curp,
                 estatusTramite: estatusCalculado,
                 porcentajeProgreso: progresoReal,
               };
@@ -114,6 +116,7 @@ export class TutorService {
                   `${a.nombre ?? ''} ${a.apellidoPaterno ?? ''} ${a.apellidoMaterno ?? ''}`
                     .trim()
                     .toUpperCase(),
+                curp: a.curp,
                 estatusTramite: a.estatusAspirante,
                 porcentajeProgreso: 25,
               }),

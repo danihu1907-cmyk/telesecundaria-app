@@ -106,6 +106,7 @@ export interface TarjetaDocumento {
 export interface AspiranteTarjetaDashboard {
   claveAspirante: string;
   nombreCompleto: string; // Se construye en el servicio concatenando los tres campos
+  curp: string;
   estatusTramite: string; // Viene de estatusAspirante del API
   porcentajeProgreso: number;
   tieneDocumentosRechazados?: boolean;
