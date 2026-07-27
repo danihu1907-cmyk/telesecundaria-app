@@ -16,14 +16,6 @@ export class BannerHeroService {
    * Obtiene las publicaciones activas para el Banner Principal
    */
   obtenerBanners(): Observable<Publicacion[]> {
-    // <-- Ahora retorna un arreglo de Publicaciones
-
-    // 1. En producción apuntamos al endpoint exacto que vimos en Swagger: /api/Publicaciones
-    // 2. En desarrollo seguimos apuntando a tus datos simulados (JSON local)
-
-    /*const url = environment.production
-      ? `${environment.apiUrl}/api/Publicaciones`
-      : 'mock-data/banner-hero.json'; */
     const url = `${environment.apiUrl}/Publicaciones`;
 
     return this.http.get<Publicacion[]>(url);

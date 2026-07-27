@@ -14,11 +14,6 @@ export class GaleriaService {
    * Obtiene las imágenes activas para la sección de Galería
    */
   obtenerImagenes(): Observable<GaleriaImagen[]> {
-    // 1. En producción apuntamos al endpoint de la API en C#
-    // 2. En desarrollo seguimos apuntando a tus datos simulados (JSON local en public)
-    /*const url = environment.production
-      ? `${environment.apiUrl}/api/Galeria`
-      : 'mock-data/galeria.json';*/
     const url = `${environment.apiUrl}/GaleriaImagenes`;
 
     return this.http.get<GaleriaImagen[]>(url);
