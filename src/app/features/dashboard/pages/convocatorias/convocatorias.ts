@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { EmptyState } from '../../components/empty-state/empty-state';
 import { TablaConvocatorias } from '../../components/data-table/tabla-convocatorias/tabla-convocatorias';
 
 @Component({

@@ -1,6 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { HlmItemImports } from '@spartan-ng/helm/item';
-import { lucideEdit, lucideTrash } from '@ng-icons/lucide';
+import { lucideEdit, lucideTrash, lucideLoader } from '@ng-icons/lucide';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { GaleriaService } from '../../services/galeria.service';
 import { CommonModule } from '@angular/common';
@@ -24,8 +24,8 @@ import { HlmFieldImports } from '@spartan-ng/helm/field';
   template: `
     @if (cargando()) {
       <div class="flex items-center justify-center py-8">
-        <span class="animate-spin"></span>
-        <span class="ml-2 text-muted-foreground">Cargando imágenes...</span>
+        <ng-icon name="lucideLoader" class="h-8 w-8 animate-spin" />
+        <span class="ml-3 text-muted-foreground">Cargando imagenes...</span>
       </div>
     }
 
@@ -34,6 +34,7 @@ import { HlmFieldImports } from '@spartan-ng/helm/field';
         <p class="text-red-600">{{ error() }}</p>
         <button
           (click)="recargar()"
+          variant="destructive"
           class="mt-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
         >
           Reintentar
@@ -47,7 +48,7 @@ import { HlmFieldImports } from '@spartan-ng/helm/field';
       } @else {
         <div class="max-h-[350px] overflow-y-auto pr-2">
           <fieldset hlmFieldSet class="w-full">
-            <hlm-radio-group class="flex flex-col gap-2">
+            <hlm-radio-group class="flex flex-col gap-2" (valueChange)="onSeleccionar($event)">
               @for (imagen of imagenes(); track imagen.claveImagen) {
                 <label hlmFieldLabel [for]="'radio-' + imagen.claveImagen" class="w-full">
                   <div hlmField orientation="horizontal" class="w-full">
@@ -93,10 +94,16 @@ import { HlmFieldImports } from '@spartan-ng/helm/field';
       }
     }
   `,
-  providers: [provideIcons({ lucideEdit, lucideTrash })],
+  providers: [provideIcons({ lucideEdit, lucideTrash, lucideLoader })],
 })
 export class ListaGaleria implements OnInit {
   private GaleriaService = inject(GaleriaService);
+
+  @Output() imagenSeleccionada = new EventEmitter<string>();
+
+  onSeleccionar(claveImagen: string): void {
+    this.imagenSeleccionada.emit(claveImagen);
+  }
 
   //Señales del servicio
   imagenes = this.GaleriaService.imagenes;

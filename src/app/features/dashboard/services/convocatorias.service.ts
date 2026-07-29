@@ -1,12 +1,33 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import type {
   Convocatoria,
   CreateConvocatoriaRequest,
   UpdateConvocatoriaRequest,
+  EliminarConvocatoriaRequest,
 } from '../models/convocatorias.models';
-import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
+import { catchError, map, Observable, of, tap } from 'rxjs';
+
+/**
+ * Formatea un Date al formato DD/MM/YYYY que espera la API.
+ * Angular/JSON.stringify serializa los Date como ISO 8601 (toISOString()) por defecto,
+ * lo que el backend rechaza con 400 Bad Request, así que convertimos explícitamente
+ * antes de enviar la petición.
+ */
+function formatFechaApi(fecha: Date): string {
+  const dia = String(fecha.getDate()).padStart(2, '0');
+  const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+  const anio = fecha.getFullYear();
+  return `${dia}/${mes}/${anio}`;
+}
+
+/** Payload real que viaja por HTTP: mismas propiedades que CreateConvocatoriaRequest,
+ * salvo que las fechas van como string con el formato que espera el backend. */
+type CreateConvocatoriaPayload = Omit<CreateConvocatoriaRequest, 'fechaInicio' | 'fechaFin'> & {
+  fechaInicio: string;
+  fechaFin: string;
+};
 
 @Injectable({ providedIn: 'root' })
 //
@@ -15,10 +36,15 @@ export class ConvocatoriasService {
   private apiUrl = `${environment.apiUrl}/Convocatorias`;
 
   //Estado reactivo con Signals
+  private convocatoriasSignal = signal<Convocatoria[]>([]);
   private cargandoSignal = signal<boolean>(false);
   private errorSignal = signal<string | null>(null);
 
   //Getters públicos
+  get convocatorias() {
+    return this.convocatoriasSignal.asReadonly();
+  }
+
   get cargando() {
     return this.cargandoSignal.asReadonly();
   }
@@ -43,6 +69,7 @@ export class ConvocatoriasService {
       tap((data) => {
         console.log('Datos finales:', data);
         console.log('Cantidad de registros:', data.length);
+        this.convocatoriasSignal.set(data);
         this.cargandoSignal.set(false);
       }),
       catchError((error) => {
@@ -66,13 +93,19 @@ export class ConvocatoriasService {
   }
 
   // Crear nueva convocatoria
-  crearConvocatoria(data: CreateConvocatoriaRequest): Observable<Convocatoria | null> {
+  crearConvocatoria(data: CreateConvocatoriaRequest): Observable<CreateConvocatoriaRequest | null> {
     this.cargandoSignal.set(true);
     this.errorSignal.set(null);
 
-    console.log('Enviando datos:', data);
+    const payload: CreateConvocatoriaPayload = {
+      ...data,
+      fechaInicio: formatFechaApi(data.fechaInicio),
+      fechaFin: formatFechaApi(data.fechaFin),
+    };
 
-    return this.http.post<Convocatoria>(this.apiUrl, data).pipe(
+    console.log('Enviando datos:', payload);
+
+    return this.http.post<CreateConvocatoriaRequest>(this.apiUrl, payload).pipe(
       tap((response) => {
         console.log('Convocatoria creada:', response);
         this.cargandoSignal.set(false);
@@ -96,11 +129,11 @@ export class ConvocatoriasService {
 
     return this.http.put<Convocatoria>(`${this.apiUrl}/${id}`, data).pipe(
       tap((response) => {
-        console.log('✅ Convocatoria actualizada:', response);
+        console.log('Convocatoria actualizada:', response);
         this.cargandoSignal.set(false);
       }),
       catchError((error) => {
-        console.error('❌ Error al actualizar convocatoria:', error);
+        console.error('Error al actualizar convocatoria:', error);
         this.errorSignal.set(error.message || 'Error al actualizar convocatoria');
         this.cargandoSignal.set(false);
         return of(null);
@@ -108,13 +141,30 @@ export class ConvocatoriasService {
     );
   }
 
-  // Eliminar convocatoria
-  eliminarConvocatoria(id: string): Observable<boolean> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
-      map(() => true),
+  eliminarConvocatoria(request: EliminarConvocatoriaRequest): Observable<boolean> {
+    this.cargandoSignal.set(true);
+    this.errorSignal.set(null);
+
+    // Construir URL con path para claveConvocatoria
+    const url = `${this.apiUrl}/${request.claveConvocatoria}`;
+
+    const params = new HttpParams().set('nombreUsuario', request.nombreUsuario);
+
+    console.log(`Eliminando convocatoria: ${url}?nombreUsuario=${request.nombreUsuario}`);
+
+    return this.http.delete<void>(url, { params }).pipe(
+      map(() => {
+        console.log('Convocatoria eliminada:', request.claveConvocatoria);
+        this.convocatoriasSignal.update((lista) =>
+          lista.filter((c) => c.claveConvocatoria !== request.claveConvocatoria),
+        );
+        this.cargandoSignal.set(false);
+        return true; // Retorna true si la eliminación fue exitosa
+      }),
       catchError((error) => {
         console.error('Error al eliminar convocatoria:', error);
         this.errorSignal.set(error.message || 'Error al eliminar convocatoria');
+        this.cargandoSignal.set(false);
         return of(false); // Retorna un observable con false en caso de error
       }),
     );

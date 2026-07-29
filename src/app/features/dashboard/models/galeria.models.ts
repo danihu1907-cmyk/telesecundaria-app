@@ -6,6 +6,10 @@ export type ImagenGaleria = {
   fechaRegistro: string;
 };
 
+export type EliminarImagenRequest = {
+  claveImagen: string;
+};
+
 export type tipoRecursoConvocatoria =
   | 'Eventos Culturales'
   | 'Noticia'

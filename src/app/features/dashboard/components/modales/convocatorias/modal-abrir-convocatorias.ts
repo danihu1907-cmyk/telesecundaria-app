@@ -9,7 +9,7 @@ import { provideIcons, NgIcon } from '@ng-icons/core';
 import { HlmDatePickerImports, provideHlmDatePickerConfig } from '@spartan-ng/helm/date-picker';
 import { HlmDrawerImports } from '@spartan-ng/helm/drawer';
 import { HlmSheetImports } from '@spartan-ng/helm/sheet';
-import { Convocatoria } from '../../../models/convocatorias.models';
+import { Convocatoria, CreateConvocatoriaRequest } from '../../../models/convocatorias.models';
 
 @Component({
   selector: 'modal-abrir-convocatorias',
@@ -44,7 +44,10 @@ import { Convocatoria } from '../../../models/convocatorias.models';
       <!-- Modal -->
       <hlm-sheet-content *hlmSheetPortal="let ctx">
         <hlm-sheet-header>
-          <h2 hlmSheetTitle>{{ detallesConvocatoria()?.titulo }}</h2>
+          <h2 hlmSheetTitle class="max-w-75">{{ detallesConvocatoria()?.titulo }}</h2>
+          <p hlmSheetDescription>
+            {{ detallesConvocatoria()?.subtitulo }}
+          </p>
           <p hlmSheetDescription>
             {{ detallesConvocatoria()?.descripcion }}
           </p>
