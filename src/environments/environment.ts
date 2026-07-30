@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://telesecundaria.com/api',
+  apiUrl: 'https://e0cc-201-174-175-62.ngrok-free.app',
 };
 3;
