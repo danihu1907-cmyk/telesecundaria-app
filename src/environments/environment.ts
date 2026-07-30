@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:5000/api',
+  apiUrl: 'https://e0cc-201-174-175-62.ngrok-free.app/api',
 };
