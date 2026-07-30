@@ -1,6 +1,6 @@
 <div class="card">
   <div class="card-header">
-    <span class="nombre">{{ aspirante().nombreCompleto }} - {{ aspirante().claveAspirante }}</span>
+    <span class="nombre">{{ aspirante().nombreCompleto }} - {{ aspirante().curp }}</span>
     <div class="card-acciones">
       <app-status-badge [estatus]="aspirante().estatusTramite" />
 
@@ -10,6 +10,11 @@
           (click)="completarDocumentos.emit(aspirante().claveAspirante)"
         >
           Completar documentos →
+        </button>
+      }
+      @if (aspirante().estatusTramite === 'Rechazado') {
+        <button class="btn-corregir" (click)="corregirDocumentos.emit(aspirante().claveAspirante)">
+          Corregir documentos →
         </button>
       }
     </div>

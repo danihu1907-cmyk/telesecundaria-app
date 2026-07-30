@@ -21,6 +21,7 @@
           <app-aspirante-card
             [aspirante]="asp"
             (completarDocumentos)="completarDocumentosAspirante($event)"
+            (corregirDocumentos)="corregirDocumentosAspirante($event)"
           />
         } @empty {
           <div class="estado-vacio">

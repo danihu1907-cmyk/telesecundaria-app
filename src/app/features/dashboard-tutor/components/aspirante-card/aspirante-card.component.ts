@@ -13,4 +13,5 @@ import { StatusBadgeComponent } from '../status-badge/status-badge.component';
 export class AspiranteCardComponent {
   aspirante = input.required<AspiranteTarjetaDashboard>();
   completarDocumentos = output<string>();
+  corregirDocumentos = output<string>();
 }

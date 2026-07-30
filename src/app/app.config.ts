@@ -1,5 +1,6 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { authInterceptor } from './core/interceptors/auth.dashboard.interceptor';
 import { provideHttpClient, withInterceptors } from '@angular/common/http'; // MODIFICADO: SE IMPORTA withInterceptors
 
 import { routes } from './app.routes';
@@ -9,7 +10,6 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    // MODIFICADO: SE INYECTA EL INTERCEPTOR DENTRO DE LA CONFIGURACIÓN DEL CLIENTE HTTP
-    provideHttpClient(withInterceptors([authTutorInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, authTutorInterceptor])),
   ],
 };

@@ -12,6 +12,8 @@ import {
   Aspirante,
   TipoDocumento,
   EstadoAdjuncion,
+  FinalizarAdjuncionRequest,
+  AdjuncionResponse,
 } from '../models/tutorado.model';
 
 @Injectable({
@@ -58,6 +60,7 @@ export class TutorService {
                 `${a.nombre ?? ''} ${a.apellidoPaterno ?? ''} ${a.apellidoMaterno ?? ''}`
                   .trim()
                   .toUpperCase(),
+              curp: a.curp,
               estatusTramite: a.estatusAspirante,
               porcentajeProgreso: 100,
             });
@@ -66,18 +69,13 @@ export class TutorService {
           // ESCENARIO B: SI ESTÁ 'EN PROCESO' O 'RECHAZADO' EN LA BASE DE DATOS -> LÓGICA DE ARCHIVOS
           return this.getEstadoAdjuncion(a.claveAspirante).pipe(
             map((estadoAdj: EstadoAdjuncion): AspiranteTarjetaDashboard => {
-              // OBTENEMOS LAS PROPIEDADES DIRECTAS DESDE EL JSON DEL ENDPOINT DEL SERVIDOR
               const estanTodosCompletos = estadoAdj && estadoAdj.todosCompletos === true;
-
-              // CONTAMOS CUÁNTOS DOCUMENTOS TIENE GUARDADOS FÍSICAMENTE EN EL SERVIDOR
               const totalArchivosSubidos =
                 estadoAdj && estadoAdj.documentosCargados ? estadoAdj.documentosCargados.length : 0;
 
-              // LÓGICA MATEMÁTICA REAL: 25% BASE + 15% POR CADA ARCHIVO (SI ESTÁN TODOS PASA A 100%)
               const calculoProgreso = 25 + totalArchivosSubidos * 15;
               let progresoReal = calculoProgreso > 100 ? 100 : calculoProgreso;
 
-              // APLICACIÓN DE LA LÓGICA VIRTUAL RETORNANDO A LOS ESTADOS ORIGINALES DE LA BD
               let estatusCalculado = a.estatusAspirante;
 
               if (a.estatusAspirante === 'En proceso') {
@@ -90,6 +88,14 @@ export class TutorService {
                 }
               } else if (a.estatusAspirante === 'Rechazado') {
                 progresoReal = estanTodosCompletos ? 100 : 25 + totalArchivosSubidos * 15;
+
+                // NUEVO: SI YA NO QUEDA NINGUN DOCUMENTO RECHAZADO, YA SE CORRIGIO Y REENVIO
+                const algunoSigueRechazado = estadoAdj?.documentosCargados?.some(
+                  (d) => d.estatus === 'Rechazado',
+                );
+                if (!algunoSigueRechazado) {
+                  estatusCalculado = 'En proceso';
+                }
               }
 
               return {
@@ -98,6 +104,7 @@ export class TutorService {
                   `${a.nombre ?? ''} ${a.apellidoPaterno ?? ''} ${a.apellidoMaterno ?? ''}`
                     .trim()
                     .toUpperCase(),
+                curp: a.curp,
                 estatusTramite: estatusCalculado,
                 porcentajeProgreso: progresoReal,
               };
@@ -109,6 +116,7 @@ export class TutorService {
                   `${a.nombre ?? ''} ${a.apellidoPaterno ?? ''} ${a.apellidoMaterno ?? ''}`
                     .trim()
                     .toUpperCase(),
+                curp: a.curp,
                 estatusTramite: a.estatusAspirante,
                 porcentajeProgreso: 25,
               }),
@@ -179,9 +187,9 @@ export class TutorService {
     return this.http.post<any>(url, formData);
   }
 
-  finalizarTramite(payload: any): Observable<any> {
+  finalizarTramite(payload: FinalizarAdjuncionRequest): Observable<AdjuncionResponse> {
     const url = `${environment.apiUrl}/Adjunciones/finalizar`;
-    return this.http.post<any>(url, payload);
+    return this.http.post<AdjuncionResponse>(url, payload);
   }
 
   corregirDocumentoRechazado(claveDocAspirante: string, archivo: File): Observable<any> {
@@ -191,6 +199,14 @@ export class TutorService {
     formData.append('Archivo', archivo, archivo.name);
 
     return this.http.patch<any>(url, formData);
+  }
+
+  // NUEVO METODO: CREA UNA ADJUNCION NUEVA SOLO CON LOS DOCUMENTOS QUE SIGUEN
+  // MARCADOS COMO RECHAZADOS (YA CON SU ARCHIVO CORREGIDO), PARA REGRESARLOS
+  // A FILA VIRTUAL Y GENERAR UNA NUEVA REVISION
+  reenviarAdjuncion(payload: FinalizarAdjuncionRequest): Observable<AdjuncionResponse> {
+    const url = `${environment.apiUrl}/Adjunciones/reenviar`;
+    return this.http.post<AdjuncionResponse>(url, payload);
   }
 
   logout(): void {

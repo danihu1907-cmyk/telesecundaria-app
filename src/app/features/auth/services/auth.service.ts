@@ -28,10 +28,7 @@ export class AuthService {
   }
 
   registrarTutorCompleto(payload: RegistroTutorRequest): Observable<AuthResponse> {
-    console.log('EJECUTANDO SIMULACION DE SP_INSERTAR_TUTOR_CON_DIRECCION');
-    console.log('OBJETO UNIFICADO RECIBIDO EN EL SERVICIO:', payload);
-
-    if (this.curpsRegistradasMock.includes(payload.curp_tutor.toUpperCase().trim())) {
+if (this.curpsRegistradasMock.includes(payload.curp_tutor.toUpperCase().trim())) {
       return throwError(
         () => new Error(`LA CURP ${payload.curp_tutor} YA SE ENCUENTRA REGISTRADA EN EL SISTEMA`),
       );
@@ -52,10 +49,7 @@ export class AuthService {
 
   //  NUEVO MÉTODO: SIMULACIÓN DE INICIO DE SESIÓN (SP_INICIAR_SESION)
   login(payload: LoginRequest): Observable<AuthResponse> {
-    console.log('EJECUTANDO SIMULACION DE LOGIN / VERIFICACION DE CREDENCIALES');
-    console.log('DATOS RECIBIDOS EN SERVICIO:', payload);
-
-    // Validación simulada usando el correo de prueba que ya declaraste arriba
+// Validación simulada usando el correo de prueba que ya declaraste arriba
     if (
       payload.correo.toLowerCase().trim() === 'tutor@gmail.com' &&
       payload.contrasena === 'Temporal123'
@@ -73,10 +67,7 @@ export class AuthService {
 
   //  NUEVO MÉTODO: SIMULACIÓN DE RECUPERACIÓN DE CONTRASEÑA
   recuperarContrasena(payload: RecuperarPasswordRequest): Observable<AuthResponse> {
-    console.log('EJECUTANDO SIMULACION DE GENERACIÓN DE TOKEN DE RECUPERACIÓN');
-    console.log('CORREO SOLICITANTE:', payload.correo);
-
-    // Simulamos que si el correo no está registrado, avisa al usuario
+// Simulamos que si el correo no está registrado, avisa al usuario
     if (!this.correosRegistradosMock.includes(payload.correo.toLowerCase().trim())) {
       return throwError(
         () =>

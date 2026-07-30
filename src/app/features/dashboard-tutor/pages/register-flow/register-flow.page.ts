@@ -6,10 +6,13 @@ import { TutorService } from '../../services/tutor.service';
 import { DashboardHeaderComponent } from '../../components/dashboard-header/dashboard-header.component';
 import { ProgressStepperComponent } from '../../components/progress-stepper/progress-stepper.component';
 import { InfoFormComponent } from '../../components/info-form/info-form.component';
+import { StatusBadgeComponent } from '../../components/status-badge/status-badge.component';
+
 import {
   RegistrarAspiranteRequest,
   RegistrarAspiranteResponse,
   TarjetaDocumento,
+  DocumentoCargado,
 } from '../../models/tutorado.model';
 
 @Component({
@@ -21,6 +24,7 @@ import {
     DashboardHeaderComponent,
     ProgressStepperComponent,
     InfoFormComponent,
+    StatusBadgeComponent,
   ],
   templateUrl: './register-flow.page.html',
   styleUrl: './register-flow.page.css',
@@ -54,6 +58,18 @@ export class RegisterFlowComponent implements OnInit {
   // NUEVO SIGNAL DINÁMICO REFACTORIZADO QUE SUSTITUYE LA LISTA ESTATICA ANTERIOR
   tarjetasDocs = signal<TarjetaDocumento[]>([]);
 
+  // NUEVO: INDICA SI LA PANTALLA ESTA EN MODO CORRECCION DE DOCUMENTOS RECHAZADOS
+  modoCorreccion = signal<boolean>(false);
+
+  // NUEVO: LISTA DE LOS 5 DOCUMENTOS CON SU ESTATUS REAL, PARA EL MODO CORRECCION
+  documentosCorreccion = signal<DocumentoCargado[]>([]);
+
+  // NUEVO: BLOQUEA EL BOTON MIENTRAS SE ENVIA LA CORRECCION FINAL
+  reenviando = signal<boolean>(false);
+
+  // NUEVO: MARCA QUE EL REENVIO YA SE COMPLETO CON EXITO, PARA MOSTRAR VOLVER AL INICIO
+  reenviado = signal<boolean>(false);
+
   // NUEVO COMPUTED: CALCULA LAS INICIALES REALES DINÁMICAMENTE (P. EJ. "DIEGO NOVELO" -> "DN")
   inicialesTutor = computed(() => {
     const nombre = this.nombreTutorActivo().trim();
@@ -70,12 +86,27 @@ export class RegisterFlowComponent implements OnInit {
     return lista.length > 0 && lista.every((d) => d.cargadoEnServidor);
   });
 
+  // NUEVO: SOLO PERMITE REENVIAR CUANDO YA NO QUEDA NINGUN DOCUMENTO RECHAZADO
+  correccionCompleta = computed(() => {
+    const lista = this.documentosCorreccion();
+    return lista.length > 0 && lista.every((d) => d.estatus !== 'Rechazado');
+  });
+
   ngOnInit(): void {
     // CARGAMOS EL NOMBRE DEL TUTOR DESDE EL LOCALSTORAGE
     const nombreGuardado = localStorage.getItem('nombreTutor') ?? '';
     this.nombreTutorActivo.set(nombreGuardado);
 
     const clave = this.route.snapshot.queryParamMap.get('claveAspirante');
+    const modo = this.route.snapshot.queryParamMap.get('modo');
+
+    if (clave && modo === 'corregir') {
+      this.claveAspirante.set(clave);
+      this.modoCorreccion.set(true);
+      this.cargarDocumentosCorreccion(clave);
+      return; // NO SEGUIMOS CON EL FLUJO NORMAL DE PASO 1/2
+    }
+
     if (clave) {
       this.claveAspirante.set(clave);
 
@@ -152,6 +183,99 @@ export class RegisterFlowComponent implements OnInit {
       },
       error: (err) => {
         console.error('ERROR AL CARGAR LA ARQUITECTURA DE ARCHIVOS DE LA TELESECUNDARIA:', err);
+      },
+    });
+  }
+
+  // NUEVO METODO: CARGA LOS 5 DOCUMENTOS CON SU ESTATUS REAL PARA EL MODO CORRECCION
+  private cargarDocumentosCorreccion(clave: string): void {
+    forkJoin({
+      catalogo: this.tutorService.getTipoDocumentos(),
+      estadoExpediente: this.tutorService.getEstadoAdjuncion(clave),
+    }).subscribe({
+      next: ({ catalogo, estadoExpediente }) => {
+        const docs = estadoExpediente?.documentosCargados ?? [];
+
+        // NUEVO: CRUZAMOS CON EL CATALOGO PARA OBTENER LA DESCRIPCION DE CADA DOCUMENTO
+        const docsConDescripcion = docs.map((d) => {
+          const tipoInfo = catalogo.find((t) => t.nombreDocumento === d.tipoDocumento);
+          return { ...d, descripcion: tipoInfo?.descripcion ?? '' };
+        });
+
+        this.documentosCorreccion.set(docsConDescripcion);
+
+        const hayRechazados = docsConDescripcion.some((d) => d.estatus === 'Rechazado');
+        if (!hayRechazados) {
+          this.reenviado.set(true);
+        }
+      },
+      error: (err) => {
+        console.error('ERROR AL CARGAR LOS DOCUMENTOS PARA CORRECCION:', err);
+        this.mensajeErrorGlobal.set('No se pudieron cargar los documentos del expediente.');
+      },
+    });
+  }
+
+  // NUEVO METODO: SUBE EL ARCHIVO CORREGIDO Y REFRESCA LA LISTA PARA QUITAR EL BADGE ROJO
+  onArchivoCorreccion(claveDocAspirante: string, event: any): void {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    this.tutorService.corregirDocumentoRechazado(claveDocAspirante, file).subscribe({
+      next: () => {
+        this.mensajeErrorGlobal.set(null);
+
+        this.documentosCorreccion.update((lista) =>
+          lista.map((d) =>
+            d.claveDocAspirante === claveDocAspirante
+              ? { ...d, estatus: 'Aceptado' as const, motivoRechazo: null }
+              : d,
+          ),
+        );
+
+        // NUEVO: SI YA NO QUEDA NINGUN DOCUMENTO RECHAZADO, REENVIAMOS AUTOMATICAMENTE
+        if (this.correccionCompleta()) {
+          this.onReenviar();
+        }
+      },
+      error: (err) => {
+        const errorMsg =
+          err.error?.mensaje || err.error?.detalle || 'No se pudo corregir el documento.';
+        this.mensajeErrorGlobal.set(errorMsg);
+      },
+    });
+
+    if (event.target) {
+      event.target.value = '';
+    }
+  }
+
+  // NUEVO METODO: ENVIA LOS DOCUMENTOS CORREGIDOS A UNA NUEVA ADJUNCION Y REVISION
+  onReenviar(): void {
+    if (this.reenviando()) return;
+    this.reenviando.set(true);
+
+    const clave = this.claveAspirante();
+    if (!clave) {
+      this.reenviando.set(false);
+      return;
+    }
+
+    const claveTutorReal = localStorage.getItem('claveTutorAspirante') || '';
+    const payload = { ClaveTutor: claveTutorReal, ClaveAspirante: clave };
+
+    this.tutorService.reenviarAdjuncion(payload).subscribe({
+      next: () => {
+        this.reenviando.set(false);
+        this.reenviado.set(true);
+        this.mensajeErrorGlobal.set(null);
+        this.tutorService.obtenerDashboardTutor().subscribe();
+      },
+      error: (err: any) => {
+        this.reenviando.set(false);
+        const errorMsg =
+          err.error?.mensaje || err.error?.detalle || 'No se pudo reenviar el expediente.';
+        this.mensajeErrorGlobal.set(errorMsg);
       },
     });
   }

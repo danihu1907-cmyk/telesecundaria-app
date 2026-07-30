@@ -1,0 +1,41 @@
+/* sidebar.component.css - Sin @apply */
+.sidebar-btn {
+    /* Clases de Tailwind aplicadas manualmente */
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+    cursor: pointer;
+    width: 100%;
+}
+
+.sidebar-btn-expanded {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-radius: 9999px;
+}
+
+.sidebar-btn-collapsed {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-radius: 0.5rem;
+    justify-content: center;
+}
+
+.sidebar-btn-active {
+    color: white;
+}
+
+.sidebar-btn-inactive {
+    color: #0a0a0a;
+    /* neutral-950 */
+}
+
+.sidebar-btn-inactive:hover {
+    background-color: #bef264;
+    /* lime-100 */
+}

@@ -11,28 +11,39 @@ import { CommonModule } from '@angular/common';
 export class StatusBadgeComponent {
   estatus = input.required<string>();
 
+  private get estatusLimpio(): string {
+    return this.estatus().trim().toLowerCase();
+  }
   // TEXTO VISUAL
   get label(): string {
-    const s = this.estatus().trim();
-    if (s === 'Oculto') return '';
-    if (s === 'Documentos incompletos') return 'Documentos Incompletos';
-    if (s === 'Aceptado') return 'Aceptado';
-    if (s === 'Rechazado') return 'Rechazado';
-    // NUEVA CONDICIÓN PARA EL TEXTO
-    if (s === 'En proceso' || s === 'EN PROCESO') return 'En Proceso';
-    return s;
+    switch (this.estatusLimpio) {
+      case 'oculto':
+        return '';
+      case 'documentos incompletos':
+        return 'Documentos Incompletos';
+      case 'aceptado':
+        return 'Aceptado';
+      case 'rechazado':
+        return 'Rechazado';
+      case 'en proceso':
+        return 'En Proceso';
+      default:
+        return this.estatus(); // Si no coincide, devuelve el original
+    }
   }
 
   // CLASE CSS PARA COLOR
   get claseCss(): string {
-    const s = this.estatus().trim();
-    if (s === 'Documentos incompletos') return 'status-proceso'; // AMARILLO
-    if (s === 'Aceptado') return 'status-exito'; // VERDE
-    if (s === 'Rechazado') return 'status-error'; // ROJO
-
-    // NUEVA CONDICIÓN MAESTRA: APUNTA A LA MISMA CLASE AMARILLA (.status-proceso)
-    if (s === 'En proceso' || s === 'EN PROCESO') return 'status-proceso'; // AMARILLO
-
-    return ''; // SIN CLASE SI ESTÁ OCULTO
+    switch (this.estatusLimpio) {
+      case 'documentos incompletos':
+      case 'en proceso':
+        return 'status-proceso'; // AMARILLO (Agrupado limpiamente)
+      case 'aceptado':
+        return 'status-exito'; // VERDE
+      case 'rechazado':
+        return 'status-error'; // ROJO
+      default:
+        return ''; // Sin clase si está oculto o desconocido
+    }
   }
 }

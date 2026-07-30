@@ -20,10 +20,27 @@ export interface RegistroTutorRequest {
   municipio: string;
 }
 
-export interface RecuperarPasswordRequest {
+export interface SolicitarCodigoRequest {
   correo: string;
 }
 
+export interface RecuperacionResponse {
+  mensaje: string;
+}
+
+export interface ValidarCodigoRequest {
+  correo: string;
+  codigo: string;
+}
+export interface ValidarCodigoResponse {
+  mensaje: string;
+  tokenConfirmacion: string;
+}
+export interface ConfirmarCambioRequest {
+  correo: string;
+  tokenConfirmacion: string;
+  nuevaContrasena: string;
+}
 export interface AuthResponse {
   token: string;
   claveToken: string;
