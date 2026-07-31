@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmFieldImports } from '@spartan-ng/helm/field';
 import { HlmInputImports } from '@spartan-ng/helm/input';
@@ -11,7 +19,11 @@ import { HlmSheetImports } from '@spartan-ng/helm/sheet';
 import { HlmSliderImports } from '@spartan-ng/helm/slider';
 import { ListaGaleria } from '../../../pages/galeria/lista-galeria';
 import { toast } from '@spartan-ng/brain/sonner';
-import { CreateConvocatoriaRequest } from '../../../models/convocatorias.models';
+import {
+  Convocatoria,
+  CreateConvocatoriaRequest,
+  UpdateConvocatoriaRequest,
+} from '../../../models/convocatorias.models';
 import {
   form,
   FormField,
@@ -61,186 +73,7 @@ import { BrnDialogState } from '@spartan-ng/brain/dialog';
     }),
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-
-  template: `
-    <hlm-sheet (stateChanged)="onSheetStateChanged($event)">
-      <button
-        id="crear-convocatorias-button"
-        hlmSheetTrigger
-        side="right"
-        hlmBtn
-        variant="outline"
-        class="ml-auto rounded-full border-lime-600 bg-lime-50 text-lime-600 hover:bg-lime-100 hover:text-lime-600"
-      >
-        <ng-icon name="lucidePlus" />
-        Crear convocatoria
-      </button>
-      <!-- Modal -->
-      <hlm-sheet-content *hlmSheetPortal="let ctx" class="flex flex-col h-full">
-        <hlm-sheet-header>
-          <h1 hlmSheetTitle>Crear Convocatoria</h1>
-          <p hlmSheetDescription>Cree una nueva convocatoria aquí.</p>
-        </hlm-sheet-header>
-
-        <!-- Inputs -->
-        <form
-          [formRoot]="formulario"
-          id="form-crear-convocatorias"
-          class=" flex-1 overflow-y-auto "
-        >
-          <hlm-field-group class="px-4 flex-1 overflow-y-auto ">
-            <hlm-field>
-              <label hlmFieldLabel for="titulo">Titulo de la convocatoria</label>
-              <input
-                hlmInput
-                id="titulo"
-                [formField]="formulario.titulo"
-                placeholder="Escribe el titulo de la convocatoria."
-              />
-              @for (error of formulario.titulo().errors(); track error) {
-                <hlm-field-error [validator]="error.kind">
-                  {{ error.message }}
-                </hlm-field-error>
-              }
-            </hlm-field>
-            <hlm-field>
-              <label hlmFieldLabel for="subtitulo">Subtitulo de la convocatoria</label>
-              <input
-                hlmInput
-                id="subtitulo"
-                [formField]="formulario.subtitulo"
-                placeholder="Escribe el subtitulo de la convocatoria."
-              />
-              @for (error of formulario.subtitulo().errors(); track error) {
-                <hlm-field-error [validator]="error.kind">
-                  {{ error.message }}
-                </hlm-field-error>
-              }
-            </hlm-field>
-            <hlm-field>
-              <label hlmFieldLabel for="descripcion">Descripción de la convocatoria</label>
-              <textarea
-                hlmTextarea
-                id="descripcion"
-                placeholder="Escribe la descripcion que se mostrara para dar mas detalles de la convocatoria."
-                class="h-24"
-                [formField]="formulario.descripcion"
-              ></textarea>
-              @for (error of formulario.descripcion().errors(); track error) {
-                <hlm-field-error [validator]="error.kind">
-                  {{ error.message }}
-                </hlm-field-error>
-              }
-            </hlm-field>
-
-            <!-- Fechas -->
-            <div class="grid grid-cols-2 gap-3">
-              <hlm-field class="w-full">
-                <label hlmFieldLabel>Fecha de inicio</label>
-                <hlm-date-picker [formField]="formulario.fechaInicio">
-                  <hlm-date-picker-trigger buttonId="fechaInicio" class="w-full"
-                    >Elije una fecha</hlm-date-picker-trigger
-                  >
-                </hlm-date-picker>
-                @for (error of formulario.fechaInicio().errors(); track error) {
-                  <hlm-field-error [validator]="error.kind">
-                    {{ error.message }}
-                  </hlm-field-error>
-                }
-              </hlm-field>
-              <hlm-field class="w-full">
-                <label hlmFieldLabel>Fecha de finalización</label>
-                <hlm-date-picker [formField]="formulario.fechaFin">
-                  <hlm-date-picker-trigger buttonId="fechaFin" class="w-full"
-                    >Elije una fecha</hlm-date-picker-trigger
-                  >
-                </hlm-date-picker>
-                @for (error of formulario.fechaFin().errors(); track error) {
-                  <hlm-field-error [validator]="error.kind">
-                    {{ error.message }}
-                  </hlm-field-error>
-                }
-              </hlm-field>
-            </div>
-
-            <!-- inputs -->
-            <div class="grid grid-cols-2 gap-3">
-              <hlm-field class="w-full">
-                <label hlmFieldLabel for="cicloEscolar">Ciclo escolar</label>
-                <input
-                  hlmInput
-                  id="cicloEscolar"
-                  placeholder="Escribe el ciclo escolar"
-                  [formField]="formulario.cicloEscolar"
-                />
-                @for (error of formulario.cicloEscolar().errors(); track error) {
-                  <hlm-field-error [validator]="error.kind">
-                    {{ error.message }}
-                  </hlm-field-error>
-                }
-              </hlm-field>
-
-              <hlm-field class="w-full">
-                <label hlmFieldLabel for="cupoMaximo">Cupo Maximo:</label>
-                <input
-                  hlmInput
-                  id="cupoMaximo"
-                  type="number"
-                  placeholder="Escribe el cupo maximo"
-                  [formField]="formulario.cupoMaximo"
-                />
-              </hlm-field>
-            </div>
-
-            <!-- Seleccionar imagen -->
-
-            <hlm-field class="w-full">
-              <label hlmFieldLabel for="cicloEscolar"
-                >Elegir imagen de banner
-                @if (imagenSeleccionada()) {
-                  <p class="text-sm text-green-600 ml-2">
-                    <ng-icon name="lucideCheckCircle" class="h-4 w-4" />
-                    Imagen seleccionada
-                  </p>
-                }
-              </label>
-
-              <lista-galeria (imagenSeleccionada)="seleccionarImagen($event)" />
-
-              @for (error of formulario.claveImagen().errors(); track error) {
-                <hlm-field-error [validator]="error.kind">
-                  {{ error.message }}
-                </hlm-field-error>
-              }
-            </hlm-field>
-          </hlm-field-group>
-          <!-- Botones -->
-          <hlm-sheet-footer>
-            <div class="grid grid-cols-2 gap-3 w-full">
-              <button hlmSheetClose hlmBtn variant="outline" type="button">
-                <ng-icon name="lucideArrowLeft" />
-                Salir
-              </button>
-              <button
-                hlmBtn
-                type="submit"
-                form="form-crear-convocatorias"
-                [disabled]="submitting()"
-              >
-                @if (submitting()) {
-                  <ng-icon name="lucideLoader" class="h-4 w-4 animate-spin mr-2" />
-                  Creando...
-                } @else {
-                  <ng-icon name="lucidePlus" />
-                  Crear convocatoria
-                }
-              </button>
-            </div>
-          </hlm-sheet-footer>
-        </form>
-      </hlm-sheet-content>
-    </hlm-sheet>
-  `,
+  templateUrl: './crear-convocatoria.html',
 })
 export class CrearConvocatorias {
   /** Valor del slider */
@@ -248,8 +81,18 @@ export class CrearConvocatorias {
 
   private convocatoriasService = inject(ConvocatoriasService);
 
+  // modo edicion
+  readonly convocatoriaParaEditar = input<UpdateConvocatoriaRequest | null>(null);
+  readonly abierto = input<boolean>(false);
+
+  //outputs
+  readonly cerrado = output<void>();
+  readonly actualizado = output<void>();
+
+  //estados
   public readonly imagenSeleccionada = signal<string | null>(null);
   public readonly submitting = signal(false);
+  public readonly modoEdicion = signal(false);
 
   /** Modelo de la convocatoria */
   DEFAULT_CONVOCATORIA = {
@@ -262,9 +105,56 @@ export class CrearConvocatorias {
     cupoMaximo: 0,
     claveImagen: '',
     nombreUsuario: 'admin',
+    destacadoTexto: '',
   } as const;
 
+  private updateModel = signal<UpdateConvocatoriaRequest>({
+    claveConvocatoria: '',
+    titulo: '',
+    subtitulo: '',
+    descripcion: '',
+    cupoMaximo: 0,
+    nombreUsuario: 'admin',
+    claveImagen: '',
+    destacadoTexto: '',
+  });
+
   convocatoriaModel = signal<CreateConvocatoriaRequest>(this.DEFAULT_CONVOCATORIA);
+
+  //efecto cargar datos
+  private loadEffect = effect(() => {
+    const convocatoria = this.convocatoriaParaEditar();
+    const abierto = this.abierto();
+
+    if (convocatoria && abierto) {
+      this.modoEdicion.set(true);
+      this.updateModel.set({
+        claveConvocatoria: convocatoria.claveConvocatoria,
+        titulo: convocatoria.titulo || '',
+        subtitulo: convocatoria.subtitulo || '',
+        descripcion: convocatoria.descripcion || '',
+        cupoMaximo: convocatoria.cupoMaximo || 0,
+        nombreUsuario: 'admin',
+        claveImagen: convocatoria.claveImagen || '',
+        destacadoTexto: convocatoria.destacadoTexto || '',
+      });
+      this.updateModel.set({
+        claveConvocatoria: convocatoria.claveConvocatoria,
+        titulo: convocatoria.titulo || '',
+        subtitulo: convocatoria.subtitulo || '',
+        descripcion: convocatoria.descripcion || '',
+        cupoMaximo: convocatoria.cupoMaximo || 0,
+        nombreUsuario: 'admin',
+        claveImagen: convocatoria.claveImagen || '',
+        destacadoTexto: convocatoria.destacadoTexto || '',
+      });
+      this.imagenSeleccionada.set(convocatoria.claveImagen || null);
+    } else if (abierto) {
+      this.modoEdicion.set(false);
+      this.convocatoriaModel.set({ ...this.DEFAULT_CONVOCATORIA });
+      this.imagenSeleccionada.set(null);
+    }
+  });
 
   public readonly formulario = form(
     this.convocatoriaModel,
@@ -313,9 +203,14 @@ export class CrearConvocatorias {
           const model = this.convocatoriaModel();
           this.submitting.set(true);
 
-          const toastId = toast.loading('Creando convocatoria...', {
-            description: 'Por favor, espere mientras se procesa la solicitud.',
-          });
+          const toastId = toast.loading(
+            this.modoEdicion() ? 'Actualizando convocatoria...' : 'Creando convocatoria...',
+            {
+              description: this.modoEdicion()
+                ? 'Por favor, espere mientras se actualiza la solicitud.'
+                : 'Por favor, espere mientras se procesa la solicitud.',
+            },
+          );
 
           try {
             //Llamar al servicio para crear la convocatoria

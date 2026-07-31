@@ -48,7 +48,6 @@ import { EstatusAspirantes } from './estado-aspirantes-columna';
     HlmSelectImports,
     HlmTableImports,
     BarraAccionesAspirantes,
-    EstatusAspirantes,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [

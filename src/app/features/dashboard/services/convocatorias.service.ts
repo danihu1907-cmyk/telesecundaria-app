@@ -7,7 +7,8 @@ import type {
   UpdateConvocatoriaRequest,
   EliminarConvocatoriaRequest,
 } from '../models/convocatorias.models';
-import { catchError, map, Observable, of, tap } from 'rxjs';
+import { catchError, firstValueFrom, map, Observable, of, tap } from 'rxjs';
+import { toast } from '@spartan-ng/brain/sonner';
 
 /**
  * Formatea un Date al formato DD/MM/YYYY que espera la API.
@@ -168,6 +169,40 @@ export class ConvocatoriasService {
         return of(false); // Retorna un observable con false en caso de error
       }),
     );
+  }
+
+  async cancelarConvocatoria(
+    convocatoria: Convocatoria,
+    nombreUsuario = 'admin',
+  ): Promise<boolean> {
+    const request = {
+      claveConvocatoria: convocatoria.claveConvocatoria,
+      nombreUsuario,
+    };
+
+    try {
+      const exito = await firstValueFrom(this.eliminarConvocatoria(request));
+
+      if (!exito) {
+        toast.error('Error al cancelar convocatoria', {
+          description: 'Ocurrió un error al intentar cancelar la convocatoria.',
+        });
+
+        return false;
+      }
+
+      toast.success('Convocatoria cancelada', {
+        description: `La convocatoria "${convocatoria.titulo}" se canceló correctamente.`,
+      });
+
+      return true;
+    } catch (error: any) {
+      toast.error('Error al cancelar convocatoria', {
+        description: error?.message ?? 'Ocurrió un error inesperado.',
+      });
+
+      return false;
+    }
   }
 
   //Limpiar errores

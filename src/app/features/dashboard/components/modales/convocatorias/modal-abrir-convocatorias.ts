@@ -1,15 +1,26 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmFieldImports } from '@spartan-ng/helm/field';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { CommonModule } from '@angular/common';
 import { HlmTextareaImports } from '@spartan-ng/helm/textarea';
-import { lucidePlus, lucidePencil, lucideArrowLeft } from '@ng-icons/lucide';
+import { lucidePlus, lucidePencil, lucideCircleX } from '@ng-icons/lucide';
 import { provideIcons, NgIcon } from '@ng-icons/core';
 import { HlmDatePickerImports, provideHlmDatePickerConfig } from '@spartan-ng/helm/date-picker';
 import { HlmDrawerImports } from '@spartan-ng/helm/drawer';
 import { HlmSheetImports } from '@spartan-ng/helm/sheet';
-import { Convocatoria, CreateConvocatoriaRequest } from '../../../models/convocatorias.models';
+import { Convocatoria } from '../../../models/convocatorias.models';
+import { HlmBadge } from '@spartan-ng/helm/badge';
+import { HlmAlertDialogImports } from '@spartan-ng/helm/alert-dialog';
+import { ConvocatoriasService } from '../../../services/convocatorias.service';
 
 @Component({
   selector: 'modal-abrir-convocatorias',
@@ -24,93 +35,79 @@ import { Convocatoria, CreateConvocatoriaRequest } from '../../../models/convoca
     CommonModule,
     NgIcon,
     HlmSheetImports,
+    HlmBadge,
+    HlmAlertDialogImports,
   ],
   providers: [
     provideHlmDatePickerConfig({ autoCloseOnSelect: true }),
     provideIcons({
       lucidePlus,
       lucidePencil,
-      lucideArrowLeft,
+      lucideCircleX,
     }),
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <hlm-sheet
-      [state]="abierto() ? 'open' : 'closed'"
-      (closed)="cerrado.emit()"
-      hlmSheetTrigger
-      side="right"
-    >
-      <!-- Modal -->
-      <hlm-sheet-content *hlmSheetPortal="let ctx">
-        <hlm-sheet-header>
-          <h2 hlmSheetTitle class="max-w-75">{{ detallesConvocatoria()?.titulo }}</h2>
-          <p hlmSheetDescription>
-            {{ detallesConvocatoria()?.subtitulo }}
-          </p>
-          <p hlmSheetDescription>
-            {{ detallesConvocatoria()?.descripcion }}
-          </p>
-        </hlm-sheet-header>
-
-        <hlm-field-group class="px-4 pt-4 ">
-          <!-- Fechas -->
-          <div class="grid grid-cols-2 gap-3">
-            <hlm-field class="w-full">
-              <label hlmFieldLabel>Fecha de inicio</label>
-              <p class="font-semibold text-neutral-800" hlmDrawerDescription>
-                {{ detallesConvocatoria()?.fechaInicio | date: 'dd/MM/yyyy' }}
-              </p>
-            </hlm-field>
-            <hlm-field class="w-full">
-              <label hlmFieldLabel>Fecha de finalización</label>
-              <p class="font-semibold text-neutral-800" hlmDrawerDescription>
-                {{ detallesConvocatoria()?.fechaFin | date: 'dd/MM/yyyy' }}
-              </p>
-            </hlm-field>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <hlm-field class="w-full">
-              <label hlmFieldLabel for="cicloEscolar">Ciclo escolar</label>
-
-              <p class="font-semibold text-neutral-800" hlmDrawerDescription>
-                {{ detallesConvocatoria()?.cicloEscolar }}
-              </p>
-            </hlm-field>
-            <hlm-field class="w-full">
-              <label hlmFieldLabel for="cupoMaximo">Cupo máximo</label>
-
-              <p class="font-semibold text-neutral-800" hlmDrawerDescription>
-                {{ detallesConvocatoria()?.cupoMaximo }}
-              </p>
-            </hlm-field>
-          </div>
-        </hlm-field-group>
-        <!-- Botones -->
-        <hlm-sheet-footer>
-          <div class="grid grid-cols-2 gap-3">
-            <button hlmSheetClose hlmBtn variant="outline">
-              <ng-icon name="lucideArrowLeft" />Salir
-            </button>
-            <button hlmBtn type="submit">
-              <ng-icon name="lucidePencil" />
-              Editar convocatoria
-            </button>
-          </div>
-        </hlm-sheet-footer>
-      </hlm-sheet-content>
-    </hlm-sheet>
-  `,
+  templateUrl: './abrir-convocatoria.html',
 })
 export class AbrirConvocatorias {
   detallesConvocatoria = input<Convocatoria | null>(null);
   abierto = input(false);
   cerrado = output<void>();
 
-  /**Fecha minima */
-  public minDate = new Date(2023, 0, 1);
+  private readonly _convocatoriasService = inject(ConvocatoriasService);
+  readonly convocatoriaEliminada = output<string>();
+  protected readonly eliminando = signal(false);
 
-  /** Fecha maxima */
-  public maxDate = new Date(2030, 11, 31);
+  private BADGE_COLORS = {
+    Activa: {
+      bg: 'bg-green-100 dark:bg-green-950',
+      text: 'text-green-700 dark:text-green-300',
+    },
+    Inactiva: {
+      bg: 'bg-red-100 dark:bg-red-950',
+      text: 'text-red-700 dark:text-red-300',
+    },
+    Publicada: {
+      bg: 'bg-green-100 dark:bg-green-950',
+      text: 'text-green-700 dark:text-green-300',
+    },
+    Cerrada: {
+      bg: 'bg-red-100 dark:bg-red-950',
+      text: 'text-red-700 dark:text-red-300',
+    },
+    Programada: {
+      bg: 'bg-yellow-100 dark:bg-yellow-950',
+      text: 'text-yellow-700 dark:text-yellow-300',
+    },
+  };
+
+  protected getBadgeClasses(badge: keyof typeof this.BADGE_COLORS | undefined): string {
+    if (!badge) {
+      return 'bg-gray-100 text-gray-700';
+    }
+
+    const colors = this.BADGE_COLORS[badge];
+
+    return `${colors.bg} ${colors.text}`;
+  }
+
+  protected readonly eliminarConvocatoria = async (ctx: { close?: () => void }) => {
+    const convocatoria = this.detallesConvocatoria();
+    if (!convocatoria) {
+      return;
+    }
+    this.eliminando.set(true);
+    const exito = await this._convocatoriasService.cancelarConvocatoria(convocatoria);
+    this.eliminando.set(false);
+
+    if (exito) {
+      this.convocatoriaEliminada.emit(convocatoria.claveConvocatoria);
+    }
+  };
+
+  puedeEditar(): boolean {
+    const convocatoria = this.detallesConvocatoria();
+    if (!convocatoria) return false;
+    return convocatoria.estado === 'Publicada' || convocatoria.estado === 'Programada';
+  }
 }

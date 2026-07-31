@@ -26,7 +26,7 @@ export interface CreateConvocatoriaRequest {
   claveImagen: string;
 }
 
-export interface UpdateConvocatoriaRequest {
+export type UpdateConvocatoriaRequest = {
   claveConvocatoria: string;
   titulo: string;
   subtitulo: string;
@@ -35,7 +35,7 @@ export interface UpdateConvocatoriaRequest {
   nombreUsuario: string;
   claveImagen: string;
   destacadoTexto: string;
-}
+};
 
 export interface EliminarConvocatoriaRequest {
   claveConvocatoria: string;

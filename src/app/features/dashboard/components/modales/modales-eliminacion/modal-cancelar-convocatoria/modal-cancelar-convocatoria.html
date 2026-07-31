@@ -1,0 +1,33 @@
+<!-- alert dialog para confirmar la eliminacion -->
+<hlm-alert-dialog>
+    <!-- boton para abrir el dialogo -->
+    <button hlmDropdownMenuItem variant="destructive" hlmAlertDialogTrigger>
+        <ng-icon name="lucideCircleX" />
+        Cancelar
+    </button>
+
+    <hlm-alert-dialog-content *hlmAlertDialogPortal="let ctx">
+        <hlm-alert-dialog-header>
+            <hlm-alert-dialog-media>
+                <ng-icon name="lucideCircleX" />
+            </hlm-alert-dialog-media>
+            <h2 hlmAlertDialogTitle class="font-semibold">¿Cancelar Convocatoria?</h2>
+            <p hlmAlertDialogDescription>
+                Al cancelar la convocatoria, no estará disponible para los usuarios. Esta acción no se
+                puede deshacer. ¿Deseas continuar?
+            </p>
+        </hlm-alert-dialog-header>
+        <hlm-alert-dialog-footer>
+            <button hlmAlertDialogCancel>Salir</button>
+            <button hlmAlertDialogAction variant="destructive" [disabled]="cargando()"
+                (click)="confirmar.emit(); ctx.close()">
+                @if (cargando()) {
+                <ng-icon name="lucideLoader" class="h-4 w-4 animate-spin mr-2" />
+                Cancelando...
+                } @else {
+                Cancelar convocatoria
+                }
+            </button>
+        </hlm-alert-dialog-footer>
+    </hlm-alert-dialog-content>
+</hlm-alert-dialog>

@@ -77,7 +77,7 @@ export class TablaConvocatorias implements OnInit {
   error = this.convocatoriasService.error;
 
   // Datos de la tabla con toSignal
-  private convocatoriasData = toSignal(
+  public convocatoriasData = toSignal(
     this.convocatoriasService.obtenerConvocatorias(),
     { initialValue: [] }, // Valor inicial para evitar undefined
   );
