@@ -60,31 +60,117 @@ export const routes: Routes = [
   // Panel de administración (layout con rutas hijas)
   {
     path: 'dashboard',
-    component: AdminDashboard,
+    loadComponent: () =>
+      import('./features/dashboard/pages/admin-dashboard/admin-dashboard').then(
+        (m) => m.AdminDashboard,
+      ),
     children: [
       { path: '', redirectTo: 'inicio', pathMatch: 'full' },
-      { path: 'inicio', component: Inicio, data: { title: 'Inicio' } },
-      { path: 'inscripciones', component: Inscripciones, data: { title: 'Inscripciones' } },
-      { path: 'convocatorias', component: Convocatorias, data: { title: 'Convocatorias' } },
-      { path: 'aspirantes', component: Aspirantes, data: { title: 'Aspirantes' } },
-      { path: 'tutores', component: Tutores, data: { title: 'Tutores' } },
-      { path: 'adjunciones', component: Adjunciones, data: { title: 'Adjunciones' } },
-      { path: 'alumnos', component: Alumnos, data: { title: 'Alumnos' } },
-      { path: 'grupos', component: Grupos, data: { title: 'Grupos' } },
-      { path: 'actividades', component: Actividades, data: { title: 'Actividades' } },
-      { path: 'revisiones', component: Revisiones, data: { title: 'Revisiones' } },
-      { path: 'citas', component: Citas, data: { title: 'Citas' } },
-      { path: 'entregas', component: Entregas, data: { title: 'Entregas' } },
-      { path: 'cotejos', component: Cotejos, data: { title: 'Cotejos' } },
-      { path: 'expedientes', component: Expedientes, data: { title: 'Expedientes' } },
-      { path: 'usuarios', component: Usuarios, data: { title: 'Usuarios' } },
-      { path: 'galeria', component: Galeria, data: { title: 'Galería' } },
+      {
+        path: 'inicio',
+        loadComponent: () =>
+          import('./features/dashboard/pages/inicio/inicio').then((m) => m.Inicio),
+        data: { title: 'Inicio' },
+      },
+      {
+        path: 'inscripciones',
+        loadComponent: () =>
+          import('./features/dashboard/pages/inscripciones/inscripciones').then(
+            (m) => m.Inscripciones,
+          ),
+        data: { title: 'Inscripciones' },
+      },
+      {
+        path: 'convocatorias',
+        loadComponent: () =>
+          import('./features/dashboard/pages/convocatorias/convocatorias').then(
+            (m) => m.Convocatorias,
+          ),
+        data: { title: 'Convocatorias' },
+      },
+      {
+        path: 'aspirantes',
+        loadComponent: () =>
+          import('./features/dashboard/pages/aspirantes/aspirantes').then((m) => m.Aspirantes),
+        data: { title: 'Aspirantes' },
+      },
+      {
+        path: 'tutores',
+        loadComponent: () =>
+          import('./features/dashboard/pages/tutores/tutores').then((m) => m.Tutores),
+        data: { title: 'Tutores' },
+      },
+      {
+        path: 'adjunciones',
+        loadComponent: () =>
+          import('./features/dashboard/pages/adjunciones/adjunciones').then((m) => m.Adjunciones),
+        data: { title: 'Adjunciones' },
+      },
+      {
+        path: 'alumnos',
+        loadComponent: () =>
+          import('./features/dashboard/pages/alumnos/alumnos').then((m) => m.Alumnos),
+        data: { title: 'Alumnos' },
+      },
+      {
+        path: 'grupos',
+        loadComponent: () =>
+          import('./features/dashboard/pages/grupos/grupos').then((m) => m.Grupos),
+        data: { title: 'Grupos' },
+      },
+      {
+        path: 'actividades',
+        loadComponent: () =>
+          import('./features/dashboard/pages/actividades/actividades').then((m) => m.Actividades),
+        data: { title: 'Actividades' },
+      },
+      {
+        path: 'revisiones',
+        loadComponent: () =>
+          import('./features/dashboard/pages/revisiones/revisiones').then((m) => m.Revisiones),
+        data: { title: 'Revisiones' },
+      },
+      {
+        path: 'citas',
+        loadComponent: () => import('./features/dashboard/pages/citas/citas').then((m) => m.Citas),
+        data: { title: 'Citas' },
+      },
+      {
+        path: 'entregas',
+        loadComponent: () =>
+          import('./features/dashboard/pages/entregas/entregas').then((m) => m.Entregas),
+        data: { title: 'Entregas' },
+      },
+      {
+        path: 'cotejos',
+        loadComponent: () =>
+          import('./features/dashboard/pages/cotejos/cotejos').then((m) => m.Cotejos),
+        data: { title: 'Cotejos' },
+      },
+      {
+        path: 'expedientes',
+        loadComponent: () =>
+          import('./features/dashboard/pages/expedientes/expedientes').then((m) => m.Expedientes),
+        data: { title: 'Expedientes' },
+      },
+      {
+        path: 'usuarios',
+        loadComponent: () =>
+          import('./features/dashboard/pages/usuarios/usuarios').then((m) => m.Usuarios),
+        data: { title: 'Usuarios' },
+      },
+      {
+        path: 'galeria',
+        loadComponent: () =>
+          import('./features/dashboard/pages/galeria/galeria').then((m) => m.Galeria),
+        data: { title: 'Galería' },
+      },
     ],
   },
 
   {
     path: 'LoginDashboard',
-    component: LoginDashboard,
+    loadComponent: () => import('./features/login/login').then((m) => m.LoginDashboard),
   },
 
   // DASHBOARD PRINCIPAL - LISTA DE ASPIRANTES (PROTEGIDO CON GUARD)
