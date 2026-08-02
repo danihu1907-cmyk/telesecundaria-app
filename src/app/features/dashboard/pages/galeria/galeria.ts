@@ -1,16 +1,19 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, output, signal } from '@angular/core';
 import { HlmItemImports } from '@spartan-ng/helm/item';
-import { lucideEdit, lucideTrash } from '@ng-icons/lucide';
+import { lucideCircleX, lucideEdit, lucideLoader, lucideTrash } from '@ng-icons/lucide';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ImagenGaleria } from '../../models/galeria.models';
 import { GaleriaService } from '../../services/galeria.service';
 import { CommonModule } from '@angular/common';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { HlmAlertDialogImports } from '@spartan-ng/helm/alert-dialog';
+import { firstValueFrom } from 'rxjs';
+import { toast } from '@spartan-ng/brain/sonner';
 
 @Component({
   selector: 'galeria-imagenes',
-  imports: [HlmItemImports, NgIcon, CommonModule, HlmBadgeImports, HlmButtonImports],
+  imports: [HlmItemImports, CommonModule, HlmBadgeImports, HlmButtonImports, HlmAlertDialogImports],
   host: {
     class: 'flex min-h-0 min-w-0 h-full w-full flex-1 overflow-hidden',
   },
@@ -67,14 +70,21 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
                     </p>
                   </hlm-item-content>
 
-                  <hlm-item-actions class="flex gap-0">
+                  <!-- <hlm-item-actions class="flex gap-0">
                     <button hlmBtn variant="ghost" size="icon" class="rounded-full">
                       <ng-icon name="lucideEdit" />
                     </button>
-                    <button hlmBtn variant="ghost" size="icon" class="rounded-full">
+                    <button
+                      hlmBtn
+                      [hlmAlertDialogTriggerFor]="deleteDialog"
+                      variant="ghost"
+                      size="icon"
+                      class="rounded-full"
+                      (click)="seleccionarImagen(imagen)"
+                    >
                       <ng-icon name="lucideTrash" />
                     </button>
-                  </hlm-item-actions>
+                  </hlm-item-actions> -->
                 </hlm-item>
               }
             </hlm-item-group>
@@ -82,11 +92,47 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
         }
       </div>
     </div>
+
+    <!-- <hlm-alert-dialog #deleteDialog="hlmAlertDialog">
+      <hlm-alert-dialog-content *hlmAlertDialogPortal="let ctx">
+        <hlm-alert-dialog-header>
+          <hlm-alert-dialog-media>
+            <ng-icon name="lucideTrash" />
+          </hlm-alert-dialog-media>
+          <h2 hlmAlertDialogTitle class="font-semibold">Eliminar Imagen</h2>
+          <p hlmAlertDialogDescription>
+            Al eliminar la imagen, no estará disponible para los usuarios. Esta acción no se puede
+            deshacer. ¿Deseas continuar?
+          </p>
+        </hlm-alert-dialog-header>
+        <hlm-alert-dialog-footer>
+          <button hlmAlertDialogCancel>Salir</button>
+          <button
+            hlmAlertDialogAction
+            variant="destructive"
+            [disabled]="eliminando()"
+            (click)="eliminarGaleria()"
+          >
+            @if (eliminando()) {
+              <ng-icon name="lucideLoader" class="h-4 w-4 animate-spin mr-2" />
+              Eliminando...
+            } @else {
+              Eliminar imagen
+            }
+          </button>
+        </hlm-alert-dialog-footer>
+      </hlm-alert-dialog-content>
+    </hlm-alert-dialog> -->
   `,
-  providers: [provideIcons({ lucideEdit, lucideTrash })],
+  providers: [provideIcons({ lucideEdit, lucideTrash, lucideCircleX, lucideLoader })],
 })
 export class Galeria implements OnInit {
   private GaleriaService = inject(GaleriaService);
+  private readonly _galeriaService = inject(GaleriaService);
+
+  readonly imagenEliminada = output<string>();
+  protected readonly eliminando = signal(false);
+  private _element: ImagenGaleria | null = null;
 
   //Señales del servicio
   imagenes = this.GaleriaService.imagenes;
@@ -96,6 +142,56 @@ export class Galeria implements OnInit {
   ngOnInit(): void {
     this.cargarImagenes();
   }
+
+  seleccionarImagen(imagen: ImagenGaleria): void {
+    this._element = imagen;
+  }
+
+  protected readonly eliminarGaleria = async () => {
+    const imagenSeleccionada = this._element;
+
+    if (!imagenSeleccionada?.claveImagen) {
+      toast.error('Error', {
+        description: 'No se pudo obtener la clave de la imagen.',
+      });
+      return;
+    }
+
+    this.eliminando.set(true);
+
+    try {
+      const request = {
+        claveImagen: imagenSeleccionada.claveImagen,
+      };
+
+      console.log(`Eliminando: /Galeria/${request.claveImagen}`);
+
+      const exito = await firstValueFrom(this._galeriaService.eliminarImagen(request));
+
+      this.eliminando.set(false);
+
+      if (exito) {
+        toast.success('Imagen eliminada', {
+          description: `La imagen "${imagenSeleccionada.nombreArchivo}" se canceló correctamente.`,
+          duration: 5000,
+        });
+
+        this.imagenEliminada.emit(imagenSeleccionada.claveImagen);
+      } else {
+        toast.error('Error al eliminar imagen', {
+          description: 'Ocurrió un error al intentar eliminar la imagen.',
+          duration: 6000,
+        });
+      }
+    } catch (error: any) {
+      this.eliminando.set(false);
+      console.error('Error:', error);
+      toast.error('Error al eliminar la imagen', {
+        description: error?.message || 'Ocurrió un error inesperado.',
+        duration: 6000,
+      });
+    }
+  };
 
   cargarImagenes(): void {
     // El servicio ya actualiza las signals en el pipeline; solo disparamos la petición.

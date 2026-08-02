@@ -1,22 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { TablaConvocatorias } from './tabla-convocatorias';
-import {
-  HlmPopover,
-  HlmPopoverPortal,
-  HlmPopoverTrigger,
-} from '../../../../../../../libs/ui/popover/src';
+import { HlmPopoverImports } from '@spartan-ng/helm/popover';
 import { HlmIcon } from '@spartan-ng/helm/icon';
 import { lucideCirclePlus, lucideX } from '@ng-icons/lucide';
 import { provideIcons, NgIcon } from '@ng-icons/core';
 import { EstadoConvocatoria } from '../../../models/convocatorias.models';
-import {
-  HlmCommand,
-  HlmCommandInput,
-  HlmCommandList,
-  HlmCommandGroup,
-  HlmCommandEmptyState,
-  HlmCommandItem,
-} from '../../../../../../../libs/ui/command/src';
+import { HlmCommandImports } from '@spartan-ng/helm/command';
 import { HlmCheckbox } from '@spartan-ng/helm/checkbox';
 import { HlmButton } from '@spartan-ng/helm/button';
 import { HlmInput } from '@spartan-ng/helm/input';
@@ -24,18 +13,11 @@ import { HlmInput } from '@spartan-ng/helm/input';
 @Component({
   selector: 'barra-acciones-convocatorias',
   imports: [
-    HlmPopover,
-    HlmPopoverTrigger,
+    HlmPopoverImports,
     NgIcon,
     HlmIcon,
-    HlmCommand,
-
-    HlmCommandItem,
-    HlmCommandList,
-    HlmCommandGroup,
+    HlmCommandImports,
     HlmCheckbox,
-    HlmPopoverPortal,
-    HlmCommandEmptyState,
     HlmButton,
     HlmInput,
   ],
@@ -114,7 +96,7 @@ export class BarraAccionesConvocatorias {
 
   protected readonly _filtroEstatus = signal<EstadoConvocatoria[]>([]);
   protected readonly _estatus = signal([
-    'Activa',
+    'Publicada',
     'Cerrada',
     'Programada',
   ] satisfies EstadoConvocatoria[]);

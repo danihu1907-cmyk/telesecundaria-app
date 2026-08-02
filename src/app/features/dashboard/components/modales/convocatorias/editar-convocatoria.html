@@ -1,0 +1,103 @@
+<hlm-sheet (stateChanged)="onSheetStateChanged($event)">
+    <button id="editar-convocatorias-button" hlmSheetTrigger side="right" hlmBtn>
+        <ng-icon name="lucideEdit" />
+        Editar convocatoria
+    </button>
+
+    <!-- Modal -->
+    <hlm-sheet-content *hlmSheetPortal="let ctx" class="flex flex-col h-full">
+        <hlm-sheet-header class="px-4 pt-4">
+            <h1 hlmSheetTitle>Editar Convocatoria</h1>
+            <p hlmSheetDescription>Edite la convocatoria aquí.</p>
+        </hlm-sheet-header>
+
+        <!-- Inputs -->
+        <form [formRoot]="formulario" id="form-crear-convocatorias" class=" flex-1 overflow-y-auto ">
+            <hlm-field-group class="px-4 flex-1 overflow-y-auto ">
+                <hlm-field>
+                    <label hlmFieldLabel for="titulo">Titulo de la convocatoria</label>
+                    <input hlmInput id="titulo" [formField]="formulario.titulo"
+                        placeholder="Escribe el título de la convocatoria." />
+                    @for (error of formulario.titulo().errors(); track error) {
+                    <hlm-field-error [validator]="error.kind">
+                        {{ error.message }}
+                    </hlm-field-error>
+                    }
+                </hlm-field>
+                <hlm-field>
+                    <label hlmFieldLabel for="subtitulo">Subtitulo de la convocatoria</label>
+                    <input hlmInput id="subtitulo" [formField]="formulario.subtitulo"
+                        placeholder="Escribe el subtitulo de la convocatoria." />
+                    @for (error of formulario.subtitulo().errors(); track error) {
+                    <hlm-field-error [validator]="error.kind">
+                        {{ error.message }}
+                    </hlm-field-error>
+                    }
+                </hlm-field>
+                <hlm-field>
+                    <label hlmFieldLabel for="descripcion">Descripción de la convocatoria</label>
+                    <textarea hlmTextarea id="descripcion" placeholder="Escribe la descripción de la convocatoria."
+                        class="h-24" [formField]="formulario.descripcion"></textarea>
+                    @for (error of formulario.descripcion().errors(); track error) {
+                    <hlm-field-error [validator]="error.kind">
+                        {{ error.message }}
+                    </hlm-field-error>
+                    }
+                </hlm-field>
+
+                <!-- inputs -->
+                <div class="grid grid-cols-2 gap-3">
+                    <hlm-field class="w-full">
+                        <label hlmFieldLabel for="cupoMaximo">Cupo Maximo:</label>
+                        <input hlmInput id="cupoMaximo" type="number" placeholder="Escribe el cupo máximo"
+                            [formField]="formulario.cupoMaximo" />
+                        @for (error of formulario.cupoMaximo().errors(); track error) {
+                        <hlm-field-error [validator]="error.kind">
+                            {{ error.message }}
+                        </hlm-field-error>
+                        }
+                    </hlm-field>
+                </div>
+
+                <!-- Imagen -->
+                <hlm-field class="w-full">
+                    <label hlmFieldLabel>
+                        Elegir imagen de banner
+                        @if (imagenSeleccionada()) {
+                        <span class="text-sm text-green-600 ml-2">
+                            <ng-icon name="lucideCheckCircle" class="h-4 w-4 inline" />
+                            Imagen seleccionada
+                        </span>
+                        }
+                    </label>
+                    <lista-galeria (imagenSeleccionada)="seleccionarImagen($event)" />
+                    @for (error of formulario.claveImagen().errors(); track error) {
+                    <hlm-field-error [validator]="error.kind">
+                        {{ error.message }}
+                    </hlm-field-error>
+                    }
+                </hlm-field>
+
+            </hlm-field-group>
+
+            <!-- Botones -->
+            <hlm-sheet-footer class="p-4">
+                <div class="grid grid-cols-2 gap-3 w-full">
+                    <button hlmSheetClose hlmBtn variant="outline" type="button">
+                        <ng-icon name="lucideArrowLeft" />
+                        Salir
+                    </button>
+                    <button hlmBtn type="submit" form="form-crear-convocatorias" [disabled]="submitting()">
+                        @if (submitting()) {
+                        <ng-icon name="lucideLoader" class="h-4 w-4 animate-spin mr-2" />
+                        Editando...
+                        } @else {
+                        <ng-icon name="lucideSave" />
+                        Guardar cambios
+                        }
+                    </button>
+                </div>
+            </hlm-sheet-footer>
+        </form>
+    </hlm-sheet-content>
+</hlm-sheet>

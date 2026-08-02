@@ -3,13 +3,15 @@ import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
 import { AppSidebar } from '../../components/sidebar/sidebar';
 import { SiteHeader } from '../../components/site-header/site-header';
 import { RouterOutlet } from '@angular/router';
+import { HlmToasterImports } from '@spartan-ng/helm/sonner';
 
 @Component({
   selector: 'admin-dashboard',
-  imports: [HlmSidebarImports, SiteHeader, AppSidebar, RouterOutlet],
+  imports: [HlmSidebarImports, SiteHeader, AppSidebar, RouterOutlet, HlmToasterImports],
   changeDetection: ChangeDetectionStrategy.OnPush,
 
   template: `
+    <hlm-toaster />
     <!-- Sidebar -->
     <app-sidebar>
       <main hlmSidebarInset class="flex min-h-0 min-w-0 w-full flex-1 flex-col overflow-hidden">

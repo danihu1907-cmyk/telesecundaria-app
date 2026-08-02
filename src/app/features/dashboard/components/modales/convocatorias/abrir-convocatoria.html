@@ -1,0 +1,120 @@
+<hlm-sheet [state]="abierto() ? 'open' : 'closed'" (closed)="cerrado.emit()" hlmSheetTrigger side="right">
+    <!-- Modal -->
+    <hlm-sheet-content *hlmSheetPortal="let ctx" class="px-4 pt-5 ">
+        <hlm-sheet-header>
+            <h2 hlmSheetTitle class="max-w-75">{{ detallesConvocatoria()?.titulo }}</h2>
+            <p hlmSheetDescription>
+                {{ detallesConvocatoria()?.subtitulo }}
+            </p>
+            <p hlmSheetDescription>
+                {{ detallesConvocatoria()?.descripcion }}
+            </p>
+        </hlm-sheet-header>
+
+        <hlm-field-group>
+
+            <div class="grid grid-cols-2 gap-3">
+                <hlm-field class="w-full">
+                    <label hlmFieldLabel>Fecha de inicio</label>
+                    <p class="font-semibold text-neutral-800" hlmDrawerDescription>
+                        {{ detallesConvocatoria()?.fechaInicio | date: 'dd/MM/yyyy' }}
+                    </p>
+                </hlm-field>
+                <hlm-field class="w-full">
+                    <label hlmFieldLabel>Fecha de finalización</label>
+                    <p class="font-semibold text-neutral-800" hlmDrawerDescription>
+                        {{ detallesConvocatoria()?.fechaFin | date: 'dd/MM/yyyy' }}
+                    </p>
+                </hlm-field>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <hlm-field class="w-full">
+                    <label hlmFieldLabel for="cicloEscolar">Ciclo escolar</label>
+
+                    <p class="font-semibold text-neutral-800" hlmDrawerDescription>
+                        {{ detallesConvocatoria()?.cicloEscolar }}
+                    </p>
+                </hlm-field>
+                <hlm-field class="w-full">
+                    <label hlmFieldLabel for="cupoMaximo">Cupo máximo</label>
+                    <p class="font-semibold text-neutral-800" hlmDrawerDescription>
+                        {{ detallesConvocatoria()?.cupoMaximo }}
+                    </p>
+                </hlm-field>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <hlm-field class="w-full">
+                    <label hlmFieldLabel for="cicloEscolar">Cupo disponible</label>
+                    <p class="font-semibold text-neutral-800" hlmDrawerDescription>
+                        {{ detallesConvocatoria()?.cupoDisponible }}
+                    </p>
+                </hlm-field>
+                <hlm-field class="w-full">
+                    <label hlmFieldLabel>Fecha de registro</label>
+                    <p class="font-semibold text-neutral-800" hlmDrawerDescription>
+                        {{ detallesConvocatoria()?.fechaRegistro | date: 'dd/MM/yyyy' }}
+                    </p>
+                </hlm-field>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <hlm-field class="w-fit">
+                    <label hlmFieldLabel for="cicloEscolar">Estado</label>
+                    <span hlmBadge [class]="getBadgeClasses(detallesConvocatoria()?.estado)">
+                        {{ detallesConvocatoria()?.estado }}
+                    </span>
+                </hlm-field>
+                <hlm-field class="w-fit">
+                    <label hlmFieldLabel for="cupoMaximo">Activación</label>
+                    <span hlmBadge
+                        [class]="getBadgeClasses(detallesConvocatoria()?.activacion ? 'Activa' : 'Inactiva')">
+                        {{ detallesConvocatoria()?.activacion ? 'Activa' : 'Inactiva' }}
+                    </span>
+                </hlm-field>
+            </div>
+        </hlm-field-group>
+        <!-- Botones -->
+        <hlm-sheet-footer>
+            @if (puedeEditar()) {
+            <div class="grid grid-cols-2 gap-3">
+                <button [hlmAlertDialogTriggerFor]="deleteDialog" hlmBtn hlmDropdownMenuItem variant="destructive">
+                    <ng-icon name="lucideCircleX" />
+                    Cancelar
+                </button>
+                <!-- aqui va el boton de editar convocatoria que abrirar el modal -->
+                <editar-convocatorias [convocatoria]="detallesConvocatoria()" />
+            </div>
+            }
+        </hlm-sheet-footer>
+    </hlm-sheet-content>
+</hlm-sheet>
+
+<!-- alert dialog para confirmar la eliminacion -->
+<hlm-alert-dialog #deleteDialog="hlmAlertDialog">
+    <hlm-alert-dialog-content *hlmAlertDialogPortal="let ctx">
+        <hlm-alert-dialog-header>
+            <hlm-alert-dialog-media>
+                <ng-icon name="lucideCircleX" />
+            </hlm-alert-dialog-media>
+            <h2 hlmAlertDialogTitle class="font-semibold">¿Cancelar Convocatoria?</h2>
+            <p hlmAlertDialogDescription>
+                Al cancelar la convocatoria, no estará disponible para los usuarios. Esta acción no se
+                puede deshacer. ¿Deseas continuar?
+            </p>
+        </hlm-alert-dialog-header>
+        <hlm-alert-dialog-footer>
+            <button hlmAlertDialogCancel>Salir</button>
+            <button hlmAlertDialogAction variant="destructive" [disabled]="eliminando()"
+                (click)="eliminarConvocatoria(ctx); ctx.close?.()">
+                @if (eliminando()) {
+                <ng-icon name="lucideLoader" class="h-4 w-4 animate-spin mr-2" />
+                Cancelando...
+                } @else {
+                Cancelar convocatoria
+                }
+            </button>
+        </hlm-alert-dialog-footer>
+    </hlm-alert-dialog-content>
+</hlm-alert-dialog>

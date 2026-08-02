@@ -1,9 +1,9 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
-import type { ImagenGaleria } from '../models/galeria.models';
+import type { EliminarImagenRequest, ImagenGaleria } from '../models/galeria.models';
 
 @Injectable({
   providedIn: 'root',
@@ -64,6 +64,35 @@ export class GaleriaService {
         this.errorSignal.set(err.message || 'Error al obtener la imagen');
         this.cargandoSignal.set(false);
         return of(null);
+      }),
+    );
+  }
+
+  eliminarImagen(request: EliminarImagenRequest): Observable<boolean> {
+    this.cargandoSignal.set(true);
+    this.errorSignal.set(null);
+
+    // Construir URL con path para claveConvocatoria
+    const url = `${this.apiUrl}/${request.claveImagen}`;
+
+    const params = new HttpParams().set('nombreUsuario', request.claveImagen);
+
+    console.log(`Eliminando convocatoria: ${url}?nombreUsuario=${request.claveImagen}`);
+
+    return this.http.delete<void>(url, { params }).pipe(
+      map(() => {
+        console.log('Galeria eliminada:', request.claveImagen);
+        this.imagenesSignal.update((lista) =>
+          lista.filter((c) => c.claveImagen !== request.claveImagen),
+        );
+        this.cargandoSignal.set(false);
+        return true; // Retorna true si la eliminación fue exitosa
+      }),
+      catchError((error) => {
+        console.error('Error al eliminar la imagen:', error);
+        this.errorSignal.set(error.message || 'Error al eliminar la imagen');
+        this.cargandoSignal.set(false);
+        return of(false); // Retorna un observable con false en caso de error
       }),
     );
   }

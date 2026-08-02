@@ -1,6 +1,7 @@
 export type Convocatoria = {
   claveConvocatoria: string;
   titulo: string;
+  subtitulo: string;
   descripcion: string;
   fechaInicio: Date;
   fechaFin: Date;
@@ -10,16 +11,9 @@ export type Convocatoria = {
   cupoDisponible?: number;
   activacion: boolean;
   fechaRegistro: Date;
+  claveImagen?: string;
+  destacadoTexto?: string;
 };
-
-// Respuesta de API con paginación
-export interface ApiResponse<T> {
-  data: T[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
 
 // Request para crear/actualizar
 export interface CreateConvocatoriaRequest {
@@ -34,7 +28,7 @@ export interface CreateConvocatoriaRequest {
   claveImagen: string;
 }
 
-export interface UpdateConvocatoriaRequest {
+export type UpdateConvocatoriaRequest = {
   claveConvocatoria: string;
   titulo: string;
   subtitulo: string;
@@ -43,12 +37,17 @@ export interface UpdateConvocatoriaRequest {
   nombreUsuario: string;
   claveImagen: string;
   destacadoTexto: string;
+};
+
+export interface EliminarConvocatoriaRequest {
+  claveConvocatoria: string;
+  nombreUsuario: 'admin' | string; // O el usuario actual
 }
 
-export type EstadoConvocatoria = 'Activa' | 'Cerrada' | 'Programada';
+export type EstadoConvocatoria = 'Publicada' | 'Cerrada' | 'Programada';
 
 export const ESTADO_COLORS: Record<EstadoConvocatoria, { bg: string; text: string }> = {
-  Activa: {
+  Publicada: {
     bg: 'bg-green-100 dark:bg-green-950',
     text: 'text-green-700 dark:text-green-300',
   },
@@ -61,34 +60,3 @@ export const ESTADO_COLORS: Record<EstadoConvocatoria, { bg: string; text: strin
     text: 'text-yellow-700 dark:text-yellow-300',
   },
 };
-
-// Creacion de datos de prueba para las convocatorias
-function randomDate(start: Date, end: Date): Date {
-  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-}
-
-const ESTADOS: EstadoConvocatoria[] = ['Activa', 'Cerrada', 'Programada'];
-
-export function getRandomEstado(): EstadoConvocatoria {
-  const randomIndex = Math.floor(Math.random() * ESTADOS.length);
-  return ESTADOS[randomIndex];
-}
-
-export const DATA_CONVOCATORIAS: Convocatoria[] = Array.from({ length: 100 }, (_, index) => {
-  const anioInicio = 2015 + Math.floor(Math.random() * 12);
-  const anioFin = anioInicio + 1;
-
-  return {
-    claveConvocatoria: `CONV-${String(index + 1).padStart(3, '0')}`,
-    titulo: `Convocatoria para el ciclo escolar ${anioInicio}-${anioFin}`,
-    descripcion: `Proceso de admisión correspondiente al ciclo escolar ${anioInicio}-${anioFin}.`,
-    fechaInicio: randomDate(new Date(anioInicio, 0, 1), new Date(anioInicio, 10, 30)),
-    fechaFin: randomDate(new Date(anioInicio, 11, 1), new Date(anioFin, 6, 31)),
-    cicloEscolar: `${anioInicio}-${anioFin}`,
-    cupoMaximo: Math.floor(Math.random() * 200) + 50,
-    cupoDisponible: Math.floor(Math.random() * 200) + 50,
-    estado: ESTADOS[Math.floor(Math.random() * ESTADOS.length)],
-    activacion: Math.random() > 0.5,
-    fechaRegistro: randomDate(new Date(2020, 0, 1), new Date()),
-  };
-});

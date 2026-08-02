@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, inject, signal, output } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideEllipsis, lucideEye, lucidePencil, lucideCircleX } from '@ng-icons/lucide';
 import { HlmButton } from '@spartan-ng/helm/button';
@@ -7,14 +7,8 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
 import { type CellContext, injectFlexRenderContext } from '@tanstack/angular-table';
 import type { Convocatoria } from '../../../models/convocatorias.models';
 import { HlmAlertDialogImports } from '@spartan-ng/helm/alert-dialog';
-
-import {
-  HlmDropdownMenuTrigger,
-  HlmDropdownMenu,
-  HlmDropdownMenuLabel,
-  HlmDropdownMenuSeparator,
-  HlmDropdownMenuItem,
-} from '../../../../../../../libs/ui/dropdown-menu/src';
+import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
+import { ConvocatoriasService } from '../../../services/convocatorias.service';
 
 @Component({
   selector: 'boton-acciones-columna',
@@ -22,13 +16,9 @@ import {
     HlmButton,
     NgIcon,
     HlmIcon,
-    HlmDropdownMenu,
-    HlmDropdownMenuLabel,
-    HlmDropdownMenuSeparator,
-    HlmDropdownMenuTrigger,
     HlmButtonImports,
-    HlmDropdownMenuItem,
     HlmAlertDialogImports,
+    HlmDropdownMenuImports,
   ],
   providers: [provideIcons({ lucideEllipsis, lucidePencil, lucideCircleX, lucideEye })],
   template: `
@@ -52,13 +42,18 @@ import {
           Ver
         </button>
         <!-- boton editar -->
-        <button hlmDropdownMenuItem>
+        <button hlmDropdownMenuItem [disabled]="!puedeEditar()">
           <ng-icon name="lucidePencil" />
           Editar
         </button>
         <hlm-dropdown-menu-separator />
         <!-- boton eliminar-->
-        <button [hlmAlertDialogTriggerFor]="deleteDialog" hlmDropdownMenuItem variant="destructive">
+        <button
+          [disabled]="!puedeEditar()"
+          [hlmAlertDialogTriggerFor]="deleteDialog"
+          hlmDropdownMenuItem
+          variant="destructive"
+        >
           <ng-icon name="lucideCircleX" />
           Cancelar
         </button>
@@ -80,7 +75,19 @@ import {
         </hlm-alert-dialog-header>
         <hlm-alert-dialog-footer>
           <button hlmAlertDialogCancel>Salir</button>
-          <button hlmAlertDialogAction variant="destructive">Cancelar convocatoria</button>
+          <button
+            hlmAlertDialogAction
+            variant="destructive"
+            [disabled]="eliminando()"
+            (click)="eliminarConvocatoria(ctx)"
+          >
+            @if (eliminando()) {
+              <ng-icon name="lucideLoader" class="h-4 w-4 animate-spin mr-2" />
+              Cancelando...
+            } @else {
+              Cancelar convocatoria
+            }
+          </button>
         </hlm-alert-dialog-footer>
       </hlm-alert-dialog-content>
     </hlm-alert-dialog>
@@ -88,10 +95,34 @@ import {
 })
 export class BotonAccionesColumna {
   private readonly _context = injectFlexRenderContext<CellContext<Convocatoria, unknown>>();
+  private readonly _convocatoriasService = inject(ConvocatoriasService);
   protected readonly _element = this._context.row.original;
+
   readonly ver = input<(convocatoria: Convocatoria) => void>();
+  protected readonly abierto = signal(false);
+
+  readonly convocatoriaEliminada = output<string>();
+  protected readonly eliminando = signal(false);
 
   protected readonly verConvocatoria = () => {
     this.ver()?.(this._element);
   };
+
+  protected readonly eliminarConvocatoria = async (ctx: { close?: () => void }) => {
+    this.eliminando.set(true);
+    const exito = await this._convocatoriasService.cancelarConvocatoria(this._element);
+    this.eliminando.set(false);
+
+    if (exito) {
+      this.convocatoriaEliminada.emit(this._element.claveConvocatoria);
+    }
+  };
+
+  protected puedeEditar(): boolean {
+    const convocatoria = this._element;
+    if (!convocatoria) {
+      return false;
+    }
+    return convocatoria.estado === 'Publicada' || convocatoria.estado === 'Programada';
+  }
 }
