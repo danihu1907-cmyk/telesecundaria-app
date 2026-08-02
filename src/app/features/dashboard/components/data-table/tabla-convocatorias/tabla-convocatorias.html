@@ -79,17 +79,17 @@
                     }
                 </tbody>
             </table>
+
+            <!-- modal que abre al hacer click a una fila para ver detalle de convocatorias -->
+            <modal-abrir-convocatorias [detallesConvocatoria]="convocatoriaSeleccionada()" [abierto]="modalAbierto()"
+                (cerrado)="cerrarConvocatoria()">
+            </modal-abrir-convocatorias>
             }
             } @placeholder {
             <div class="flex h-96 items-center justify-center">
                 <ng-icon name="lucideLoader" class="h-4 w-4 animate-spin" />
             </div>
             }
-
-            <!-- modal que abre al hacer click a una fila para ver detalle de convocatorias -->
-            <modal-abrir-convocatorias [detallesConvocatoria]="convocatoriaSeleccionada()" [abierto]="modalAbierto()"
-                (cerrado)="cerrarConvocatoria()">
-            </modal-abrir-convocatorias>
         </div>
     </div>
 

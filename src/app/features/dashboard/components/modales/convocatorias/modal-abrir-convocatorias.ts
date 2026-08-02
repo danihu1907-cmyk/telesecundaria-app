@@ -21,6 +21,7 @@ import { Convocatoria } from '../../../models/convocatorias.models';
 import { HlmBadge } from '@spartan-ng/helm/badge';
 import { HlmAlertDialogImports } from '@spartan-ng/helm/alert-dialog';
 import { ConvocatoriasService } from '../../../services/convocatorias.service';
+import { EditarConvocatorias } from './modal-editar-convocatorias';
 
 @Component({
   selector: 'modal-abrir-convocatorias',
@@ -37,6 +38,7 @@ import { ConvocatoriasService } from '../../../services/convocatorias.service';
     HlmSheetImports,
     HlmBadge,
     HlmAlertDialogImports,
+    EditarConvocatorias,
   ],
   providers: [
     provideHlmDatePickerConfig({ autoCloseOnSelect: true }),
@@ -50,13 +52,41 @@ import { ConvocatoriasService } from '../../../services/convocatorias.service';
   templateUrl: './abrir-convocatoria.html',
 })
 export class AbrirConvocatorias {
+  //inputs
   detallesConvocatoria = input<Convocatoria | null>(null);
   abierto = input(false);
+
+  //outputs
   cerrado = output<void>();
+  readonly convocatoriaEliminada = output<string>();
 
   private readonly _convocatoriasService = inject(ConvocatoriasService);
-  readonly convocatoriaEliminada = output<string>();
+
+  //estado
   protected readonly eliminando = signal(false);
+  protected readonly modalEditarAbierto = signal(false);
+
+  //computed
+  puedeEditar(): boolean {
+    const convocatoria = this.detallesConvocatoria();
+    if (!convocatoria) return false;
+    return convocatoria.estado === 'Publicada' || convocatoria.estado === 'Programada';
+  }
+
+  //eliminar convocatoria
+  protected readonly eliminarConvocatoria = async (ctx: { close?: () => void }) => {
+    const convocatoria = this.detallesConvocatoria();
+    if (!convocatoria) {
+      return;
+    }
+    this.eliminando.set(true);
+    const exito = await this._convocatoriasService.cancelarConvocatoria(convocatoria);
+    this.eliminando.set(false);
+
+    if (exito) {
+      this.convocatoriaEliminada.emit(convocatoria.claveConvocatoria);
+    }
+  };
 
   private BADGE_COLORS = {
     Activa: {
@@ -89,25 +119,5 @@ export class AbrirConvocatorias {
     const colors = this.BADGE_COLORS[badge];
 
     return `${colors.bg} ${colors.text}`;
-  }
-
-  protected readonly eliminarConvocatoria = async (ctx: { close?: () => void }) => {
-    const convocatoria = this.detallesConvocatoria();
-    if (!convocatoria) {
-      return;
-    }
-    this.eliminando.set(true);
-    const exito = await this._convocatoriasService.cancelarConvocatoria(convocatoria);
-    this.eliminando.set(false);
-
-    if (exito) {
-      this.convocatoriaEliminada.emit(convocatoria.claveConvocatoria);
-    }
-  };
-
-  puedeEditar(): boolean {
-    const convocatoria = this.detallesConvocatoria();
-    if (!convocatoria) return false;
-    return convocatoria.estado === 'Publicada' || convocatoria.estado === 'Programada';
   }
 }

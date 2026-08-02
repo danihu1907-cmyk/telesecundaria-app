@@ -11,6 +11,8 @@ export type Convocatoria = {
   cupoDisponible?: number;
   activacion: boolean;
   fechaRegistro: Date;
+  claveImagen?: string;
+  destacadoTexto?: string;
 };
 
 // Request para crear/actualizar

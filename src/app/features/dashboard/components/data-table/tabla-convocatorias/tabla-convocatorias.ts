@@ -40,6 +40,8 @@ import { HlmButton } from '@spartan-ng/helm/button';
 import { AbrirConvocatorias } from '../../modales/convocatorias/modal-abrir-convocatorias';
 import { ConvocatoriasService } from '../../../services/convocatorias.service';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { FechaInicioColumna } from '../../modales/convocatorias/fecha-inicio';
+import { FechaFinColumna } from '../../modales/convocatorias/fecha-fin';
 
 @Component({
   selector: 'tabla-convocatorias',
@@ -122,14 +124,14 @@ export class TablaConvocatorias implements OnInit {
       accessorKey: 'fechaInicio',
       id: 'fechaInicio',
       header: () => flexRenderComponent(OrdenarColumnas, { inputs: { header: '' } }),
-      cell: (info) => info.getValue(),
+      cell: (info) => flexRenderComponent(FechaInicioColumna),
     },
 
     {
       accessorKey: 'fechaFin',
       id: 'fechaFin',
       header: () => flexRenderComponent(OrdenarColumnas, { inputs: { header: '' } }),
-      cell: (info) => info.getValue(),
+      cell: (info) => flexRenderComponent(FechaFinColumna),
     },
 
     {
@@ -219,7 +221,11 @@ export class TablaConvocatorias implements OnInit {
 
   //Método para cargar datos desde la API
   cargarDatos(): void {
-    this.convocatoriasService.obtenerConvocatorias();
+    this.convocatoriasService.obtenerConvocatorias().subscribe({
+      error: (err) => {
+        console.error('Error al cargar datos:', err);
+      },
+    });
   }
 
   recargarDatos(): void {

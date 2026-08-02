@@ -12,7 +12,6 @@
         </hlm-sheet-header>
 
         <hlm-field-group>
-            <!-- Fechas -->
 
             <div class="grid grid-cols-2 gap-3">
                 <hlm-field class="w-full">
@@ -84,13 +83,10 @@
                     <ng-icon name="lucideCircleX" />
                     Cancelar
                 </button>
-                <button hlmBtn type="submit">
-                    <ng-icon name="lucidePencil" />
-                    Editar convocatoria
-                </button>
+                <!-- aqui va el boton de editar convocatoria que abrirar el modal -->
+                <editar-convocatorias [convocatoria]="detallesConvocatoria()" />
             </div>
             }
-
         </hlm-sheet-footer>
     </hlm-sheet-content>
 </hlm-sheet>
