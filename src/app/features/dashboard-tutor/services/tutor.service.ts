@@ -20,21 +20,14 @@ import {
   providedIn: 'root',
 })
 export class TutorService {
-  // INYECCIÓN MODERNA DE DEPENDENCIAS UTILIZANDO INJECT
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  // VARIABLES DE ESTADO REACTIVAS (SIGNALS) PARA EL DASHBOARD
   private datosDashboardSignal = signal<DashboardTutorResponse | null>(null);
   private cargandoSignal = signal<boolean>(false);
 
-  // EXUESTAS PARA LECTURA EN COMPONENTES
   public datosDashboard = this.datosDashboardSignal.asReadonly();
   public cargando = this.cargandoSignal.asReadonly();
-
-  // =========================================================================
-  // ESCENARIO REAL CON SERVIDOR (MOCK ELIMINADO COMPLETAMENTE)
-  // =========================================================================
 
   obtenerDashboardTutor(): Observable<DashboardTutorResponse> {
     this.cargandoSignal.set(true);
@@ -43,8 +36,16 @@ export class TutorService {
     const nombreTutor = localStorage.getItem('nombreTutor') ?? '';
     const url = `${environment.apiUrl}/Aspirantes`;
 
-    return this.http.get<Aspirante[]>(url).pipe(
-      map((aspirantes) => aspirantes.filter((a) => a.claveTutorAspirante === claveTutorAspirante)),
+    return this.http.get<any>(url).pipe(
+      map((respuesta): Aspirante[] => {
+        // Si el backend devuelve un objeto (por ejemplo { mensaje: "No hay aspirantes registrados." })
+        // en lugar de un arreglo, regresamos un arreglo vacío para evitar errores.
+        if (!Array.isArray(respuesta)) {
+          return [];
+        }
+
+        return respuesta.filter((a: Aspirante) => a.claveTutorAspirante === claveTutorAspirante);
+      }),
 
       switchMap((aspirantesFiltrados): Observable<AspiranteTarjetaDashboard[]> => {
         if (aspirantesFiltrados.length === 0) {
@@ -69,9 +70,8 @@ export class TutorService {
           // ESCENARIO B: SI ESTÁ 'EN PROCESO' O 'RECHAZADO' EN LA BASE DE DATOS -> LÓGICA DE ARCHIVOS
           return this.getEstadoAdjuncion(a.claveAspirante).pipe(
             map((estadoAdj: EstadoAdjuncion): AspiranteTarjetaDashboard => {
-              const estanTodosCompletos = estadoAdj && estadoAdj.todosCompletos === true;
-              const totalArchivosSubidos =
-                estadoAdj && estadoAdj.documentosCargados ? estadoAdj.documentosCargados.length : 0;
+              const estanTodosCompletos = estadoAdj?.todosCompletos === true;
+              const totalArchivosSubidos = estadoAdj?.documentosCargados?.length ?? 0;
 
               const calculoProgreso = 25 + totalArchivosSubidos * 15;
               let progresoReal = calculoProgreso > 100 ? 100 : calculoProgreso;
@@ -82,17 +82,17 @@ export class TutorService {
                 if (!estanTodosCompletos) {
                   estatusCalculado = 'Documentos incompletos';
                   progresoReal = 25 + totalArchivosSubidos * 15;
-                } else if (estanTodosCompletos) {
+                } else {
                   estatusCalculado = 'En proceso';
                   progresoReal = 100;
                 }
               } else if (a.estatusAspirante === 'Rechazado') {
                 progresoReal = estanTodosCompletos ? 100 : 25 + totalArchivosSubidos * 15;
 
-                // NUEVO: SI YA NO QUEDA NINGUN DOCUMENTO RECHAZADO, YA SE CORRIGIO Y REENVIO
                 const algunoSigueRechazado = estadoAdj?.documentosCargados?.some(
                   (d) => d.estatus === 'Rechazado',
                 );
+
                 if (!algunoSigueRechazado) {
                   estatusCalculado = 'En proceso';
                 }
@@ -124,15 +124,15 @@ export class TutorService {
           );
         });
 
-        return forkJoin(peticionesAspirantes) as Observable<AspiranteTarjetaDashboard[]>;
+        return forkJoin(peticionesAspirantes);
       }),
 
-      map((tarjetasMapeadas): DashboardTutorResponse => {
-        return {
-          nombreTutor: nombreTutor,
+      map(
+        (tarjetasMapeadas): DashboardTutorResponse => ({
+          nombreTutor,
           aspirantes: tarjetasMapeadas,
-        };
-      }),
+        }),
+      ),
 
       tap({
         next: (dashboardData) => {
@@ -201,9 +201,6 @@ export class TutorService {
     return this.http.patch<any>(url, formData);
   }
 
-  // NUEVO METODO: CREA UNA ADJUNCION NUEVA SOLO CON LOS DOCUMENTOS QUE SIGUEN
-  // MARCADOS COMO RECHAZADOS (YA CON SU ARCHIVO CORREGIDO), PARA REGRESARLOS
-  // A FILA VIRTUAL Y GENERAR UNA NUEVA REVISION
   reenviarAdjuncion(payload: FinalizarAdjuncionRequest): Observable<AdjuncionResponse> {
     const url = `${environment.apiUrl}/Adjunciones/reenviar`;
     return this.http.post<AdjuncionResponse>(url, payload);
